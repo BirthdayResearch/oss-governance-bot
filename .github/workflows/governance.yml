@@ -1,0 +1,21 @@
+name: OSS
+
+on:
+  pull_request:
+  issues:
+  status:
+
+jobs:
+  main:
+    name: Governance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v3
+        with:
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `<details><summary>Debug Payload Information</summary>\n\n\`\`\`json\n${JSON.stringify(context, undefined, 2)}\n\`\`\`\n\n</details>`
+            })

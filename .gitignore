@@ -102,3 +102,11 @@ dist
 
 # TernJS port file
 .tern-port
+
+# IntelliJ
+.idea/*
+!.idea/inspectionProfiles/
+!.idea/dictionaries/
+!.idea/vcs.xml
+!.idea/modules.xml
+!.idea/*.iml
