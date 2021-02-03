@@ -1,8 +1,15 @@
 # oss-governance
 
+> Fork and use this project for your organisation.
+
+This project is a collection of documentations and tool (code pipeline) that aims to bring efficacy to your open source
+software project governance. Speed up your code review agility and issues triaging!
+This project is heavily inspired by Kubernetes Prow but is designed for GitHub Action and deterministic/stateless by
+design.
+
 ## Motivation
 
-> TLDR: Moves your project governance policy to code.
+> TLDR: Moves your project governance policy to code. (Those that can be moved!)
 
 Open Source Software project governance is increasingly complex and autonomous. Putting your project on GitHub is a
 usually first step to making your project open. Making your project visible is far from making it maintainable. For new
@@ -30,6 +37,7 @@ hooks and deeply integrate with many GitHub offerings.
 - [ ] Generate Workflow Graph
 - [ ] ChatOps/ChatBots
 - [ ] GitHub Secret for a custom username and image of bot.
+- [ ] Fork and use immediately.
 
 ### Todo
 
@@ -42,8 +50,10 @@ hooks and deeply integrate with many GitHub offerings.
 
 - [ ] Setup Technical Steering Community Charter as an example that drives oss governance policy.
 - [ ] Setup governance docs.
+- [ ] Pull Request Template
+- [ ] Issue Template
 
 ## Development
 
 > IntelliJ IDEA is the IDE of choice for writing and maintaining this code library. IntelliJ's files are included for
-> convenience but usage of IntelliJ is not required. 
+> convenience with toolchain setup but usage of IntelliJ is optional. 

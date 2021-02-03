@@ -1,0 +1,16 @@
+{
+  "name": "oss-governance",
+  "description": "Collection of documentations and tool to bring efficacy to your open source software project governance.",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [
+    "actions",
+    "open source",
+    "project management",
+    "goverenance"
+  ],
+  "author": "Fuxing Loh",
+  "license": "MIT"
+}
