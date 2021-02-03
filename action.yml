@@ -1,0 +1,20 @@
+name: 'OSS Governance'
+description: 'Collection of documentations and tool to bring efficacy to your open source software project governance.'
+author: 'Fuxing Loh'
+branding:
+  icon: zap
+  color: white
+
+inputs:
+  config-path:
+    description: 'The path for the label configurations'
+    default: '.github/labeler.yml'
+    required: false
+  github-token:
+    description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)'
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
