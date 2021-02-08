@@ -1,5 +1,13 @@
 # oss-governance
 
+Collection of documentations and tool to bring efficacy to your open source software project governance.
+
+- [ ] Aims to support theses but not yet released.
+
+* Improve code review agility for better code governance. (Quality, meta & feedback.)
+* Speed up on the ground issue with automated triaging and lifecycle tracking.
+* Draft release automatically with pull request information.
+
 > Fork and use this project for your organisation.
 
 This project is a collection of documentations and tool (code pipeline) that aims to bring efficacy to your open source
@@ -43,8 +51,8 @@ hooks and deeply integrate with many GitHub offerings.
 
 - [ ] `__test__`
 - [ ] CI & Publish
-- [ ] create-oss-governance?
-- [ ] npm 7?
+- [x] create-oss-governance?
+- [x] npm 7?
 
 ## TSC
 
