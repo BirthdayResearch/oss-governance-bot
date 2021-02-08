@@ -1,2 +1,0 @@
-# oss-governance/core
-

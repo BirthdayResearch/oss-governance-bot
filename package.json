@@ -1,9 +1,21 @@
 {
   "name": "oss-governance",
-  "description": "Collection of documentations and tool to bring efficacy to your open source software project governance.",
   "version": "0.0.0",
-  "main": "index.js",
+  "private": true,
+  "description": "",
+  "main": "lib/main.js",
   "scripts": {
+    "build": "tsc",
+    "format": "prettier --write **/*.ts",
+    "lint": "eslint --fix src/**/*.ts",
+    "package": "ncc build --source-map --license licenses.txt",
+    "test": "jest",
+    "all": "npm run build && npm run format && npm run lint && npm run package",
+    "ci": "npm run all && jest --ci --coverage && codecov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fuxingloh/oss-governance.git"
   },
   "keywords": [
     "actions",
@@ -12,5 +24,32 @@
     "goverenance"
   ],
   "author": "Fuxing Loh",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
+    "fp-ts": "^2.9.3",
+    "io-ts": "^2.2.13",
+    "io-ts-reporters": "^1.2.2",
+    "js-yaml": "^4.0.0",
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.20",
+    "@types/js-yaml": "^4.0.0",
+    "@types/lodash": "^4.14.168",
+    "@types/minimatch": "^3.0.3",
+    "@types/node": "^14.14.22",
+    "@typescript-eslint/parser": "^4.14.0",
+    "@vercel/ncc": "^0.27.0",
+    "codecov": "^3.8.1",
+    "eslint": "^7.18.0",
+    "eslint-plugin-github": "^4.1.1",
+    "eslint-plugin-jest": "^24.1.3",
+    "jest": "^26.4.4",
+    "jest-circus": "^26.4.4",
+    "prettier": "2.2.1",
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.3"
+  }
 }

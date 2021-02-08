@@ -3,10 +3,11 @@
 #### What kind of PR is this?:
 <!--
 Use one of the following kinds:
-/kind bug
-/kind refactor
 /kind feature
-/kind documentation
+/kind fix
+/kind chore
+/kind docs
+/kind refactor
 -->
 
 /kind 
