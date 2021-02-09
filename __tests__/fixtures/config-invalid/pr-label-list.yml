@@ -1,0 +1,5 @@
+version: v1
+
+pull-request:
+  labels:
+    - prefix: kind

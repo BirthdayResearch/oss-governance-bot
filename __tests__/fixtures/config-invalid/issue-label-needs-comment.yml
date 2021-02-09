@@ -1,0 +1,8 @@
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      needs:
+        comment: [ "invalid" ]

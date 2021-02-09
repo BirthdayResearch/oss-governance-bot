@@ -1,0 +1,6 @@
+version: v1
+
+pull-request:
+  chat-ops:
+    - cmd: "/assign"
+      type: assign

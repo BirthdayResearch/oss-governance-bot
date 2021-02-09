@@ -1,0 +1,11 @@
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      needs:
+        comment: |
+          @$AUTHOR: This issue is currently awaiting triage.
+
+          The triage/accepted label can be added by org members by writing /triage accepted in a comment.
