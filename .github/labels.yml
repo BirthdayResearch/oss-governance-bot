@@ -12,14 +12,19 @@
 # Needs
 - color: f9d0c4
   name: needs/kind
+  description: Needs kind label
 - color: f9d0c4
   name: needs/area
+  description: Needs area label(s)
 - color: f9d0c4
   name: needs/priority
+  description: Needs a priority label
 - color: f9d0c4
   name: needs/os
+  description: Needs os label
 - color: f9d0c4
   name: needs/triage
+  description: Waiting for triage to be accepted
 
 # Kind
 - color: e7e9eb

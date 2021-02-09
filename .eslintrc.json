@@ -22,6 +22,7 @@
     "jest/globals": true
   },
   "ignorePatterns": [
-    "**/*.test.ts"
+    "__tests__/**.ts",
+    "__tests__/client.mock.ts"
   ]
 }

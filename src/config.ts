@@ -28,6 +28,9 @@ const ChatOps = t.intersection([
       type: t.literal('close')
     }),
     t.type({
+      type: t.literal('needs')
+    }),
+    t.type({
       type: t.literal('none')
     }),
     t.type({
