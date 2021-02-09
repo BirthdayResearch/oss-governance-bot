@@ -157,6 +157,9 @@ describe('valid config', () => {
     it('chat-ops-dispatch.yml is invalid', () => {
       return expectValid('chat-ops-dispatch.yml')
     })
+    it('chat-ops-needs.yml is invalid', () => {
+      return expectValid('chat-ops-needs.yml')
+    })
     it('chat-ops-none.yml is invalid', () => {
       return expectValid('chat-ops-none.yml')
     })

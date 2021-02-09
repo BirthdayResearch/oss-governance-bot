@@ -10,6 +10,7 @@
   },
   "exclude": [
     "node_modules",
-    "__tests__/*.ts"
+    "__tests__/**.ts",
+    "__tests__/client.mock.ts"
   ]
 }

@@ -60,6 +60,11 @@ issue:
       comment: |
         @$AUTHOR: Do you want to...
 
+    - cmd: "/needs area"
+      type: needs
+
+    - cmd: "/needs kind"
+      type: needs
 
 pull-request:
   labels:
@@ -93,3 +98,9 @@ pull-request:
     - cmd: "/retest oss/governance"
       type: dispatch
       dispatch: "OSS/Governance"
+
+    - cmd: "/needs area"
+      type: needs
+
+    - cmd: "/needs kind"
+      type: needs
