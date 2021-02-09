@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: npm install
+      - run: npm run ci
+
+      - uses: EndBug/add-and-commit@v6
+        with:
+          add: 'dist'
+          author_name: dist
+          author_email: oss@fuxing.dev
+          message: 'npm run ncc, dist updated'
+          signoff: true

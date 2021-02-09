@@ -1,0 +1,7 @@
+version: v1
+
+pull-request:
+  chat-ops:
+    - cmd: "/dispatch"
+      type: dispatch
+      dispatch: "dispatch/workflow"

@@ -1,0 +1,9 @@
+version: v1
+
+issue:
+  labels:
+  chat-ops:
+
+pull-request:
+  labels:
+  chat-ops:

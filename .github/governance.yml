@@ -1,0 +1,95 @@
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      multiple: false
+      contributor: true
+      needs:
+        comment: |
+          @$AUTHOR: This issue is currently awaiting triage.
+
+          The triage/accepted label can be added by org members by writing /triage accepted in a comment.
+
+    - prefix: kind
+      list: [ "feature", "bug", "question" ]
+      multiple: false
+      needs:
+        comment: |
+          @$AUTHOR: There are no 'kind' label on this PR. You need a 'kind' label to generate the release note automatically.
+
+          * `/kind feature`
+          * `/kind bug`
+          * `/kind question`
+
+    - prefix: area
+      list: [ "ui-ux", "semantics", "translation", "security" ]
+      multiple: true
+      needs:
+        comment: |
+          @$AUTHOR: There are no area labels on this issue. Adding an appropriate label will greatly expedite the process for us. You can add as many area as you see fit.
+
+          If you are unsure what to do you can ignore this!
+
+          * `/area ui-ux`
+          * `/area semantics`
+          * `/area translation`
+          * `/area security`
+
+    - prefix: os
+      list: [ "mac", "win", "linux" ]
+      multiple: true
+
+    - prefix: priority
+      multiple: false
+      list: [ "urgent-now", "important-soon" ]
+
+  chat-ops:
+    - cmd: /close
+      type: close
+
+    - cmd: /cc
+      type: none
+
+    - cmd: "/assign (@.+)+"
+      type: assign
+
+    - cmd: "/area ui-ux"
+      type: comment
+      comment: |
+        @$AUTHOR: Do you want to...
+
+
+pull-request:
+  labels:
+    - prefix: kind
+      multiple: false
+      list: [ "feature", "fix", "chore", "docs", "refactor" ]
+      needs:
+        comment: |
+          @$AUTHOR: There are no 'kind' label on this PR. You need a 'kind' label to generate the release note automatically.
+
+          * `/kind feature`
+          * `/kind fix`
+          * `/kind chore`
+          * `/kind docs`
+          * `/kind refactor`
+
+    - prefix: priority
+      multiple: false
+      list: [ "urgent-now", "important-soon" ]
+
+  chat-ops:
+    - cmd: /close
+      type: close
+
+    - cmd: /cc
+      type: none # does not trigger anything
+
+    - cmd: "/request (@.+)+"
+      type: review
+
+    - cmd: "/retest oss/governance"
+      type: dispatch
+      dispatch: "OSS/Governance"

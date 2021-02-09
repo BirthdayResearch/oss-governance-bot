@@ -1,0 +1,5 @@
+version: v1
+
+pull-request:
+  labels:
+    - list: [ "feature", "fix", "chore", "docs", "refactor" ]

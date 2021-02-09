@@ -1,5 +1,10 @@
 # OSS Governance
 
+[![codecov](https://codecov.io/gh/fuxingloh/oss-governance/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/fuxingloh/oss-governance)
+[![CodeFactor](https://www.codefactor.io/repository/github/fuxingloh/oss-governance/badge)](https://www.codefactor.io/repository/github/fuxingloh/oss-governance)
+[![Release](https://img.shields.io/github/v/release/fuxingloh/oss-governance)](https://github.com/fuxingloh/oss-governance/releases)
+[![License MIT](https://img.shields.io/github/license/fuxingloh/oss-governance)](https://github.com/fuxingloh/oss-governance/blob/main/LICENSE)
+
 A collection of oss governance policy and techniques to bring efficacy to your open source software project governance.
 
 * Speed up issue triaging with automated chat-bot and chat-ops.
@@ -9,12 +14,15 @@ A collection of oss governance policy and techniques to bring efficacy to your o
 
 ## Usage
 
-- [ ] Details
+#### TODOs
+
+- [ ] Details & Information
+- [ ] Banner Image
 - [ ] GitHub Secret for a custom username and image of bot.
+- [ ] Release management
+- [ ] Cleanup dependencies
 
 ### Examples
-
-- [ ] Check out ...
 
 ## Motivation
 

@@ -1,0 +1,80 @@
+# Generic useful labels
+- color: cfd3d7
+  name: duplicate
+  description: This issue or pull request already exists
+- color: 0366d6
+  name: dependencies
+  description: Pull requests that update a dependency file
+- color: 7057ff
+  name: good first issue
+  description: Good for newcomers
+
+# Needs
+- color: f9d0c4
+  name: needs/kind
+- color: f9d0c4
+  name: needs/area
+- color: f9d0c4
+  name: needs/priority
+- color: f9d0c4
+  name: needs/os
+- color: f9d0c4
+  name: needs/triage
+
+# Kind
+- color: e7e9eb
+  name: kind/bug
+  description: Something isn't working
+- color: e7e9eb
+  name: kind/feature
+  description: New feature request
+- color: e7e9eb
+  name: kind/question
+  description: Generic question
+- color: e7e9eb
+  name: kind/chore
+  description: Non feature change
+- color: e7e9eb
+  name: kind/fix
+  description: Fix a bug
+- color: e7e9eb
+  name: kind/docs
+  description: Non feature documentation change
+- color: e7e9eb
+  name: kind/refactor
+  description: Non feature refactor change
+
+# Area
+- color: fbca04
+  name: area/ui-ux
+  description: design
+- color: fbca04
+  name: area/semantics
+  description: language
+- color: fbca04
+  name: area/translation
+  description: i18n
+- color: fbca04
+  name: area/security
+  description: Security related
+
+# Priority
+- color: d93f0b
+  name: priority/urgent-now
+  description: Urgent fix, as fast as possible
+- color: d93f0b
+  name: priority/important-soon
+  description: Will be important soon
+
+# OS
+- color: c5def5
+  name: os/mac
+- color: c5def5
+  name: os/win
+- color: c5def5
+  name: os/linux
+
+# Triage
+- color: c2e0c6
+  name: triage/accepted
+  description: Triage has been accepted
