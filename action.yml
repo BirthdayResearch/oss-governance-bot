@@ -7,8 +7,8 @@ branding:
 
 inputs:
   config-path:
-    description: 'The path for the label configurations'
-    default: '.github/labeler.yml'
+    description: 'The path for the governance configuration'
+    default: '.github/governance.yml'
     required: false
   github-token:
     description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT)'

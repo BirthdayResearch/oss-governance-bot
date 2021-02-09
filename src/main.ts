@@ -1,12 +1,13 @@
-import {getInput, error as core_error, setFailed} from '@actions/core'
-import {getOctokit, context} from '@actions/github'
+import * as core from '@actions/core'
+import * as github from '@actions/github'
 import {getConfig} from './config'
 
-const githubToken = getInput('github-token')
-const configPath = getInput('config-path', {required: true})
+const githubToken = core.getInput('github-token')
+const configPath = core.getInput('config-path', {required: true})
 
-const client = getOctokit(githubToken)
-const payload = context.payload.pull_request || context.payload.issue
+const client = github.getOctokit(githubToken)
+const payload =
+  github.context.payload.pull_request || github.context.payload.issue
 
 if (!payload?.number) {
   throw new Error(
@@ -20,6 +21,6 @@ getConfig(client, configPath)
     return Promise.all([config])
   })
   .catch(error => {
-    core_error(error)
-    setFailed(error.message)
+    core.error(error)
+    core.setFailed(error.message)
   })
