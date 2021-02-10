@@ -23,7 +23,6 @@ issue:
           * `/kind bug`
           * `/kind question`
 
-
     - prefix: area
       list: [ "ui-ux", "semantics", "translation", "security" ]
       multiple: true
@@ -37,7 +36,6 @@ issue:
           * `/area semantics`
           * `/area translation`
           * `/area security`
-
 
     - prefix: os
       list: [ "mac", "win", "linux" ]

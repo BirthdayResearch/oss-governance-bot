@@ -19,7 +19,7 @@ if (!payload?.number) {
 /* eslint github/no-then: off */
 getConfig(client, configPath)
   .then(config => {
-    return Promise.all([ignore(config)])
+    return Promise.all([ignore()])
   })
   .then(() => {
     core.info('oss-governance: completed')

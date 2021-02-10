@@ -1,6 +1,5 @@
 import ignore from '../src/ignore'
 import * as github from '@actions/github'
-import {Config} from '../src/config'
 
 beforeEach(() => {
   github.context.eventName = 'issue_comment'
@@ -17,11 +16,8 @@ afterAll(() => {
 })
 
 function expectIgnore(expected: boolean) {
-  const config: Config = {
-    version: 'v1'
-  }
   expect.assertions(1)
-  return expect(ignore(config)).resolves.toBe(expected)
+  return expect(ignore()).resolves.toBe(expected)
 }
 
 it('default should not ignore', function () {

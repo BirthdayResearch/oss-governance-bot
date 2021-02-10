@@ -1,4 +1,3 @@
-import {Config} from './config'
 import * as github from '@actions/github'
 
 function is(eventName: string, actions: string[]): boolean {
@@ -10,11 +9,8 @@ function is(eventName: string, actions: string[]): boolean {
 
 /**
  * To prevent mistakes, this will ignore invalid workflow trigger
- *
- * @param config
  */
-/* eslint no-unused-vars: off */
-export default async function (config: Config): Promise<boolean> {
+export default async function (): Promise<boolean> {
   const payload = github.context.payload
 
   // Ignore Non 'User' to prevent infinite loop
