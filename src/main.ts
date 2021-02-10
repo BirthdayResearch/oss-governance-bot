@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import {getConfig} from './config'
+import ignore from './ignore'
 
 const githubToken = core.getInput('github-token')
 const configPath = core.getInput('config-path', {required: true})
@@ -18,9 +19,22 @@ if (!payload?.number) {
 /* eslint github/no-then: off */
 getConfig(client, configPath)
   .then(config => {
-    return Promise.all([config])
+    return Promise.all([
+      ignore(config)
+    ])
+  })
+  .then(() => {
+    core.info('oss-governance: completed')
   })
   .catch(error => {
     core.error(error)
     core.setFailed(error.message)
   })
+
+// 1. parse config
+// 2. ignores (bots/workflow)
+// TODO(fuxing): 3. parse chat-ops (access-control)
+// TODO(fuxing): 4. run chat-ops (types)
+// TODO(fuxing): 5. produce prefixed labels (add/remove)
+// TODO(fuxing): 6. produce needs labels
+// TODO(fuxing): 7. produce comments + generate available commands

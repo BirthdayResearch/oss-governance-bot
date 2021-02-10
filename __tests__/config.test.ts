@@ -1,38 +1,52 @@
-import * as core from '@actions/core'
+import fs from "fs";
 import * as github from '@actions/github'
+import nock from 'nock';
 import {getConfig} from '../src/config'
-import {mockClient} from './client.mock'
 
-jest.spyOn(core, 'warning').mockImplementation(jest.fn())
-jest.spyOn(core, 'info').mockImplementation(jest.fn())
-jest.spyOn(core, 'debug').mockImplementation(jest.fn())
-jest.spyOn(core, 'setFailed').mockImplementation(jest.fn())
-
-jest.spyOn(github.context, 'repo', 'get').mockImplementation(() => {
-  return {
-    owner: 'owner-name',
-    repo: 'repo-name'
-  }
-})
-
-const client = mockClient()
+function expectConfig(path: string) {
+  const client = github.getOctokit('token')
+  return expect(
+    getConfig(client, path)
+  )
+}
 
 function expectInvalid(path: string) {
-  return expect(
-    getConfig(client, `__tests__/fixtures/config-invalid/${path}`)
-  ).rejects.toThrow(/Config parse error:.+/)
+  return expectConfig(`__tests__/fixtures/config-invalid/${path}`)
+    .rejects.toThrow(/Config parse error:.+/)
 }
 
 function expectValid(path: string) {
-  return expect(
-    getConfig(client, `__tests__/fixtures/config-valid/${path}`)
-  ).resolves.toBeTruthy()
+  return expectConfig(`__tests__/fixtures/config-valid/${path}`)
+    .resolves.toBeTruthy()
 }
 
+beforeEach(() => {
+  jest.spyOn(github.context, 'repo', 'get').mockImplementation(() => {
+    return {
+      owner: 'owner',
+      repo: 'repo'
+    }
+  })
+
+  const contentsRegex = /\/repos\/owner\/repo\/contents\/(.+)/
+  nock('https://api.github.com')
+    .get(contentsRegex)
+    .reply(200, function () {
+      const path = contentsRegex.exec(this.req.path)?.[1] || ''
+      return {
+        content: fs.readFileSync(decodeURIComponent(path), 'utf8'),
+        encoding: 'utf-8'
+      }
+    })
+})
+
+afterAll(() => {
+  jest.clearAllMocks()
+})
+
 it('.github/governance.yml is valid', () => {
-  return expect(
-    getConfig(client, '.github/governance.yml')
-  ).resolves.toBeTruthy()
+  return expectConfig('.github/governance.yml')
+    .resolves.toBeTruthy()
 })
 
 describe('invalid config', () => {
@@ -156,9 +170,6 @@ describe('valid config', () => {
     })
     it('chat-ops-dispatch.yml is invalid', () => {
       return expectValid('chat-ops-dispatch.yml')
-    })
-    it('chat-ops-needs.yml is invalid', () => {
-      return expectValid('chat-ops-needs.yml')
     })
     it('chat-ops-none.yml is invalid', () => {
       return expectValid('chat-ops-none.yml')

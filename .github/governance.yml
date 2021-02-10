@@ -23,6 +23,7 @@ issue:
           * `/kind bug`
           * `/kind question`
 
+
     - prefix: area
       list: [ "ui-ux", "semantics", "translation", "security" ]
       multiple: true
@@ -36,6 +37,7 @@ issue:
           * `/area semantics`
           * `/area translation`
           * `/area security`
+
 
     - prefix: os
       list: [ "mac", "win", "linux" ]
@@ -52,19 +54,13 @@ issue:
     - cmd: /cc
       type: none
 
-    - cmd: "/assign (@.+)+"
+    - cmd: /assign
       type: assign
 
-    - cmd: "/area ui-ux"
+    - cmd: /area ui-ux
       type: comment
       comment: |
         @$AUTHOR: Do you want to...
-
-    - cmd: "/needs area"
-      type: needs
-
-    - cmd: "/needs kind"
-      type: needs
 
 pull-request:
   labels:
@@ -92,15 +88,9 @@ pull-request:
     - cmd: /cc
       type: none # does not trigger anything
 
-    - cmd: "/request (@.+)+"
+    - cmd: /request
       type: review
 
-    - cmd: "/retest oss/governance"
+    - cmd: /retest oss/governance
       type: dispatch
       dispatch: "OSS/Governance"
-
-    - cmd: "/needs area"
-      type: needs
-
-    - cmd: "/needs kind"
-      type: needs
