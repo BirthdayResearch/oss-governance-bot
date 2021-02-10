@@ -1,23 +1,23 @@
-import fs from "fs";
+import fs from 'fs'
 import * as github from '@actions/github'
-import nock from 'nock';
+import nock from 'nock'
 import {getConfig} from '../src/config'
 
 function expectConfig(path: string) {
   const client = github.getOctokit('token')
-  return expect(
-    getConfig(client, path)
-  )
+  return expect(getConfig(client, path))
 }
 
 function expectInvalid(path: string) {
-  return expectConfig(`__tests__/fixtures/config-invalid/${path}`)
-    .rejects.toThrow(/Config parse error:.+/)
+  return expectConfig(
+    `__tests__/fixtures/config-invalid/${path}`
+  ).rejects.toThrow(/Config parse error:.+/)
 }
 
 function expectValid(path: string) {
-  return expectConfig(`__tests__/fixtures/config-valid/${path}`)
-    .resolves.toBeTruthy()
+  return expectConfig(
+    `__tests__/fixtures/config-valid/${path}`
+  ).resolves.toBeTruthy()
 }
 
 beforeEach(() => {
@@ -45,8 +45,7 @@ afterAll(() => {
 })
 
 it('.github/governance.yml is valid', () => {
-  return expectConfig('.github/governance.yml')
-    .resolves.toBeTruthy()
+  return expectConfig('.github/governance.yml').resolves.toBeTruthy()
 })
 
 describe('invalid config', () => {

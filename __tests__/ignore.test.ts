@@ -1,6 +1,6 @@
 import ignore from '../src/ignore'
-import * as github from "@actions/github";
-import {Config} from "../src/config";
+import * as github from '@actions/github'
+import {Config} from '../src/config'
 
 beforeEach(() => {
   github.context.eventName = 'issue_comment'
@@ -26,7 +26,7 @@ function expectIgnore(expected: boolean) {
 
 it('default should not ignore', function () {
   expectIgnore(false)
-});
+})
 
 describe('sender', () => {
   it('should not ignore User', function () {
@@ -36,7 +36,7 @@ describe('sender', () => {
       }
     }
     expectIgnore(false)
-  });
+  })
 
   it('should ignore Bot', function () {
     github.context.payload = {
@@ -45,7 +45,7 @@ describe('sender', () => {
       }
     }
     expectIgnore(true)
-  });
+  })
 })
 
 describe('issue_comment', () => {
@@ -56,12 +56,12 @@ describe('issue_comment', () => {
   it('should not ignore created', function () {
     github.context.action = 'created'
     expectIgnore(false)
-  });
+  })
 
   it('should ignore edited', function () {
     github.context.action = 'edited'
     expectIgnore(true)
-  });
+  })
 })
 
 describe('pull_request', () => {
@@ -72,27 +72,27 @@ describe('pull_request', () => {
   it('should not ignore opened', function () {
     github.context.action = 'opened'
     expectIgnore(false)
-  });
+  })
 
   it('should not ignore opened', function () {
     github.context.action = 'opened'
     expectIgnore(false)
-  });
+  })
 
   it('should not ignore unlabeled', function () {
     github.context.action = 'unlabeled'
     expectIgnore(false)
-  });
+  })
 
   it('should ignore locked', function () {
     github.context.action = 'locked'
     expectIgnore(true)
-  });
+  })
 
   it('should ignore edited', function () {
     github.context.action = 'edited'
     expectIgnore(true)
-  });
+  })
 })
 
 describe('issues', () => {
@@ -103,25 +103,25 @@ describe('issues', () => {
   it('should not ignore opened', function () {
     github.context.action = 'opened'
     expectIgnore(false)
-  });
+  })
 
   it('should not ignore opened', function () {
     github.context.action = 'opened'
     expectIgnore(false)
-  });
+  })
 
   it('should not ignore unlabeled', function () {
     github.context.action = 'unlabeled'
     expectIgnore(false)
-  });
+  })
 
   it('should ignore assigned', function () {
     github.context.action = 'assigned'
     expectIgnore(true)
-  });
+  })
 
   it('should ignore edited', function () {
     github.context.action = 'edited'
     expectIgnore(true)
-  });
+  })
 })

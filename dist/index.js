@@ -67,9 +67,6 @@ const ChatOps = t.intersection([
             type: t.literal('close')
         }),
         t.type({
-            type: t.literal('needs')
-        }),
-        t.type({
             type: t.literal('none')
         }),
         t.type({
@@ -133,6 +130,76 @@ exports.getConfig = getConfig;
 
 /***/ }),
 
+/***/ 5404:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const github = __importStar(__nccwpck_require__(5438));
+function is(eventName, actions) {
+    return (github.context.eventName === eventName &&
+        actions.includes(github.context.action));
+}
+/**
+ * To prevent mistakes, this will ignore invalid workflow trigger
+ *
+ * @param config
+ */
+/* eslint no-unused-vars: off */
+function default_1(config) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const payload = github.context.payload;
+        // Ignore Non 'User' to prevent infinite loop
+        if (((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User') {
+            return true;
+        }
+        if (is('issue_comment', ['created'])) {
+            return false;
+        }
+        if (is('pull_request', ['opened', 'labeled', 'unlabeled'])) {
+            return false;
+        }
+        if (is('issues', ['opened', 'labeled', 'unlabeled'])) {
+            return false;
+        }
+        return true;
+    });
+}
+exports.default = default_1;
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -157,10 +224,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const config_1 = __nccwpck_require__(88);
+const ignore_1 = __importDefault(__nccwpck_require__(5404));
 const githubToken = core.getInput('github-token');
 const configPath = core.getInput('config-path', { required: true });
 const client = github.getOctokit(githubToken);
@@ -171,12 +242,22 @@ if (!(payload === null || payload === void 0 ? void 0 : payload.number)) {
 /* eslint github/no-then: off */
 config_1.getConfig(client, configPath)
     .then(config => {
-    return Promise.all([config]);
+    return Promise.all([ignore_1.default(config)]);
+})
+    .then(() => {
+    core.info('oss-governance: completed');
 })
     .catch(error => {
     core.error(error);
     core.setFailed(error.message);
 });
+// 1. parse config
+// 2. ignores (bots/workflow)
+// TODO(fuxing): 3. parse chat-ops (access-control)
+// TODO(fuxing): 4. run chat-ops (types)
+// TODO(fuxing): 5. produce prefixed labels (add/remove)
+// TODO(fuxing): 6. produce needs labels
+// TODO(fuxing): 7. produce comments + generate available commands
 
 
 /***/ }),

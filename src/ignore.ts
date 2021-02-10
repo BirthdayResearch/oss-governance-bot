@@ -2,7 +2,10 @@ import {Config} from './config'
 import * as github from '@actions/github'
 
 function is(eventName: string, actions: string[]): boolean {
-  return github.context.eventName === eventName && actions.includes(github.context.action)
+  return (
+    github.context.eventName === eventName &&
+    actions.includes(github.context.action)
+  )
 }
 
 /**
@@ -10,6 +13,7 @@ function is(eventName: string, actions: string[]): boolean {
  *
  * @param config
  */
+/* eslint no-unused-vars: off */
 export default async function (config: Config): Promise<boolean> {
   const payload = github.context.payload
 
@@ -22,11 +26,11 @@ export default async function (config: Config): Promise<boolean> {
     return false
   }
 
-  if (is('pull_request', ["opened", "labeled", "unlabeled"])) {
+  if (is('pull_request', ['opened', 'labeled', 'unlabeled'])) {
     return false
   }
 
-  if (is('issues', ["opened", "labeled", "unlabeled"])) {
+  if (is('issues', ['opened', 'labeled', 'unlabeled'])) {
     return false
   }
 

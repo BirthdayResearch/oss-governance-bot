@@ -14,6 +14,7 @@
   },
   "rules": {
     "import/no-namespace": "off",
+    "import/no-anonymous-default-export": "off",
     "no-redeclare": "off"
   },
   "env": {

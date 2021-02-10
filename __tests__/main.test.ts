@@ -1,8 +1,8 @@
 import * as core from '@actions/core'
-import * as github from "@actions/github";
-import waitForExpect from "wait-for-expect";
-import nock from "nock";
-import fs from "fs";
+import * as github from '@actions/github'
+import waitForExpect from 'wait-for-expect'
+import nock from 'nock'
+import fs from 'fs'
 
 beforeEach(() => {
   github.context.eventName = 'issue_comment'
@@ -21,7 +21,7 @@ beforeEach(() => {
   jest.spyOn(core, 'debug').mockImplementation(jest.fn())
   jest.spyOn(core, 'setFailed').mockImplementation(jest.fn())
 
-  jest.spyOn(core, 'getInput').mockImplementation((name) => {
+  jest.spyOn(core, 'getInput').mockImplementation(name => {
     switch (name) {
       case 'github-token':
         return 'token'
@@ -60,6 +60,6 @@ describe('main', () => {
 
     return waitForExpect(() => {
       expect(info).toBeCalledWith('oss-governance: completed')
-    });
-  });
+    })
+  })
 })
