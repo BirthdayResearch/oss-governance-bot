@@ -100,6 +100,7 @@ const Config = t.intersection([
 
 /* eslint no-redeclare: off */
 export type Label = t.TypeOf<typeof Label>
+export type AuthorAssociation = t.TypeOf<typeof AuthorAssociation>
 export type CommentChatOps = t.TypeOf<typeof CommentChatOps>
 export type DispatchChatOps = t.TypeOf<typeof DispatchChatOps>
 export type GenericChatOps = t.TypeOf<typeof GenericChatOps>
