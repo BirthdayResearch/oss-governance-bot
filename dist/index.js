@@ -517,7 +517,7 @@ ignore_1.default()
     if (!governance) {
         return;
     }
-    console.log(governance);
+    core.info(JSON.stringify(governance));
     yield operations_1.default(governance, yield command_1.default());
 }))
     .then(() => {

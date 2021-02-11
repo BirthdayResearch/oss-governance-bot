@@ -31,7 +31,7 @@ ignore()
       return
     }
 
-    console.log(governance)
+    core.info(JSON.stringify(governance))
 
     await operations(governance, await command())
   })
