@@ -2,12 +2,13 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import {Config, getConfig, Governance} from './config'
 import ignore from './ignore'
-
-const client = github.getOctokit(core.getInput('github-token'))
-const configPath = core.getInput('config-path', {required: true})
+import command from './command'
+import operations from './operations'
+import {initClient} from "./utils";
 
 export async function getGovernance(): Promise<Governance | undefined> {
-  const config: Config = await getConfig(client, configPath)
+  const configPath = core.getInput('config-path', {required: true})
+  const config: Config = await getConfig(initClient(), configPath)
 
   if (github.context.payload.issue) {
     return config.issue
@@ -26,7 +27,11 @@ ignore()
     if (toIgnore) return
 
     const governance = await getGovernance()
-    return Promise.all([governance])
+    if (!governance) {
+      return
+    }
+
+    await operations(governance, await command())
   })
   .then(() => {
     core.info('oss-governance: completed')
