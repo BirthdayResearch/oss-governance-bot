@@ -22,8 +22,8 @@ export async function getGovernance(): Promise<Governance | undefined> {
 
 /* eslint github/no-then: off */
 ignore()
-  .then(async ignore => {
-    if (ignore) return
+  .then(async toIgnore => {
+    if (toIgnore) return
 
     const governance = await getGovernance()
     return Promise.all([governance])

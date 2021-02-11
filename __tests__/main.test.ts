@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import waitForExpect from 'wait-for-expect'
 import nock from 'nock'
 import fs from 'fs'
 
@@ -61,8 +60,9 @@ describe('getGovernance', () => {
 
     const {getGovernance} = require('../src/main')
 
-    await expect(getGovernance()).rejects
-      .toThrow('Could not get pull_request or issue from context')
+    await expect(getGovernance()).rejects.toThrow(
+      'Could not get pull_request or issue from context'
+    )
   })
 
   it('should be issue', async function () {
@@ -76,7 +76,7 @@ describe('getGovernance', () => {
     const governance = await getGovernance()
 
     expect(governance?.labels?.length).toBe(5)
-  });
+  })
 
   it('should be pull request', async function () {
     github.context.payload = {
@@ -88,31 +88,5 @@ describe('getGovernance', () => {
     const {getGovernance} = require('../src/main')
     const governance = await getGovernance()
     expect(governance?.labels?.length).toBe(2)
-  });
-})
-
-describe('main', () => {
-  it('should be completed', function () {
-    jest.isolateModules(() => {
-      require('../src/main');
-
-      return waitForExpect(() => {
-        expect(error).not.toHaveBeenCalled()
-        expect(info).toBeCalledWith('oss-governance: completed')
-      })
-    });
-  })
-
-  it('should be ignored', function () {
-    jest.isolateModules(() => {
-      github.context.payload = {}
-
-      require('../src/main');
-
-      return waitForExpect(() => {
-        expect(error).not.toHaveBeenCalled()
-        expect(info).toBeCalledWith('oss-governance: completed')
-      })
-    })
   })
 })

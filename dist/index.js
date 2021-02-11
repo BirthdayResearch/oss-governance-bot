@@ -58,32 +58,35 @@ const Label = t.intersection([
         })
     })
 ]);
-const ChatOps = t.intersection([
+const CommentChatOps = t.type({
+    cmd: t.string,
+    type: t.literal('comment'),
+    comment: t.string
+});
+const DispatchChatOps = t.type({
+    cmd: t.string,
+    type: t.literal('dispatch'),
+    dispatch: t.string
+});
+const ChatOps = t.union([
     t.type({
-        cmd: t.string
+        cmd: t.string,
+        type: t.literal('close')
     }),
-    t.union([
-        t.type({
-            type: t.literal('close')
-        }),
-        t.type({
-            type: t.literal('none')
-        }),
-        t.type({
-            type: t.literal('assign')
-        }),
-        t.type({
-            type: t.literal('review')
-        }),
-        t.type({
-            type: t.literal('comment'),
-            comment: t.string
-        }),
-        t.type({
-            type: t.literal('dispatch'),
-            dispatch: t.string
-        })
-    ])
+    t.type({
+        cmd: t.string,
+        type: t.literal('none')
+    }),
+    t.type({
+        cmd: t.string,
+        type: t.literal('assign')
+    }),
+    t.type({
+        cmd: t.string,
+        type: t.literal('review')
+    }),
+    CommentChatOps,
+    DispatchChatOps
 ]);
 const Governance = t.partial({
     labels: t.array(Label),
@@ -171,11 +174,8 @@ function is(eventName, actions) {
 }
 /**
  * To prevent mistakes, this will ignore invalid workflow trigger
- *
- * @param config
  */
-/* eslint no-unused-vars: off */
-function default_1(config) {
+function default_1() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const payload = github.context.payload;
@@ -224,26 +224,47 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getGovernance = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const config_1 = __nccwpck_require__(88);
 const ignore_1 = __importDefault(__nccwpck_require__(5404));
-const githubToken = core.getInput('github-token');
+const client = github.getOctokit(core.getInput('github-token'));
 const configPath = core.getInput('config-path', { required: true });
-const client = github.getOctokit(githubToken);
-const payload = github.context.payload.pull_request || github.context.payload.issue;
-if (!(payload === null || payload === void 0 ? void 0 : payload.number)) {
-    throw new Error('Could not get issue_number from pull_request or issue from context');
+function getGovernance() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const config = yield config_1.getConfig(client, configPath);
+        if (github.context.payload.issue) {
+            return config.issue;
+        }
+        if (github.context.payload.pull_request) {
+            return config['pull-request'];
+        }
+        throw new Error('Could not get pull_request or issue from context');
+    });
 }
+exports.getGovernance = getGovernance;
 /* eslint github/no-then: off */
-config_1.getConfig(client, configPath)
-    .then(config => {
-    return Promise.all([ignore_1.default(config)]);
-})
+ignore_1.default()
+    .then((toIgnore) => __awaiter(void 0, void 0, void 0, function* () {
+    if (toIgnore)
+        return;
+    const governance = yield getGovernance();
+    return Promise.all([governance]);
+}))
     .then(() => {
     core.info('oss-governance: completed');
 })
@@ -251,13 +272,6 @@ config_1.getConfig(client, configPath)
     core.error(error);
     core.setFailed(error.message);
 });
-// 1. parse config
-// 2. ignores (bots/workflow)
-// TODO(fuxing): 3. parse chat-ops (access-control)
-// TODO(fuxing): 4. run chat-ops (types)
-// TODO(fuxing): 5. produce prefixed labels (add/remove)
-// TODO(fuxing): 6. produce needs labels
-// TODO(fuxing): 7. produce comments + generate available commands
 
 
 /***/ }),

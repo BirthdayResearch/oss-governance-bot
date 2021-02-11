@@ -19,32 +19,37 @@ const Label = t.intersection([
   })
 ])
 
-const ChatOps = t.intersection([
+const CommentChatOps = t.type({
+  cmd: t.string,
+  type: t.literal('comment'),
+  comment: t.string
+})
+
+const DispatchChatOps = t.type({
+  cmd: t.string,
+  type: t.literal('dispatch'),
+  dispatch: t.string
+})
+
+const ChatOps = t.union([
   t.type({
-    cmd: t.string
+    cmd: t.string,
+    type: t.literal('close')
   }),
-  t.union([
-    t.type({
-      type: t.literal('close')
-    }),
-    t.type({
-      type: t.literal('none')
-    }),
-    t.type({
-      type: t.literal('assign')
-    }),
-    t.type({
-      type: t.literal('review')
-    }),
-    t.type({
-      type: t.literal('comment'),
-      comment: t.string
-    }),
-    t.type({
-      type: t.literal('dispatch'),
-      dispatch: t.string
-    })
-  ])
+  t.type({
+    cmd: t.string,
+    type: t.literal('none')
+  }),
+  t.type({
+    cmd: t.string,
+    type: t.literal('assign')
+  }),
+  t.type({
+    cmd: t.string,
+    type: t.literal('review')
+  }),
+  CommentChatOps,
+  DispatchChatOps
 ])
 
 const Governance = t.partial({
@@ -64,6 +69,8 @@ const Config = t.intersection([
 
 /* eslint no-redeclare: off */
 export type Label = t.TypeOf<typeof Label>
+export type CommentChatOps = t.TypeOf<typeof CommentChatOps>
+export type DispatchChatOps = t.TypeOf<typeof DispatchChatOps>
 export type ChatOps = t.TypeOf<typeof ChatOps>
 export type Governance = t.TypeOf<typeof Governance>
 export type Config = t.TypeOf<typeof Config>
