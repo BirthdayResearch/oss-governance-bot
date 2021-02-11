@@ -18,10 +18,12 @@ export class ArgsCommand extends Command {
   public readonly args: string[] = []
 
   constructor(text: string, prefix: string) {
-    super(text);
+    super(text)
 
     const postfix = this.text.split(prefix)[1]
-    this.args = postfix.trim().split(' ')
+    if (postfix) {
+      this.args = postfix.trim().split(' ')
+    }
   }
 }
 
@@ -32,12 +34,14 @@ export class Commands {
     this.commands = commands
   }
 
-  prefix(text: string): ArgsCommand[] {
-    return this.commands.filter(command => {
-      return command.text.startsWith(text)
-    }).map(value => {
-      return new ArgsCommand(value.text, text)
-    })
+  prefix(start: string): ArgsCommand[] {
+    return this.commands
+      .filter(command => {
+        return command.text.startsWith(start)
+      })
+      .map(value => {
+        return new ArgsCommand(value.text, start + ' ')
+      })
   }
 }
 

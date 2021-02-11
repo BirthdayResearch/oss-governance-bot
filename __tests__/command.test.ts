@@ -10,7 +10,7 @@ describe('getCommands', () => {
       }
     }
 
-    expect(getCommands().map((cmd) => cmd.text)).toStrictEqual(commands)
+    expect(getCommands().map(cmd => cmd.text)).toStrictEqual(commands)
   }
 
   it('multi line', () => {
@@ -125,9 +125,7 @@ describe('commands', () => {
     expect(commands.prefix('@tommy').length).toBeFalsy()
     expect(commands.prefix('/review').length).toBeTruthy()
     expect(commands.prefix('/review @fuxing').length).toBeTruthy()
-    expect(commands.prefix('/review @fuxing')[0].args).toStrictEqual([
-      '@tommy'
-    ])
+    expect(commands.prefix('/review @fuxing')[0].args).toStrictEqual(['@tommy'])
     expect(commands.prefix('/review')[0].args).toStrictEqual([
       '@fuxing',
       '@tommy'

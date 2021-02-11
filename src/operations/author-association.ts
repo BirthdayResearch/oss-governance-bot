@@ -1,5 +1,5 @@
-import {AuthorAssociation} from "../config";
-import * as github from "@actions/github";
+import {AuthorAssociation} from '../config'
+import * as github from '@actions/github'
 
 function getAuthorAssociation(): string | undefined {
   const payload = github.context.payload
@@ -7,7 +7,9 @@ function getAuthorAssociation(): string | undefined {
   return current?.author_association
 }
 
-export function isAuthorAssociationAllowed(authorAssociation: AuthorAssociation | undefined): boolean {
+export function isAuthorAssociationAllowed(
+  authorAssociation: AuthorAssociation | undefined
+): boolean {
   if (!authorAssociation) {
     return true
   }

@@ -23,7 +23,7 @@ const AuthorAssociation = t.partial({
   // Author has no association with the repository.
   none: t.boolean,
   // Author is the owner of the repository.
-  owner: t.boolean,
+  owner: t.boolean
 })
 
 const Label = t.intersection([
@@ -34,9 +34,12 @@ const Label = t.intersection([
   t.partial({
     multiple: t.boolean,
     author_association: AuthorAssociation,
-    needs: t.partial({
-      comment: t.string
-    })
+    needs: t.union([
+      t.boolean,
+      t.partial({
+        comment: t.string
+      })
+    ])
   })
 ])
 
@@ -44,10 +47,10 @@ const CommentChatOps = t.intersection([
   t.type({
     cmd: t.string,
     type: t.literal('comment'),
-    comment: t.string,
+    comment: t.string
   }),
   t.partial({
-    author_association: AuthorAssociation,
+    author_association: AuthorAssociation
   })
 ])
 
@@ -55,10 +58,10 @@ const DispatchChatOps = t.intersection([
   t.type({
     cmd: t.string,
     type: t.literal('dispatch'),
-    dispatch: t.string,
+    dispatch: t.string
   }),
   t.partial({
-    author_association: AuthorAssociation,
+    author_association: AuthorAssociation
   })
 ])
 
@@ -69,19 +72,15 @@ const GenericChatOps = t.intersection([
       close: null,
       none: null,
       assign: null,
-      review: null,
+      review: null
     })
   }),
   t.partial({
-    author_association: AuthorAssociation,
+    author_association: AuthorAssociation
   })
 ])
 
-const ChatOps = t.union([
-  GenericChatOps,
-  CommentChatOps,
-  DispatchChatOps
-])
+const ChatOps = t.union([GenericChatOps, CommentChatOps, DispatchChatOps])
 
 const Governance = t.partial({
   labels: t.array(Label),

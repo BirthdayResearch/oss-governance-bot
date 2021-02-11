@@ -4,7 +4,7 @@ import {Config, getConfig, Governance} from './config'
 import ignore from './ignore'
 import command from './command'
 import operations from './operations'
-import {initClient} from "./github";
+import {initClient} from './github'
 
 export async function getGovernance(): Promise<Governance | undefined> {
   const configPath = core.getInput('config-path', {required: true})

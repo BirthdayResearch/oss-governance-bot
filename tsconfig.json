@@ -13,7 +13,6 @@
   },
   "exclude": [
     "node_modules",
-    "__tests__/**.ts",
-    "__mocks__/client.ts"
+    "__tests__/**/*.ts"
   ]
 }
