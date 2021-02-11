@@ -47,11 +47,9 @@ beforeEach(() => {
   nock('https://api.github.com')
     .get(contentsRegex)
     .reply(200, function () {
-      let path = contentsRegex.exec(this.req.path)?.[1] || ''
-      path = decodeURIComponent(path)
-      path = path.split('?')[0]
+      const path = contentsRegex.exec(this.req.path)?.[1] || ''
       return {
-        content: fs.readFileSync(path, 'utf8'),
+        content: fs.readFileSync(decodeURIComponent(path), 'utf8'),
         encoding: 'utf-8'
       }
     })

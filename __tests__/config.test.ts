@@ -28,7 +28,7 @@ beforeEach(() => {
     }
   })
 
-  const contentsRegex = /\/repos\/owner\/repo\/contents\/(.+)/
+  const contentsRegex = /\/repos\/owner\/repo\/contents\/([^?]+).*/
   nock('https://api.github.com')
     .get(contentsRegex)
     .reply(200, function () {

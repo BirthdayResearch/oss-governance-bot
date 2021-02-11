@@ -31,8 +31,6 @@ ignore()
       return
     }
 
-    core.info(JSON.stringify(governance))
-
     await operations(governance, await command())
   })
   .then(() => {

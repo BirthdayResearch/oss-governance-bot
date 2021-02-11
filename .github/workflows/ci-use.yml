@@ -12,15 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/github-script@v3
-        with:
-          script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `<details><summary>Debug Payload</summary>\n\n\`\`\`json\n${JSON.stringify(context, undefined, 2)}\n\`\`\`\n\n</details>`
-            })
+#      - uses: actions/github-script@v3
+#        with:
+#          script: |
+#            github.issues.createComment({
+#              issue_number: context.issue.number,
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              body: `<details><summary>Debug Payload</summary>\n\n\`\`\`json\n${JSON.stringify(context, undefined, 2)}\n\`\`\`\n\n</details>`
+#            })
 
       - uses: ./
       - uses: fuxingloh/multi-labeler@v1
