@@ -2,16 +2,26 @@ import * as github from '@actions/github'
 
 export class Command {
   public readonly text: string
-
-  public readonly cmd: string
-  public readonly args: string[]
+  public readonly args: string[] = []
 
   constructor(text: string) {
     this.text = text
+  }
 
-    const strings = text.split(' ')
-    this.cmd = strings[0]
-    this.args = strings.slice(1)
+  getArgs(prefix: string): string[] {
+    const postfix = this.text.split(prefix)[1]
+    return postfix.trim().split(' ')
+  }
+}
+
+export class ArgsCommand extends Command {
+  public readonly args: string[] = []
+
+  constructor(text: string, prefix: string) {
+    super(text);
+
+    const postfix = this.text.split(prefix)[1]
+    this.args = postfix.trim().split(' ')
   }
 }
 
@@ -22,9 +32,11 @@ export class Commands {
     this.commands = commands
   }
 
-  prefix(cmd: string): Command[] {
+  prefix(text: string): ArgsCommand[] {
     return this.commands.filter(command => {
-      return command.text.startsWith(cmd)
+      return command.text.startsWith(text)
+    }).map(value => {
+      return new ArgsCommand(value.text, text)
     })
   }
 }

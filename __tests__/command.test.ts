@@ -10,7 +10,7 @@ describe('getCommands', () => {
       }
     }
 
-    expect(getCommands().map(({text}) => text)).toStrictEqual(commands)
+    expect(getCommands().map((cmd) => cmd.text)).toStrictEqual(commands)
   }
 
   it('multi line', () => {
@@ -98,10 +98,7 @@ describe('getCommands', () => {
 })
 
 describe('commands', () => {
-  async function getCommands(
-    body: string,
-    callback: (commands: Commands) => void
-  ) {
+  async function getCommands(body: string): Promise<Commands> {
     github.context.payload = {
       issue: {
         number: 1,
@@ -109,43 +106,45 @@ describe('commands', () => {
       }
     }
 
-    const commands = await command()
-    callback(commands)
+    return await command()
   }
 
-  it('should multi line', () => {
-    getCommands('/area ui/ux\n/needs label', commands => {
-      expect(commands.prefix('/area').length).toBeTruthy()
-      expect(commands.prefix('/area')[0].args[0]).toBe('ui/ux')
-      expect(commands.prefix('/needs').length).toBeTruthy()
-      expect(commands.prefix('/needs')[0].args[0]).toBe('label')
-    })
+  it('should multi line', async () => {
+    const commands = await getCommands('/area ui/ux\n/needs label')
+
+    expect(commands.prefix('/area').length).toBeTruthy()
+    expect(commands.prefix('/area')[0].args[0]).toBe('ui/ux')
+    expect(commands.prefix('/needs').length).toBeTruthy()
+    expect(commands.prefix('/needs')[0].args[0]).toBe('label')
   })
 
-  it('should authors', function () {
-    getCommands('/review @fuxing @tommy', commands => {
-      expect(commands.prefix('@fuxing').length).toBeFalsy()
-      expect(commands.prefix('@tommy').length).toBeFalsy()
-      expect(commands.prefix('/review').length).toBeTruthy()
-      expect(commands.prefix('/review @fuxing').length).toBeTruthy()
-      expect(commands.prefix('/review')[0].args).toStrictEqual([
-        '@fuxing',
-        '@tommy'
-      ])
-    })
+  it('should authors', async () => {
+    const commands = await getCommands('/review @fuxing @tommy')
+
+    expect(commands.prefix('@fuxing').length).toBeFalsy()
+    expect(commands.prefix('@tommy').length).toBeFalsy()
+    expect(commands.prefix('/review').length).toBeTruthy()
+    expect(commands.prefix('/review @fuxing').length).toBeTruthy()
+    expect(commands.prefix('/review @fuxing')[0].args).toStrictEqual([
+      '@tommy'
+    ])
+    expect(commands.prefix('/review')[0].args).toStrictEqual([
+      '@fuxing',
+      '@tommy'
+    ])
   })
 
-  it('should args', () => {
-    getCommands('no\n/why a b c\nnah', commands => {
-      expect(commands.prefix('no').length).toBeFalsy()
-      expect(commands.prefix('nah').length).toBeFalsy()
-      expect(commands.prefix('/why').length).toBeTruthy()
-      expect(commands.prefix('/why a').length).toBeTruthy()
-      expect(commands.prefix('/why a b').length).toBeTruthy()
-      expect(commands.prefix('/why a b c').length).toBeTruthy()
-      expect(commands.prefix('/why')[0].args).toStrictEqual(['a', 'b', 'c'])
-      expect(commands.prefix('/why a')[0].args).toStrictEqual(['a', 'b', 'c'])
-    })
+  it('should args', async () => {
+    const commands = await getCommands('no\n/why a b c\nnah')
+
+    expect(commands.prefix('no').length).toBeFalsy()
+    expect(commands.prefix('nah').length).toBeFalsy()
+    expect(commands.prefix('/why').length).toBeTruthy()
+    expect(commands.prefix('/why a').length).toBeTruthy()
+    expect(commands.prefix('/why a b').length).toBeTruthy()
+    expect(commands.prefix('/why a b c').length).toBeTruthy()
+    expect(commands.prefix('/why')[0].args).toStrictEqual(['a', 'b', 'c'])
+    expect(commands.prefix('/why a')[0].args).toStrictEqual(['b', 'c'])
   })
 
   describe('issue', () => {
