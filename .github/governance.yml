@@ -5,7 +5,10 @@ issue:
     - prefix: triage
       list: [ "accepted" ]
       multiple: false
-      contributor: true
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
       needs:
         comment: |
           @$AUTHOR: This issue is currently awaiting triage.
@@ -44,23 +47,36 @@ issue:
     - prefix: priority
       multiple: false
       list: [ "urgent-now", "important-soon" ]
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
 
-  chat-ops:
+  chat_ops:
     - cmd: /close
       type: close
+      author_association:
+        author: true
+        collaborator: true
+        member: true
+        owner: true
 
     - cmd: /cc
       type: none
 
     - cmd: /assign
       type: assign
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
 
     - cmd: /area ui-ux
       type: comment
       comment: |
         @$AUTHOR: Do you want to...
 
-pull-request:
+pull_request:
   labels:
     - prefix: kind
       multiple: false
@@ -78,17 +94,35 @@ pull-request:
     - prefix: priority
       multiple: false
       list: [ "urgent-now", "important-soon" ]
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
 
-  chat-ops:
+  chat_ops:
     - cmd: /close
       type: close
+      author_association:
+        author: true
+        collaborator: true
+        member: true
+        owner: true
 
     - cmd: /cc
       type: none # does not trigger anything
 
     - cmd: /request
       type: review
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
 
     - cmd: /retest oss/governance
       type: dispatch
       dispatch: "OSS/Governance"
+      author_association:
+        author: true
+        collaborator: true
+        member: true
+        owner: true

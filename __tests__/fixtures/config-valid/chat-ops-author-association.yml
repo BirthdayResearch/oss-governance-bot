@@ -1,0 +1,16 @@
+version: v1
+
+pull_request:
+  chat_ops:
+    - cmd: "/author"
+      type: none
+      author_association:
+        author: false
+        collaborator: false
+        contributor: false
+        first_timer: false
+        first_time_contributor: false
+        mannequin: false
+        member: false
+        none: false
+        owner: false

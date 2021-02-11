@@ -5,7 +5,7 @@ issue:
     - prefix: triage
       list: [ "accepted" ]
 
-pull-request:
+pull_request:
   labels:
     - prefix: kind
       list: [ "feature", "fix", "chore", "docs", "refactor" ]

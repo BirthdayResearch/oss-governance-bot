@@ -4,4 +4,6 @@ issue:
   labels:
     - prefix: triage
       list: [ "accepted" ]
-      contributor: true
+      multiple: false
+      author_association:
+        author: true

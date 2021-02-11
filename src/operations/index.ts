@@ -49,7 +49,7 @@ export default async function (governance: Governance, commands: Commands): Prom
     await labels(governance.labels, commands)
   }
 
-  if (governance["chat-ops"]) {
-    await chatOps(governance["chat-ops"], commands)
+  if (governance.chat_ops) {
+    await chatOps(governance.chat_ops, commands)
   }
 }

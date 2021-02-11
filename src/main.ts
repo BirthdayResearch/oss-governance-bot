@@ -15,7 +15,7 @@ export async function getGovernance(): Promise<Governance | undefined> {
   }
 
   if (github.context.payload.pull_request) {
-    return config['pull-request']
+    return config.pull_request
   }
 
   throw new Error('Could not get pull_request or issue from context')

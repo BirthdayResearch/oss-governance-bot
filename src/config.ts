@@ -5,6 +5,27 @@ import {isRight} from 'fp-ts/Either'
 import {GitHub} from '@actions/github/lib/utils'
 import * as github from '@actions/github'
 
+const AuthorAssociation = t.partial({
+  // Author of issue or pull_request
+  author: t.boolean,
+  // Author has been invited to collaborate on the repository.
+  collaborator: t.boolean,
+  // Author has previously committed to the repository.
+  contributor: t.boolean,
+  // Author has not previously committed to GitHub.
+  first_timer: t.boolean,
+  // Author has not previously committed to the repository.
+  first_time_contributor: t.boolean,
+  // Author is a placeholder for an unclaimed user.
+  mannequin: t.boolean,
+  // Author is a member of the organization that owns the repository.
+  member: t.boolean,
+  // Author has no association with the repository.
+  none: t.boolean,
+  // Author is the owner of the repository.
+  owner: t.boolean,
+})
+
 const Label = t.intersection([
   t.type({
     prefix: t.string,
@@ -12,49 +33,59 @@ const Label = t.intersection([
   }),
   t.partial({
     multiple: t.boolean,
-    contributor: t.boolean,
+    author_association: AuthorAssociation,
     needs: t.partial({
       comment: t.string
     })
   })
 ])
 
-const CommentChatOps = t.type({
-  cmd: t.string,
-  type: t.literal('comment'),
-  comment: t.string
-})
+const CommentChatOps = t.intersection([
+  t.type({
+    cmd: t.string,
+    type: t.literal('comment'),
+    comment: t.string,
+  }),
+  t.partial({
+    author_association: AuthorAssociation,
+  })
+])
 
-const DispatchChatOps = t.type({
-  cmd: t.string,
-  type: t.literal('dispatch'),
-  dispatch: t.string
-})
+const DispatchChatOps = t.intersection([
+  t.type({
+    cmd: t.string,
+    type: t.literal('dispatch'),
+    dispatch: t.string,
+  }),
+  t.partial({
+    author_association: AuthorAssociation,
+  })
+])
+
+const GenericChatOps = t.intersection([
+  t.type({
+    cmd: t.string,
+    type: t.keyof({
+      close: null,
+      none: null,
+      assign: null,
+      review: null,
+    })
+  }),
+  t.partial({
+    author_association: AuthorAssociation,
+  })
+])
 
 const ChatOps = t.union([
-  t.type({
-    cmd: t.string,
-    type: t.literal('close')
-  }),
-  t.type({
-    cmd: t.string,
-    type: t.literal('none')
-  }),
-  t.type({
-    cmd: t.string,
-    type: t.literal('assign')
-  }),
-  t.type({
-    cmd: t.string,
-    type: t.literal('review')
-  }),
+  GenericChatOps,
   CommentChatOps,
   DispatchChatOps
 ])
 
 const Governance = t.partial({
   labels: t.array(Label),
-  'chat-ops': t.array(ChatOps)
+  chat_ops: t.array(ChatOps)
 })
 
 const Config = t.intersection([
@@ -63,7 +94,7 @@ const Config = t.intersection([
   }),
   t.partial({
     issue: Governance,
-    'pull-request': Governance
+    pull_request: Governance
   })
 ])
 
@@ -71,11 +102,12 @@ const Config = t.intersection([
 export type Label = t.TypeOf<typeof Label>
 export type CommentChatOps = t.TypeOf<typeof CommentChatOps>
 export type DispatchChatOps = t.TypeOf<typeof DispatchChatOps>
+export type GenericChatOps = t.TypeOf<typeof GenericChatOps>
 export type ChatOps = t.TypeOf<typeof ChatOps>
 export type Governance = t.TypeOf<typeof Governance>
 export type Config = t.TypeOf<typeof Config>
 
-export function parse(content: string): Config {
+function parse(content: string): Config {
   const config = load(content)
 
   const decoded = Config.decode(config)
