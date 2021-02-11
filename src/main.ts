@@ -31,6 +31,8 @@ ignore()
       return
     }
 
+    console.log(governance)
+
     await operations(governance, await command())
   })
   .then(() => {
