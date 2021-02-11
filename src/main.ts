@@ -1,25 +1,32 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {getConfig} from './config'
+import {Config, getConfig, Governance} from './config'
 import ignore from './ignore'
 
-const githubToken = core.getInput('github-token')
+const client = github.getOctokit(core.getInput('github-token'))
 const configPath = core.getInput('config-path', {required: true})
 
-const client = github.getOctokit(githubToken)
-const payload =
-  github.context.payload.pull_request || github.context.payload.issue
+export async function getGovernance(): Promise<Governance | undefined> {
+  const config: Config = await getConfig(client, configPath)
 
-if (!payload?.number) {
-  throw new Error(
-    'Could not get issue_number from pull_request or issue from context'
-  )
+  if (github.context.payload.issue) {
+    return config.issue
+  }
+
+  if (github.context.payload.pull_request) {
+    return config['pull-request']
+  }
+
+  throw new Error('Could not get pull_request or issue from context')
 }
 
 /* eslint github/no-then: off */
-getConfig(client, configPath)
-  .then(config => {
-    return Promise.all([ignore()])
+ignore()
+  .then(async ignore => {
+    if (ignore) return
+
+    const governance = await getGovernance()
+    return Promise.all([governance])
   })
   .then(() => {
     core.info('oss-governance: completed')
@@ -28,11 +35,3 @@ getConfig(client, configPath)
     core.error(error)
     core.setFailed(error.message)
   })
-
-// 1. parse config
-// 2. ignores (bots/workflow)
-// TODO(fuxing): 3. parse chat-ops (access-control)
-// TODO(fuxing): 4. run chat-ops (types)
-// TODO(fuxing): 5. produce prefixed labels (add/remove)
-// TODO(fuxing): 6. produce needs labels
-// TODO(fuxing): 7. produce comments + generate available commands

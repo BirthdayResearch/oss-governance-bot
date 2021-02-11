@@ -4,6 +4,9 @@ import waitForExpect from 'wait-for-expect'
 import nock from 'nock'
 import fs from 'fs'
 
+const info = jest.fn()
+const error = jest.fn()
+
 beforeEach(() => {
   github.context.eventName = 'issue_comment'
   github.context.action = 'created'
@@ -16,8 +19,9 @@ beforeEach(() => {
     }
   }
 
+  jest.spyOn(core, 'info').mockImplementation(info)
+  jest.spyOn(core, 'error').mockImplementation(error)
   jest.spyOn(core, 'warning').mockImplementation(jest.fn())
-  jest.spyOn(core, 'info').mockImplementation(jest.fn())
   jest.spyOn(core, 'debug').mockImplementation(jest.fn())
   jest.spyOn(core, 'setFailed').mockImplementation(jest.fn())
 
@@ -51,15 +55,64 @@ beforeEach(() => {
     })
 })
 
+describe('getGovernance', () => {
+  it('should error not get from context', async function () {
+    github.context.payload = {}
+
+    const {getGovernance} = require('../src/main')
+
+    await expect(getGovernance()).rejects
+      .toThrow('Could not get pull_request or issue from context')
+  })
+
+  it('should be issue', async function () {
+    github.context.payload = {
+      issue: {
+        number: 1
+      }
+    }
+
+    const {getGovernance} = require('../src/main')
+    const governance = await getGovernance()
+
+    expect(governance?.labels?.length).toBe(5)
+  });
+
+  it('should be pull request', async function () {
+    github.context.payload = {
+      pull_request: {
+        number: 1
+      }
+    }
+
+    const {getGovernance} = require('../src/main')
+    const governance = await getGovernance()
+    expect(governance?.labels?.length).toBe(2)
+  });
+})
+
 describe('main', () => {
   it('should be completed', function () {
-    const info = jest.fn()
-    jest.spyOn(core, 'info').mockImplementation(info)
+    jest.isolateModules(() => {
+      require('../src/main');
 
-    require('../src/main')
+      return waitForExpect(() => {
+        expect(error).not.toHaveBeenCalled()
+        expect(info).toBeCalledWith('oss-governance: completed')
+      })
+    });
+  })
 
-    return waitForExpect(() => {
-      expect(info).toBeCalledWith('oss-governance: completed')
+  it('should be ignored', function () {
+    jest.isolateModules(() => {
+      github.context.payload = {}
+
+      require('../src/main');
+
+      return waitForExpect(() => {
+        expect(error).not.toHaveBeenCalled()
+        expect(info).toBeCalledWith('oss-governance: completed')
+      })
     })
   })
 })
