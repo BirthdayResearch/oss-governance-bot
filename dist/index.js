@@ -186,16 +186,6 @@ const CommentChatOps = t.intersection([
         author_association: AuthorAssociation
     })
 ]);
-const DispatchChatOps = t.intersection([
-    t.type({
-        cmd: t.string,
-        type: t.literal('dispatch'),
-        dispatch: t.string
-    }),
-    t.partial({
-        author_association: AuthorAssociation
-    })
-]);
 const LabelChatOps = t.intersection([
     t.type({
         cmd: t.string,
@@ -223,12 +213,7 @@ const GenericChatOps = t.intersection([
         author_association: AuthorAssociation
     })
 ]);
-const ChatOps = t.union([
-    GenericChatOps,
-    LabelChatOps,
-    CommentChatOps,
-    DispatchChatOps
-]);
+const ChatOps = t.union([GenericChatOps, LabelChatOps, CommentChatOps]);
 const Governance = t.partial({
     labels: t.array(Label),
     chat_ops: t.array(ChatOps)
@@ -813,9 +798,6 @@ function processChatOps(chatOps, commands) {
                 case 'label':
                     yield label_chat_ops_1.default(chatOp, commands);
                     break;
-                // case 'dispatch':
-                //   await dispatch(chatOp, commands)
-                //   break
             }
         }
     });

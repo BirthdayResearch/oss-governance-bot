@@ -1,6 +1,0 @@
-version: v1
-
-issue:
-  chat_ops:
-    - cmd: "/dispatch"
-      type: dispatch

@@ -83,9 +83,6 @@ describe('invalid config', () => {
       it('issue-chat-ops-comment.yml is invalid', () => {
         return expectInvalid('issue-chat-ops-comment.yml')
       })
-      it('issue-chat-ops-dispatch.yml is invalid', () => {
-        return expectInvalid('issue-chat-ops-dispatch.yml')
-      })
       it('issue-chat-ops-label.yml is invalid', () => {
         return expectInvalid('issue-chat-ops-label.yml')
       })
@@ -123,9 +120,6 @@ describe('invalid config', () => {
       })
       it('pr-chat-ops-comment.yml is invalid', () => {
         return expectInvalid('pr-chat-ops-comment.yml')
-      })
-      it('pr-chat-ops-dispatch.yml is invalid', () => {
-        return expectInvalid('pr-chat-ops-dispatch.yml')
       })
       it('pr-chat-ops-label.yml is invalid', () => {
         return expectInvalid('pr-chat-ops-label.yml')
@@ -217,9 +211,6 @@ describe('valid config', () => {
     })
     it('chat-ops-comment.yml is valid', () => {
       return expectValid('chat-ops-comment.yml')
-    })
-    it('chat-ops-dispatch.yml is valid', () => {
-      return expectValid('chat-ops-dispatch.yml')
     })
     it('chat-ops-none.yml is valid', () => {
       return expectValid('chat-ops-none.yml')
