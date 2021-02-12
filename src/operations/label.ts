@@ -1,21 +1,87 @@
 import {Label} from '../config'
 import {Commands} from '../command'
-import {difference} from 'lodash'
 import {addLabels, getLabels, postComment, removeLabels} from '../github'
+import * as github from '@actions/github'
 
-async function updateLabels(labels: string[]): Promise<void> {
-  const removes = getLabels().filter(name => {
-    return !labels.includes(name)
-  })
+class PrefixLabelSet {
+  public prefix: string
+  public needs: boolean = false
+  public labels: Set<string> = new Set<string>()
+  public last: string | undefined
+  private existing: string[] = []
 
-  await addLabels(labels)
-  await removeLabels(removes)
+  constructor(prefix: string) {
+    this.prefix = prefix
+
+    for (const label of getLabels()) {
+      if (label === `needs/${prefix}`) {
+        this.existing.push(label)
+        this.needs = true
+      } else if (label.startsWith(`${prefix}/`)) {
+        this.existing.push(label)
+        this.add(label)
+      }
+    }
+  }
+
+  remove(label: string) {
+    this.labels.delete(label)
+  }
+
+  add(label: string) {
+    this.labels.add(label)
+    this.last = label
+  }
+
+  setMultiple(bool: boolean) {
+    if (bool) {
+      return
+    }
+
+    this.labels.clear()
+    if (this.last) {
+      this.labels.add(this.last)
+    }
+  }
+
+  setNeeds(bool: boolean) {
+    this.needs = bool && this.labels.size === 0
+  }
+
+  async persist() {
+    const removes = []
+    const adds = []
+
+    if (this.needs) {
+      adds.push(`needs/${this.prefix}`)
+    }
+
+    for (const string of this.existing) {
+      if (!this.labels.has(string)) {
+        removes.push(string)
+      }
+    }
+
+    for (const label of this.labels) {
+      if (!this.existing.includes(label)) {
+        adds.push(label)
+      }
+    }
+
+    await removeLabels(removes)
+    await addLabels(adds)
+  }
 }
 
 export default async function (
   label: Label,
   commands: Commands
 ): Promise<void> {
+  const labelSet = new PrefixLabelSet(label.prefix)
+
+  /**
+   * Check if labeled is required
+   */
   function needs() {
     const needCommands = [
       ...commands.prefix(`/needs ${label.prefix}`),
@@ -26,45 +92,58 @@ export default async function (
       return true
     }
 
+    if (labelSet.needs) {
+      return true
+    }
+
     return !!label.needs
   }
 
-  function computeLabels(): string[] {
-    let labels = getLabels()
+  /**
+   * Compute labels to add and remove
+   * @return whether any prefixed label is present
+   */
+  async function computeLabels() {
+    const removing = commands
+      .prefix(`/${label.prefix}-remove`)
+      .flatMap(add => add.args.map(value => `${label.prefix}/${value}`))
 
-    labels = difference(labels, [`needs/${label.prefix}`])
-
-    for (const remove of commands.prefix(`/${label.prefix}-remove`)) {
-      const removals = remove.args.map(value => `${label.prefix}/${value}`)
-      labels = difference(labels, removals)
+    for (const value of removing) {
+      labelSet.remove(value)
     }
 
-    for (const add of commands.prefix(`/${label.prefix}`)) {
-      labels.push(...add.args.map(value => `${label.prefix}/${value}`))
+    const adding = commands
+      .prefix(`/${label.prefix}`)
+      .flatMap(add => add.args.map(value => `${label.prefix}/${value}`))
+
+    for (const value of adding) {
+      labelSet.add(value)
     }
 
-    if (label.multiple === false && labels.length) {
-      labels = [labels[labels.length - 1]]
-    }
-
-    if (needs() && labels.length === 0) {
-      labels = [`needs/${label.prefix}`]
-    }
-
-    return labels
+    labelSet.setMultiple(label.multiple === undefined || label.multiple)
+    labelSet.setNeeds(needs())
+    await labelSet.persist()
   }
 
-  const labels = computeLabels()
-  await updateLabels(labels)
+  await computeLabels()
+
+  if (labelSet.needs) {
+    await sendComment(label)
+  }
+}
+
+async function sendComment(label: Label) {
+  if (github.context.payload.action !== 'opened') {
+    return
+  }
+
+  if (typeof label.needs === 'boolean') {
+    return
+  }
 
   // Post comment if needs.comment is available
-  if (
-    labels.includes(`needs/${label.prefix}`) &&
-    typeof label.needs !== 'boolean'
-  ) {
-    const comment = label.needs?.comment
-    if (comment) {
-      await postComment(comment)
-    }
+  const comment = label.needs?.comment
+  if (comment) {
+    await postComment(comment)
   }
 }

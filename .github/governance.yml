@@ -71,6 +71,11 @@ issue:
         member: true
         owner: true
 
+    - cmd: /comment issue
+      type: comment
+      comment: |
+        @$AUTHOR: Hey this is comment issue example.
+
 pull_request:
   labels:
     - prefix: kind
@@ -123,7 +128,7 @@ pull_request:
         member: true
         owner: true
 
-    - cmd: /comment example
+    - cmd: /comment pr
       type: comment
       comment: |
-        @$AUTHOR: Hey this is comment example.
+        @$AUTHOR: Hey this is comment pr example.

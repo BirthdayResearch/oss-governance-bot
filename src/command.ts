@@ -28,7 +28,7 @@ export class ArgsCommand extends Command {
 }
 
 export class Commands {
-  private commands: Command[]
+  public readonly commands: Command[]
 
   constructor(commands: Command[]) {
     this.commands = commands
@@ -48,7 +48,12 @@ export class Commands {
 export function getCommands(): Command[] {
   const payload = github.context.payload
   const content = payload.comment || payload.pull_request || payload.issue
-  const body: string = content?.body
+
+  let body: string = content?.body || ''
+  // Replace comments so that it's not processed
+  body = body.replace('\r', '\n')
+  body = body.replace('\r\n', '\n')
+  body = body.replace(/<!--(.|\r|\n)*?-->/g, '')
 
   return body
     .split('\n')
