@@ -13,8 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - run: npm install
-      - run: npm run ci
+      - run: npm ci
+      - run: npm run build
+      - run: npm run format
+      - run: npm run lint
+      - run: npm run pack
+      - run: npm run test:coverage
 
       - uses: EndBug/add-and-commit@v6
         with:

@@ -1,0 +1,9 @@
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      multiple: false
+      author_association:
+        author: 'invalid'

@@ -1,38 +1,51 @@
-import * as core from '@actions/core'
+import fs from 'fs'
+import nock from 'nock'
 import * as github from '@actions/github'
 import {getConfig} from '../src/config'
-import {mockClient} from './client.mock'
 
-jest.spyOn(core, 'warning').mockImplementation(jest.fn())
-jest.spyOn(core, 'info').mockImplementation(jest.fn())
-jest.spyOn(core, 'debug').mockImplementation(jest.fn())
-jest.spyOn(core, 'setFailed').mockImplementation(jest.fn())
-
-jest.spyOn(github.context, 'repo', 'get').mockImplementation(() => {
-  return {
-    owner: 'owner-name',
-    repo: 'repo-name'
-  }
-})
-
-const client = mockClient()
+function expectConfig(path: string) {
+  const client = github.getOctokit('token')
+  return expect(getConfig(client, path))
+}
 
 function expectInvalid(path: string) {
-  return expect(
-    getConfig(client, `__tests__/fixtures/config-invalid/${path}`)
+  return expectConfig(
+    `__tests__/fixtures/config-invalid/${path}`
   ).rejects.toThrow(/Config parse error:.+/)
 }
 
 function expectValid(path: string) {
-  return expect(
-    getConfig(client, `__tests__/fixtures/config-valid/${path}`)
+  return expectConfig(
+    `__tests__/fixtures/config-valid/${path}`
   ).resolves.toBeTruthy()
 }
 
+beforeEach(() => {
+  jest.spyOn(github.context, 'repo', 'get').mockImplementation(() => {
+    return {
+      owner: 'owner',
+      repo: 'repo'
+    }
+  })
+
+  const contentsRegex = /\/repos\/owner\/repo\/contents\/([^?]+).*/
+  nock('https://api.github.com')
+    .get(contentsRegex)
+    .reply(200, function () {
+      const path = contentsRegex.exec(this.req.path)?.[1] || ''
+      return {
+        content: fs.readFileSync(decodeURIComponent(path), 'utf8'),
+        encoding: 'utf-8'
+      }
+    })
+})
+
+afterAll(() => {
+  jest.clearAllMocks()
+})
+
 it('.github/governance.yml is valid', () => {
-  return expect(
-    getConfig(client, '.github/governance.yml')
-  ).resolves.toBeTruthy()
+  return expectConfig('.github/governance.yml').resolves.toBeTruthy()
 })
 
 describe('invalid config', () => {
@@ -79,9 +92,6 @@ describe('invalid config', () => {
     })
 
     describe('label', () => {
-      it('issue-label-contributor.yml is invalid', () => {
-        return expectInvalid('issue-label-contributor.yml')
-      })
       it('issue-label-list.yml is invalid', () => {
         return expectInvalid('issue-label-list.yml')
       })
@@ -100,8 +110,8 @@ describe('invalid config', () => {
     })
   })
 
-  describe('pull-request', () => {
-    describe('chat-ops', () => {
+  describe('pull_request', () => {
+    describe('chat_ops', () => {
       it('pr-chat-ops-cmd.yml is invalid', () => {
         return expectInvalid('pr-chat-ops-cmd.yml')
       })
@@ -117,9 +127,6 @@ describe('invalid config', () => {
     })
 
     describe('label', () => {
-      it('pr-label-contributor.yml is invalid', () => {
-        return expectInvalid('pr-label-contributor.yml')
-      })
       it('pr-label-list.yml is invalid', () => {
         return expectInvalid('pr-label-list.yml')
       })
@@ -137,54 +144,103 @@ describe('invalid config', () => {
       })
     })
   })
+
+  describe('author_association', () => {
+    describe('chat_ops', () => {
+      it('chat-ops-author-association.yml is invalid', () => {
+        return expectInvalid('chat-ops-author-association.yml')
+      })
+      it('chat-ops-author-association-author.yml is invalid', () => {
+        return expectInvalid('chat-ops-author-association-author.yml')
+      })
+      it('chat-ops-author-association-contributor.yml is invalid', () => {
+        return expectInvalid('chat-ops-author-association-contributor.yml')
+      })
+      it('chat-ops-author-association-member.yml is invalid', () => {
+        return expectInvalid('chat-ops-author-association-member.yml')
+      })
+    })
+
+    describe('label', () => {
+      it('label-author-association.yml is invalid', () => {
+        return expectInvalid('label-author-association.yml')
+      })
+      it('label-author-association-author.yml is invalid', () => {
+        return expectInvalid('label-author-association-author.yml')
+      })
+      it('label-author-association-contributor.yml is invalid', () => {
+        return expectInvalid('label-author-association-contributor.yml')
+      })
+      it('label-author-association-member.yml is invalid', () => {
+        return expectInvalid('label-author-association-member.yml')
+      })
+    })
+  })
 })
 
 describe('valid config', () => {
-  it('version.yml is invalid', () => {
+  it('version.yml is valid', () => {
     return expectValid('version.yml')
   })
 
   describe('chat-ops', () => {
-    it('chat-ops-assign.yml is invalid', () => {
+    it('chat-ops-author-association.yml is valid', () => {
+      return expectValid('chat-ops-author-association.yml')
+    })
+    it('chat-ops-author-association-author.yml is valid', () => {
+      return expectValid('chat-ops-author-association-author.yml')
+    })
+    it('chat-ops-author-association-contributor.yml is valid', () => {
+      return expectValid('chat-ops-author-association-contributor.yml')
+    })
+    it('chat-ops-author-association-member.yml is valid', () => {
+      return expectValid('chat-ops-author-association-member.yml')
+    })
+
+    it('chat-ops-assign.yml is valid', () => {
       return expectValid('chat-ops-assign.yml')
     })
-    it('chat-ops-close.yml is invalid', () => {
+    it('chat-ops-close.yml is valid', () => {
       return expectValid('chat-ops-close.yml')
     })
-    it('chat-ops-comment.yml is invalid', () => {
+    it('chat-ops-comment.yml is valid', () => {
       return expectValid('chat-ops-comment.yml')
     })
-    it('chat-ops-dispatch.yml is invalid', () => {
+    it('chat-ops-dispatch.yml is valid', () => {
       return expectValid('chat-ops-dispatch.yml')
     })
-    it('chat-ops-needs.yml is invalid', () => {
-      return expectValid('chat-ops-needs.yml')
-    })
-    it('chat-ops-none.yml is invalid', () => {
+    it('chat-ops-none.yml is valid', () => {
       return expectValid('chat-ops-none.yml')
     })
-    it('chat-ops-review.yml is invalid', () => {
+    it('chat-ops-review.yml is valid', () => {
       return expectValid('chat-ops-review.yml')
     })
   })
 
   describe('label', () => {
-    it('label-contributor-false.yml is invalid', () => {
-      return expectValid('label-contributor-false.yml')
+    it('label-author-association.yml is valid', () => {
+      return expectValid('label-author-association.yml')
     })
-    it('label-contributor-true.yml is invalid', () => {
-      return expectValid('label-contributor-true.yml')
+    it('label-author-association-author.yml is valid', () => {
+      return expectValid('label-author-association-author.yml')
     })
-    it('label-multiple-false.yml is invalid', () => {
+    it('label-author-association-contributor.yml is valid', () => {
+      return expectValid('label-author-association-contributor.yml')
+    })
+    it('label-author-association-member.yml is valid', () => {
+      return expectValid('label-author-association-member.yml')
+    })
+
+    it('label-multiple-false.yml is valid', () => {
       return expectValid('label-multiple-false.yml')
     })
-    it('label-multiple-true.yml is invalid', () => {
+    it('label-multiple-true.yml is valid', () => {
       return expectValid('label-multiple-true.yml')
     })
-    it('label-needs.yml is invalid', () => {
+    it('label-needs.yml is valid', () => {
       return expectValid('label-needs.yml')
     })
-    it('label-prefix-list.yml is invalid', () => {
+    it('label-prefix-list.yml is valid', () => {
       return expectValid('label-prefix-list.yml')
     })
   })

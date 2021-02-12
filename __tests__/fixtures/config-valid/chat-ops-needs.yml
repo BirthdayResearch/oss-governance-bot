@@ -1,6 +1,0 @@
-version: v1
-
-pull-request:
-  chat-ops:
-    - cmd: "/needs something"
-      type: needs

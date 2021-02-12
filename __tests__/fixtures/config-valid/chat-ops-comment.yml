@@ -1,7 +1,7 @@
 version: v1
 
-pull-request:
-  chat-ops:
+pull_request:
+  chat_ops:
     - cmd: "/comment"
       type: comment
       comment: "comment"

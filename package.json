@@ -8,10 +8,10 @@
     "build": "tsc",
     "format": "prettier --write **/*.ts",
     "lint": "eslint --fix src/**/*.ts",
-    "package": "ncc build --source-map --license licenses.txt",
+    "pack": "ncc build --source-map --license licenses.txt",
     "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package",
-    "ci": "npm run all && jest --ci --coverage && codecov"
+    "test:coverage": "jest --ci --coverage && codecov",
+    "all": "npm run build && npm run format && npm run lint && npm run pack && npm run test"
   },
   "repository": {
     "type": "git",
@@ -38,7 +38,6 @@
     "@types/jest": "^26.0.20",
     "@types/js-yaml": "^4.0.0",
     "@types/lodash": "^4.14.168",
-    "@types/minimatch": "^3.0.3",
     "@types/node": "^14.14.25",
     "@typescript-eslint/parser": "^4.14.0",
     "@vercel/ncc": "^0.27.0",
@@ -48,8 +47,10 @@
     "eslint-plugin-jest": "^24.1.3",
     "jest": "^26.4.4",
     "jest-circus": "^26.4.4",
+    "nock": "^13.0.7",
     "prettier": "2.2.1",
     "ts-jest": "^26.4.4",
-    "typescript": "^4.1.3"
+    "typescript": "^4.1.3",
+    "wait-for-expect": "^3.0.2"
   }
 }

@@ -1,0 +1,17 @@
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      multiple: false
+      author_association:
+        author: false
+        collaborator: false
+        contributor: false
+        first_timer: false
+        first_time_contributor: false
+        mannequin: false
+        member: false
+        none: false
+        owner: false

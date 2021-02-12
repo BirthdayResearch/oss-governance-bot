@@ -1,6 +1,6 @@
 version: v1
 
-pull-request:
-  chat-ops:
+pull_request:
+  chat_ops:
     - cmd: "/review"
       type: review

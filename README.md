@@ -24,6 +24,18 @@ A collection of oss governance policy and techniques to bring efficacy to your o
 
 ### Examples
 
+### Logic
+
+1. Parse Governance Config
+2. ignores (bots/workflow)
+3. generate available commands
+4. parse chat-ops (access-control)
+5. run chat-ops (types)
+6. produce prefixed labels (add/remove)
+7. produce needs labels
+8. produce comments
+
+
 ## Motivation
 
 Open Source Software project governance is increasingly complex and autonomous. Putting your project on GitHub is a

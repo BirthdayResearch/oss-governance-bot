@@ -1,6 +1,6 @@
 version: v1
 
-pull-request:
-  chat-ops:
-    - cmd: ["/invalid"]
+issue:
+  chat_ops:
+    - cmd: [ "/invalid" ]
       type: close

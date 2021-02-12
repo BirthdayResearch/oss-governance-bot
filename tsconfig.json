@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "target": "es6",
+    "lib": [
+      "es2019"
+    ],
     "module": "commonjs",
     "outDir": "./lib",
     "rootDir": "./src",
@@ -10,7 +13,6 @@
   },
   "exclude": [
     "node_modules",
-    "__tests__/**.ts",
-    "__tests__/client.mock.ts"
+    "__tests__/**/*.ts"
   ]
 }

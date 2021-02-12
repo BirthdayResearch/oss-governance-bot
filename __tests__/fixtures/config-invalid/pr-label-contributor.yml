@@ -1,7 +1,0 @@
-version: v1
-
-pull-request:
-  labels:
-    - prefix: triage
-      list: [ "accepted" ]
-      contributor: "invalid"
