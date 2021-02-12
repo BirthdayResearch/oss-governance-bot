@@ -6,6 +6,7 @@ import close from './close'
 import comment from './comment'
 import assign from './assign'
 import review from './review'
+import labelChatOps from './label-chat-ops'
 
 async function processLabels(
   labels: Label[],
@@ -38,6 +39,9 @@ async function processChatOps(
         break
       case 'comment':
         await comment(chatOp, commands)
+        break
+      case 'label':
+        await labelChatOps(chatOp, commands)
         break
       // case 'dispatch':
       //   await dispatch(chatOp, commands)

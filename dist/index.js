@@ -200,6 +200,19 @@ const DispatchChatOps = t.intersection([
         author_association: AuthorAssociation
     })
 ]);
+const LabelChatOps = t.intersection([
+    t.type({
+        cmd: t.string,
+        type: t.literal('label'),
+        label: t.partial({
+            add: t.union([t.string, t.array(t.string)]),
+            remove: t.union([t.string, t.array(t.string)])
+        })
+    }),
+    t.partial({
+        author_association: AuthorAssociation
+    })
+]);
 const GenericChatOps = t.intersection([
     t.type({
         cmd: t.string,
@@ -214,7 +227,12 @@ const GenericChatOps = t.intersection([
         author_association: AuthorAssociation
     })
 ]);
-const ChatOps = t.union([GenericChatOps, CommentChatOps, DispatchChatOps]);
+const ChatOps = t.union([
+    GenericChatOps,
+    LabelChatOps,
+    CommentChatOps,
+    DispatchChatOps
+]);
 const Governance = t.partial({
     labels: t.array(Label),
     chat_ops: t.array(ChatOps)
@@ -769,6 +787,7 @@ const close_1 = __importDefault(__nccwpck_require__(7577));
 const comment_1 = __importDefault(__nccwpck_require__(8448));
 const assign_1 = __importDefault(__nccwpck_require__(1800));
 const review_1 = __importDefault(__nccwpck_require__(9198));
+const label_chat_ops_1 = __importDefault(__nccwpck_require__(9557));
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         for (const labelOp of labels) {
@@ -797,6 +816,9 @@ function processChatOps(chatOps, commands) {
                 case 'comment':
                     yield comment_1.default(chatOp, commands);
                     break;
+                case 'label':
+                    yield label_chat_ops_1.default(chatOp, commands);
+                    break;
                 // case 'dispatch':
                 //   await dispatch(chatOp, commands)
                 //   break
@@ -812,6 +834,50 @@ function default_1(governance, commands) {
         }
         if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
             yield processChatOps(governance.chat_ops, commands);
+        }
+    });
+}
+exports.default = default_1;
+
+
+/***/ }),
+
+/***/ 9557:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const github_1 = __nccwpck_require__(5928);
+function default_1(chatOps, commands) {
+    var _a, _b;
+    return __awaiter(this, void 0, void 0, function* () {
+        const matched = commands.prefix(chatOps.cmd);
+        if (!matched.length) {
+            return;
+        }
+        const add = (_a = chatOps.label) === null || _a === void 0 ? void 0 : _a.add;
+        if (typeof add === 'string') {
+            yield github_1.addLabels([add]);
+        }
+        if (Array.isArray(add)) {
+            yield github_1.addLabels(add);
+        }
+        const remove = (_b = chatOps.label) === null || _b === void 0 ? void 0 : _b.remove;
+        if (typeof remove === 'string') {
+            yield github_1.removeLabels([remove]);
+        }
+        if (Array.isArray(remove)) {
+            yield github_1.removeLabels(remove);
         }
     });
 }

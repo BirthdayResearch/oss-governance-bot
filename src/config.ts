@@ -65,6 +65,20 @@ const DispatchChatOps = t.intersection([
   })
 ])
 
+const LabelChatOps = t.intersection([
+  t.type({
+    cmd: t.string,
+    type: t.literal('label'),
+    label: t.partial({
+      add: t.union([t.string, t.array(t.string)]),
+      remove: t.union([t.string, t.array(t.string)])
+    })
+  }),
+  t.partial({
+    author_association: AuthorAssociation
+  })
+])
+
 const GenericChatOps = t.intersection([
   t.type({
     cmd: t.string,
@@ -80,7 +94,12 @@ const GenericChatOps = t.intersection([
   })
 ])
 
-const ChatOps = t.union([GenericChatOps, CommentChatOps, DispatchChatOps])
+const ChatOps = t.union([
+  GenericChatOps,
+  LabelChatOps,
+  CommentChatOps,
+  DispatchChatOps
+])
 
 const Governance = t.partial({
   labels: t.array(Label),
@@ -101,6 +120,7 @@ const Config = t.intersection([
 export type Label = t.TypeOf<typeof Label>
 export type AuthorAssociation = t.TypeOf<typeof AuthorAssociation>
 export type CommentChatOps = t.TypeOf<typeof CommentChatOps>
+export type LabelChatOps = t.TypeOf<typeof LabelChatOps>
 export type DispatchChatOps = t.TypeOf<typeof DispatchChatOps>
 export type GenericChatOps = t.TypeOf<typeof GenericChatOps>
 export type ChatOps = t.TypeOf<typeof ChatOps>
