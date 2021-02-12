@@ -436,22 +436,34 @@ function requestReviewers(reviewers) {
 }
 exports.requestReviewers = requestReviewers;
 function commitStatus(context, state, description, url) {
-    var _a;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        if (!github.context.payload.pull_request) {
+        const client = initClient();
+        function sendStatus(sha) {
+            return __awaiter(this, void 0, void 0, function* () {
+                yield client.repos.createCommitStatus({
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo,
+                    sha: sha,
+                    context: context,
+                    state: state,
+                    description: description,
+                    target_url: url
+                });
+            });
+        }
+        if (github.context.payload.pull_request) {
+            yield sendStatus((_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha);
             return;
         }
-        const client = initClient();
-        const sha = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha;
-        yield client.repos.createCommitStatus({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            sha: sha,
-            context: context,
-            state: state,
-            description: description,
-            target_url: url
-        });
+        if (github.context.payload.comment && ((_b = github.context.payload.issue) === null || _b === void 0 ? void 0 : _b.pull_request)) {
+            const response = yield client.pulls.get({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                pull_number: getNumber()
+            });
+            yield sendStatus(response.data.head.sha);
+        }
     });
 }
 exports.commitStatus = commitStatus;

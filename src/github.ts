@@ -143,20 +143,35 @@ export async function commitStatus(
   description?: string,
   url?: string
 ): Promise<void> {
-  if (!github.context.payload.pull_request) {
+  const client = initClient()
+
+  async function sendStatus(sha: string) {
+    await client.repos.createCommitStatus({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      sha: sha,
+      context: context,
+      state: state,
+      description: description,
+      target_url: url
+    })
+  }
+
+  if (github.context.payload.pull_request) {
+    await sendStatus(github.context.payload.pull_request?.head.sha as string)
     return
   }
 
-  const client = initClient()
+  if (
+    github.context.payload.comment &&
+    github.context.payload.issue?.pull_request
+  ) {
+    const response = await client.pulls.get({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      pull_number: getNumber()!
+    })
 
-  const sha = github.context.payload.pull_request?.head.sha as string
-  await client.repos.createCommitStatus({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    sha: sha,
-    context: context,
-    state: state,
-    description: description,
-    target_url: url
-  })
+    await sendStatus(response.data.head.sha)
+  }
 }

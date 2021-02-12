@@ -7,7 +7,6 @@ const info = jest.fn()
 const error = jest.fn()
 
 beforeEach(() => {
-  jest.setTimeout(10000)
   github.context.eventName = 'issue_comment'
   github.context.action = 'created'
   github.context.payload = {
@@ -57,6 +56,7 @@ beforeEach(() => {
 
 describe('getGovernance', () => {
   it('should error not get from context', async function () {
+    jest.setTimeout(10000)
     github.context.payload = {}
 
     const {getGovernance} = require('../src/main')
@@ -67,6 +67,7 @@ describe('getGovernance', () => {
   })
 
   it('should be issue', async function () {
+    jest.setTimeout(10000)
     github.context.payload = {
       issue: {
         number: 1
@@ -80,6 +81,7 @@ describe('getGovernance', () => {
   })
 
   it('should be pull request', async function () {
+    jest.setTimeout(10000)
     github.context.payload = {
       pull_request: {
         number: 1
@@ -93,6 +95,7 @@ describe('getGovernance', () => {
 
   describe('comment', () => {
     it('should be issue', async function () {
+      jest.setTimeout(10000)
       github.context.payload = {
         comment: {
           id: 1
@@ -109,6 +112,7 @@ describe('getGovernance', () => {
     })
 
     it('should be pull request', async function () {
+      jest.setTimeout(10000)
       github.context.payload = {
         comment: {
           id: 1
