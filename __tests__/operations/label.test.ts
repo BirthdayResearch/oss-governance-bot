@@ -117,7 +117,9 @@ describe('needs', () => {
       list: ['accepted'],
     }, getCommands(['/need triage']))
 
-    await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/accepted']})
+    await expect(postLabels).not.toHaveBeenCalled()
+    await expect(postComments).not.toHaveBeenCalled()
+    await expect(deleteLabels).not.toHaveBeenCalled()
   });
 
   it('should have needs/triage removed when labeled', async function () {
@@ -133,7 +135,8 @@ describe('needs', () => {
       list: ['accepted', 'rejected'],
     }, getCommands())
 
-    await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/accepted']})
+    await expect(postLabels).not.toHaveBeenCalled()
+    await expect(postComments).not.toHaveBeenCalled()
     await expect(deleteLabels).toHaveBeenCalledWith("needs/triage")
   });
 
@@ -171,8 +174,9 @@ describe('needs', () => {
     await expect(deleteLabels).toHaveBeenCalledWith('needs/triage')
   });
 
-  it('should have comment when needs/triage is present', async function () {
+  it('should have comment when needs/triage is present and opened', async function () {
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: []
@@ -189,6 +193,29 @@ describe('needs', () => {
 
     await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
     await expect(postComments).toHaveBeenCalledTimes(1)
+    await expect(deleteLabels).not.toHaveBeenCalled()
+  });
+
+  it('should not have comment when needs/triage is present as its edited', async function () {
+    github.context.payload = {
+      action: 'edited',
+      issue: {
+        number: 1,
+        labels: []
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: {
+        comment: 'hello you'
+      }
+    }, getCommands())
+
+    await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
+    await expect(postComments).not.toHaveBeenCalled()
+    await expect(deleteLabels).not.toHaveBeenCalled()
   });
 
   it('should not have commented', async function () {
@@ -239,7 +266,8 @@ describe('labels', () => {
       list: ['accepted', 'a', 'b'],
     }, getCommands(['/triage a']))
 
-    await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/accepted', "triage/a"]})
+    await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/a']})
+    await expect(postComments).not.toHaveBeenCalled()
     await expect(deleteLabels).not.toHaveBeenCalled()
   });
 
@@ -278,6 +306,7 @@ describe('labels', () => {
       await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/c']})
       await expect(deleteLabels).toHaveBeenCalledTimes(1)
       await expect(deleteLabels).toHaveBeenCalledWith('triage/b')
+      await expect(postComments).not.toHaveBeenCalled()
     })
 
     it('true: should have many label', async function () {
@@ -294,8 +323,9 @@ describe('labels', () => {
         multiple: true
       }, getCommands(['/triage a c']))
 
-      await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/b', 'triage/a', 'triage/c']})
+      await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/a', 'triage/c']})
       await expect(deleteLabels).not.toHaveBeenCalled()
+      await expect(postComments).not.toHaveBeenCalled()
     })
   })
 })
