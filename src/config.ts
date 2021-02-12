@@ -37,7 +37,22 @@ const Label = t.intersection([
     needs: t.union([
       t.boolean,
       t.partial({
-        comment: t.string
+        comment: t.string,
+        status: t.intersection([
+          t.type({
+            context: t.string
+          }),
+          t.partial({
+            url: t.string,
+            description: t.union([
+              t.string,
+              t.partial({
+                success: t.string,
+                failure: t.string
+              })
+            ])
+          })
+        ])
       })
     ])
   })

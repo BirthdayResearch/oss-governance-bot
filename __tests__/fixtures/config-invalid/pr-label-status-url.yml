@@ -1,0 +1,11 @@
+version: v1
+
+pull_request:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      needs:
+        status:
+          context: Status Context
+          url:
+            url: "https://github.com/google"

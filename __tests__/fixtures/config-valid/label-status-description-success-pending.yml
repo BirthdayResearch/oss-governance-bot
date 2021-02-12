@@ -1,0 +1,12 @@
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      needs:
+        status:
+          context: Status Context
+          description:
+            success: Success description
+            pending: Pending description

@@ -1,6 +1,12 @@
 import {Label} from '../config'
 import {Commands} from '../command'
-import {addLabels, getLabels, postComment, removeLabels} from '../github'
+import {
+  addLabels,
+  commitStatus,
+  getLabels,
+  postComment,
+  removeLabels
+} from '../github'
 import * as github from '@actions/github'
 
 class PrefixLabelSet {
@@ -130,6 +136,8 @@ export default async function (
   if (labelSet.needs) {
     await sendComment(label)
   }
+
+  await sendStatus(label, !labelSet.needs)
 }
 
 async function sendComment(label: Label) {
@@ -146,4 +154,37 @@ async function sendComment(label: Label) {
   if (comment) {
     await postComment(comment)
   }
+}
+
+async function sendStatus(label: Label, success: boolean) {
+  if (typeof label.needs === 'boolean') {
+    return
+  }
+
+  const status = label.needs?.status
+  if (!status) {
+    return
+  }
+
+  function description(): string | undefined {
+    return typeof status?.description === 'string'
+      ? status?.description
+      : status?.description?.success
+  }
+
+  function state(): 'success' | 'failure' | 'pending' {
+    if (success) {
+      return 'success'
+    }
+
+    if (typeof status?.description === 'string') {
+      return 'failure'
+    }
+
+    return typeof status?.description?.failure === 'string'
+      ? 'failure'
+      : 'pending'
+  }
+
+  await commitStatus(status.context, state(), description(), status.url)
 }

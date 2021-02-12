@@ -1,0 +1,14 @@
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      needs:
+        status:
+          context: Status Context
+          url: "https://github.com/google"
+          description:
+            success: Success description
+            pending: Pending description
+            failure: Failure description

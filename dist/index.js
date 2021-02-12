@@ -171,7 +171,22 @@ const Label = t.intersection([
         needs: t.union([
             t.boolean,
             t.partial({
-                comment: t.string
+                comment: t.string,
+                status: t.intersection([
+                    t.type({
+                        context: t.string
+                    }),
+                    t.partial({
+                        url: t.string,
+                        description: t.union([
+                            t.string,
+                            t.partial({
+                                success: t.string,
+                                failure: t.string
+                            })
+                        ])
+                    })
+                ])
             })
         ])
     })
@@ -292,7 +307,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
+exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
 function initClient() {
@@ -420,6 +435,26 @@ function requestReviewers(reviewers) {
     });
 }
 exports.requestReviewers = requestReviewers;
+function commitStatus(context, state, description, url) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!github.context.payload.pull_request) {
+            return;
+        }
+        const client = initClient();
+        const sha = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha;
+        yield client.repos.createCommitStatus({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            sha: sha,
+            context: context,
+            state: state,
+            description: description,
+            target_url: url
+        });
+    });
+}
+exports.commitStatus = commitStatus;
 
 
 /***/ }),
@@ -1002,6 +1037,7 @@ function default_1(label, commands) {
         if (labelSet.needs) {
             yield sendComment(label);
         }
+        yield sendStatus(label, !labelSet.needs);
     });
 }
 exports.default = default_1;
@@ -1019,6 +1055,36 @@ function sendComment(label) {
         if (comment) {
             yield github_1.postComment(comment);
         }
+    });
+}
+function sendStatus(label, success) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        if (typeof label.needs === 'boolean') {
+            return;
+        }
+        const status = (_a = label.needs) === null || _a === void 0 ? void 0 : _a.status;
+        if (!status) {
+            return;
+        }
+        function description() {
+            var _a;
+            return typeof (status === null || status === void 0 ? void 0 : status.description) === 'string'
+                ? status === null || status === void 0 ? void 0 : status.description : (_a = status === null || status === void 0 ? void 0 : status.description) === null || _a === void 0 ? void 0 : _a.success;
+        }
+        function state() {
+            var _a;
+            if (success) {
+                return 'success';
+            }
+            if (typeof (status === null || status === void 0 ? void 0 : status.description) === 'string') {
+                return 'failure';
+            }
+            return typeof ((_a = status === null || status === void 0 ? void 0 : status.description) === null || _a === void 0 ? void 0 : _a.failure) === 'string'
+                ? 'failure'
+                : 'pending';
+        }
+        yield github_1.commitStatus(status.context, state(), description(), status.url);
     });
 }
 
