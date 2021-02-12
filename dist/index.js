@@ -80,7 +80,9 @@ function getCommands() {
     const content = payload.comment || payload.pull_request || payload.issue;
     let body = (content === null || content === void 0 ? void 0 : content.body) || '';
     // Replace comments so that it's not processed
-    body = body.replace(/<!--(.|\n)*-->/, '');
+    body = body.replace('\r', '\n');
+    body = body.replace('\r\n', '\n');
+    body = body.replace(/<!--(.|\r|\n)*?-->/g, '');
     return body
         .split('\n')
         .map(text => { var _a; return (_a = /^\/(.+)/.exec(text)) === null || _a === void 0 ? void 0 : _a[0]; })

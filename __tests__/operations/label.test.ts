@@ -157,6 +157,70 @@ describe('needs', () => {
     await expect(deleteLabels).toHaveBeenCalledWith("needs/triage")
   });
 
+  it('should have needs/kind removed when /kind fix is commented', async function () {
+    github.context.payload = {
+      action: 'created',
+      comment: {
+        id: 1,
+      },
+      pull_request: {
+        number: 1,
+        labels: [{name: 'needs/kind'}]
+      }
+    }
+
+    await label({
+      prefix: 'kind',
+      multiple: false,
+      list: ["feature", "fix", "chore", "docs", "refactor", "dependencies"],
+      needs: {
+        comment: 'TEST'
+      }
+    }, getCommands(['/kind fix']))
+
+    await expect(postLabels).toHaveBeenCalledWith({labels: ['kind/fix']})
+    await expect(deleteLabels).toHaveBeenCalledWith("needs/kind")
+  });
+
+  it('should have needs/triage removed when /triage accepted when needs:true', async function () {
+    github.context.payload = {
+      issue: {
+        number: 1,
+        labels: [{name: 'needs/triage'}]
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted', 'rejected'],
+      needs: true,
+    }, getCommands(['/triage accepted']))
+
+    await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/accepted']})
+    await expect(deleteLabels).toHaveBeenCalledWith("needs/triage")
+  });
+
+  it('should have needs/triage removed when /triage accepted when needs comments is available', async function () {
+    github.context.payload = {
+      issue: {
+        number: 1,
+        labels: [{name: 'needs/triage'}]
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted', 'rejected'],
+      needs: {
+        comment: 'available'
+      },
+    }, getCommands(['/triage accepted']))
+
+    await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/accepted']})
+    await expect(postComments).not.toHaveBeenCalled()
+    await expect(deleteLabels).toHaveBeenCalledWith("needs/triage")
+  });
+
   it('should have needs/triage removed when /triage rejected', async function () {
     github.context.payload = {
       issue: {
@@ -171,6 +235,7 @@ describe('needs', () => {
     }, getCommands(['/triage rejected']))
 
     await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/rejected']})
+    await expect(postComments).not.toHaveBeenCalled()
     await expect(deleteLabels).toHaveBeenCalledWith('needs/triage')
   });
 
@@ -327,5 +392,72 @@ describe('labels', () => {
       await expect(deleteLabels).not.toHaveBeenCalled()
       await expect(postComments).not.toHaveBeenCalled()
     })
+
+    it('should have needs/triage removed when /triage accepted', async function () {
+      github.context.payload = {
+        issue: {
+          number: 1,
+          labels: [{name: 'needs/triage'}]
+        }
+      }
+
+      await label({
+        prefix: 'triage',
+        list: ['accepted', 'rejected'],
+        multiple: false,
+      }, getCommands(['/triage accepted']))
+
+      await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/accepted']})
+      await expect(deleteLabels).toHaveBeenCalledWith("needs/triage")
+    });
+
+    it('should have needs/triage removed when /triage accepted when needs:true', async function () {
+      github.context.payload = {
+        issue: {
+          number: 1,
+          labels: [{name: 'needs/triage'}]
+        }
+      }
+
+      await label({
+        prefix: 'triage',
+        list: ['accepted', 'rejected'],
+        needs: true,
+        multiple: false,
+      }, getCommands(['/triage accepted']))
+
+      await expect(postLabels).toHaveBeenCalledWith({labels: ['triage/accepted']})
+      await expect(deleteLabels).toHaveBeenCalledWith("needs/triage")
+    });
   })
+})
+
+describe('comments flaky test', () => {
+  it('should have needs/kind removed when /kind fix is commented', async () => {
+    github.context.payload = {
+      action: 'created',
+      comment: {
+        id: 1,
+      },
+      pull_request: {
+        number: 1,
+        labels: [{name: 'needs/kind'}, {name: 'kind/fix'}]
+      }
+    }
+
+    await label({
+      prefix: 'kind',
+      multiple: false,
+      list: ["feature", "fix", "chore", "docs", "refactor", "dependencies"],
+      needs: {
+        comment: 'TEST'
+      }
+    }, getCommands(['/kind fix']))
+
+    await expect(deleteLabels).toHaveBeenCalledWith("needs/kind")
+    await expect(deleteLabels).toHaveBeenCalledTimes(1)
+    await expect(postLabels).not.toHaveBeenCalled()
+    await expect(postComments).not.toHaveBeenCalled()
+  });
+
 })
