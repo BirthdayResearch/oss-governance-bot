@@ -1,9 +1,11 @@
-import {postComment} from '../src/github'
+import {commitStatus, postComment} from '../src/github'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import nock from 'nock'
 
 const postComments = jest.fn()
+const getPulls = jest.fn()
+const postStatus = jest.fn()
 
 beforeAll(() => {
   jest.spyOn(core, 'getInput').mockImplementation(name => {
@@ -24,6 +26,26 @@ beforeAll(() => {
       return {}
     })
     .persist()
+
+  nock('https://api.github.com')
+    .get('/repos/owner/repo/pulls/1')
+    .reply(200, function (_, body) {
+      getPulls()
+      return {
+        head: {
+          sha: 'abc'
+        }
+      }
+    })
+    .persist()
+
+  nock('https://api.github.com')
+    .post(/\/repos\/owner\/repo\/statuses\/.+/)
+    .reply(200, function (_, body) {
+      postStatus(body)
+      return {}
+    })
+    .persist()
 })
 
 afterAll(() => {
@@ -33,6 +55,18 @@ afterAll(() => {
 it('pull_request should comment as expected', async () => {
   github.context.payload = {
     pull_request: {
+      number: 1,
+      labels: []
+    }
+  }
+
+  await postComment('a')
+  await expect(postComments).toBeCalled()
+})
+
+it('issue should comment as expected', async () => {
+  github.context.payload = {
+    issue: {
       number: 1,
       labels: []
     }
@@ -99,5 +133,32 @@ it('User: should format details as expected', async () => {
       'I am a bot created to help [Codertocat](https://github.com/Codertocat/) manage community feedback and contributions. You can check out my [manifest file](https://github.com/Codertocat/Hello-World/blob/master/config-path/location.yml) to understand my behavior and what I can do. If you want to use this for your project, you can check out the [fuxingloh/oss-governance](https://github.com/fuxingloh/oss-governance) repository.' +
       '\n\n' +
       '</details>'
+  })
+})
+
+describe('commit status', () => {
+  it('should resolve head.sha if not available', async () => {
+    github.context.payload = {
+      comment: {
+        id: 1
+      },
+      issue: {
+        number: 1,
+        pull_request: {
+          diff_url: 'https://github.com/fuxingloh/oss-governance/pull/9.diff',
+          html_url: 'https://github.com/fuxingloh/oss-governance/pull/9',
+          patch_url: 'https://github.com/fuxingloh/oss-governance/pull/9.patch',
+          url: 'https://api.github.com/repos/fuxingloh/oss-governance/pulls/9'
+        }
+      }
+    }
+
+    await commitStatus('Hey', 'pending', 'descriptions')
+    await expect(getPulls).toHaveBeenCalledTimes(1)
+    await expect(postStatus).toHaveBeenCalledWith({
+      context: 'Hey',
+      description: 'descriptions',
+      state: 'pending'
+    })
   })
 })

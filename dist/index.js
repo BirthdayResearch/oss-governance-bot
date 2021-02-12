@@ -436,22 +436,34 @@ function requestReviewers(reviewers) {
 }
 exports.requestReviewers = requestReviewers;
 function commitStatus(context, state, description, url) {
-    var _a;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        if (!github.context.payload.pull_request) {
+        const client = initClient();
+        function sendStatus(sha) {
+            return __awaiter(this, void 0, void 0, function* () {
+                yield client.repos.createCommitStatus({
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo,
+                    sha: sha,
+                    context: context,
+                    state: state,
+                    description: description,
+                    target_url: url
+                });
+            });
+        }
+        if (github.context.payload.pull_request) {
+            yield sendStatus((_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha);
             return;
         }
-        const client = initClient();
-        const sha = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.head.sha;
-        yield client.repos.createCommitStatus({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            sha: sha,
-            context: context,
-            state: state,
-            description: description,
-            target_url: url
-        });
+        if (github.context.payload.comment && ((_b = github.context.payload.issue) === null || _b === void 0 ? void 0 : _b.pull_request)) {
+            const response = yield client.pulls.get({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                pull_number: getNumber()
+            });
+            yield sendStatus(response.data.head.sha);
+        }
     });
 }
 exports.commitStatus = commitStatus;
@@ -682,7 +694,7 @@ exports.isAuthorAssociationAllowed = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 function getAuthorAssociation() {
     const payload = github.context.payload;
-    const current = payload.pull_request || payload.issue || payload.comment;
+    const current = payload.comment || payload.pull_request || payload.issue;
     return current === null || current === void 0 ? void 0 : current.author_association;
 }
 function isAuthorAssociationAllowed(authorAssociation) {
@@ -973,9 +985,6 @@ class PrefixLabelSet {
         return __awaiter(this, void 0, void 0, function* () {
             const removes = [];
             const adds = [];
-            if (this.needs) {
-                adds.push(`needs/${this.prefix}`);
-            }
             for (const string of this.existing) {
                 if (!this.labels.has(string)) {
                     removes.push(string);
@@ -984,6 +993,19 @@ class PrefixLabelSet {
             for (const label of this.labels) {
                 if (!this.existing.includes(label)) {
                     adds.push(label);
+                }
+            }
+            if (this.needs) {
+                if (this.existing.includes(`needs/${this.prefix}`)) {
+                    // don't remove
+                    const index = removes.indexOf(`needs/${this.prefix}`);
+                    if (index > -1) {
+                        removes.splice(index, 1);
+                    }
+                }
+                else {
+                    // add missing
+                    adds.push(`needs/${this.prefix}`);
                 }
             }
             yield github_1.removeLabels(removes);

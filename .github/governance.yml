@@ -90,7 +90,7 @@ pull_request:
           * `/kind refactor`
           * `/kind dependencies`
         status:
-          context: "Kind Label"
+          context: "Governance/Kind"
           description:
             success: Ready for review & merge.
             failure: Missing kind label to generate release automatically.

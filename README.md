@@ -10,13 +10,15 @@ providing a chat-bot experience when contributor interact with your project,
 `oss-governance` also provide automation in the form of policy enforcement. Community contributors can trigger chat-ops
 via /slash style commands.
 
-### What it can do for you
+### What can this do for you
 
 * Speed up issue triaging with automated chat-bot and chat-ops operations.
 * Increased code review agility by moving quality control hierarchy from requirements to educational steps.
 * Scale to thousands of contributors without alienating community participation with complex quality control hierarchy.
 * Tool that lives natively and integrate well with the GitHub action/workflow product offering. You can view the source
   directly and modify it to your needs.
+
+![preview](.github/preview.png)
 
 ## Usage
 
@@ -38,7 +40,7 @@ jobs:
     name: Governance
     runs-on: ubuntu-latest
     steps:
-      # follows semantic versioning. Lock to different version: v1, v1.5, v1.5.0 or use a commit hash.
+      # Semantic versioning, lock to different version: v1, v1.5, v1.5.0 or a commit hash.
       - uses: fuxingloh/oss-governance@v1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'  
@@ -178,6 +180,132 @@ pull_request:
       type: comment
       comment: |
         @$AUTHOR: Hey this is comment pr example.
+```
+
+## Configuration
+
+You can target `pull_request` or `issue` with `labels` and/or `chat_ops`.
+
+```yml
+version: v1
+
+issue:
+  labels:
+  chat_ops:
+
+pull_request:
+  labels:
+  chat_ops:
+```
+
+### Author Association
+
+Author association to restrict who can trigger the operation. You can use this for both `labels` and `chat_ops`
+in `issue` or `pull_request`.
+
+```yml
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      author_association:
+        author: false
+        collaborator: true
+        contributor: true
+        first_timer: false
+        first_time_contributor: false
+        mannequin: false
+        member: true
+        none: false
+        owner: true
+```
+
+### Labels
+
+```yml
+version: v1
+
+pull_request:
+  labels:
+    - prefix: kind
+      multiple: false
+      list: [ "feature", "fix", "chore", "docs", "refactor", "dependencies" ]
+      needs:
+        comment: |
+          @$AUTHOR: There are no 'kind' label on this PR. You need a 'kind' label to generate the release automatically.
+
+          * `/kind feature`
+          * `/kind ...`
+        status:
+          context: "Governance/Kind"
+          description:
+            success: Ready for review & merge.
+            failure: Missing kind label to generate release automatically.
+```
+
+### ChatOps: close
+
+```yml
+version: v1
+
+issue:
+  chat_ops:
+    - cmd: /close
+      type: close
+```
+
+### ChatOps: review
+
+Review is only available for pull_request.
+
+```yml
+version: v1
+
+pull_request:
+  chat_ops:
+    # /request-review @john @ben @more
+    - cmd: /request-review
+      type: review
+```
+
+### ChatOps: assign
+
+```yml
+version: v1
+
+issue:
+  chat_ops:
+    # /assign @john @ben @more
+    - cmd: /assign
+      type: assign
+```
+
+### ChatOps: none
+
+Does nothing, might be useful to show it in governance.
+
+```yml
+version: v1
+
+issue:
+  chat_ops:
+    - cmd: /cc
+      type: none
+```
+
+### ChatOps: comment
+
+```yml
+version: v1
+
+issue:
+  chat_ops:
+    - cmd: /comment me
+      type: comment
+      comment: |
+        @$AUTHOR: Hey this is comment example.
 ```
 
 ## Motivation
