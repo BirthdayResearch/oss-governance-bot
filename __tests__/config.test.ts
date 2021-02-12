@@ -86,6 +86,12 @@ describe('invalid config', () => {
       it('issue-chat-ops-dispatch.yml is invalid', () => {
         return expectInvalid('issue-chat-ops-dispatch.yml')
       })
+      it('issue-chat-ops-label.yml is invalid', () => {
+        return expectInvalid('issue-chat-ops-label.yml')
+      })
+      it('issue-chat-ops-label-object.yml is invalid', () => {
+        return expectInvalid('issue-chat-ops-label-object.yml')
+      })
       it('issue-chat-ops-type.yml is invalid', () => {
         return expectInvalid('issue-chat-ops-type.yml')
       })
@@ -120,6 +126,12 @@ describe('invalid config', () => {
       })
       it('pr-chat-ops-dispatch.yml is invalid', () => {
         return expectInvalid('pr-chat-ops-dispatch.yml')
+      })
+      it('pr-chat-ops-label.yml is invalid', () => {
+        return expectInvalid('pr-chat-ops-label.yml')
+      })
+      it('pr-chat-ops-label-object.yml is invalid', () => {
+        return expectInvalid('pr-chat-ops-label-object.yml')
       })
       it('pr-chat-ops-type.yml is invalid', () => {
         return expectInvalid('pr-chat-ops-type.yml')
@@ -211,6 +223,21 @@ describe('valid config', () => {
     })
     it('chat-ops-none.yml is valid', () => {
       return expectValid('chat-ops-none.yml')
+    })
+    it('chat-ops-label.yml is valid', () => {
+      return expectValid('chat-ops-label.yml')
+    })
+    it('chat-ops-label-add.yml is valid', () => {
+      return expectValid('chat-ops-label-add.yml')
+    })
+    it('chat-ops-label-add-array.yml is valid', () => {
+      return expectValid('chat-ops-label-add-array.yml')
+    })
+    it('chat-ops-label-remove.yml is valid', () => {
+      return expectValid('chat-ops-label-remove.yml')
+    })
+    it('chat-ops-label-remove-array.yml is valid', () => {
+      return expectValid('chat-ops-label-remove-array.yml')
     })
     it('chat-ops-review.yml is valid', () => {
       return expectValid('chat-ops-review.yml')

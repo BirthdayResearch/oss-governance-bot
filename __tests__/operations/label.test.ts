@@ -261,6 +261,26 @@ describe('needs', () => {
     await expect(deleteLabels).not.toHaveBeenCalled()
   });
 
+  it('should not have comment when needs/triage is present and opened', async function () {
+    github.context.payload = {
+      action: 'opened',
+      issue: {
+        number: 1,
+        labels: []
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: true
+    }, getCommands())
+
+    await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
+    await expect(postComments).not.toHaveBeenCalled()
+    await expect(deleteLabels).not.toHaveBeenCalled()
+  });
+
   it('should not have comment when needs/triage is present as its edited', async function () {
     github.context.payload = {
       action: 'edited',

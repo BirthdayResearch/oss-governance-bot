@@ -7,11 +7,6 @@ export class Command {
   constructor(text: string) {
     this.text = text
   }
-
-  getArgs(prefix: string): string[] {
-    const postfix = this.text.split(prefix)[1]
-    return postfix.trim().split(' ')
-  }
 }
 
 export class ArgsCommand extends Command {

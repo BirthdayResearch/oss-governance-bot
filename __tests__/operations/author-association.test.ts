@@ -17,6 +17,10 @@ describe('all association', function () {
     expectAssociation(undefined, 'OWNER').toBe(true)
   });
 
+  it('invalid type should be false', function () {
+    expectAssociation({}, 'INVALID').toBe(false)
+  });
+
   it('should fail invalid match', function () {
     expectAssociation({collaborator: false}, 'OWNER').toBe(false)
   });

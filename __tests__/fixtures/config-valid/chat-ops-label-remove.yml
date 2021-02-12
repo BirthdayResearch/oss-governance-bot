@@ -1,0 +1,8 @@
+version: v1
+
+pull_request:
+  chat_ops:
+    - cmd: "/label this"
+      type: label
+      label:
+        remove: label/remove

@@ -127,6 +127,13 @@ describe('chat-ops', () => {
           cmd: '/comment me',
           type: 'comment',
           comment: 'abc'
+        },
+        {
+          cmd: '/label me',
+          type: 'label',
+          label: {
+            add: 'me'
+          }
         }
       ]
     }, getCommands(['/close', '/cc', '/request']))
