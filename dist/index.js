@@ -347,14 +347,14 @@ function getDetails() {
     let details = '';
     details += '\n';
     details += '<details><summary>Details</summary>';
-    details += '\n';
+    details += '\n\n';
     details += `I am a bot created to help the [${organisation}](${ownerUrl}) developers manage community feedback and contributions.`;
     details += ' ';
     details += `You can check out my [manifest file](${repoUrl}/blob/master/${configPath}) to understand my behavior and what I can do.`;
     details += ' ';
     details +=
         'If you want to use this for your project, you can check out the [fuxingloh/oss-governance](https://github.com/fuxingloh/oss-governance) repository.';
-    details += '\n';
+    details += '\n\n';
     details += '</details>';
     return details;
 }
@@ -631,6 +631,36 @@ exports.default = default_1;
 
 /***/ }),
 
+/***/ 8448:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const github_1 = __nccwpck_require__(5928);
+function default_1(chatOps, commands) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const matched = commands.prefix(chatOps.cmd);
+        if (!matched.length) {
+            return;
+        }
+        yield github_1.postComment(chatOps.comment);
+    });
+}
+exports.default = default_1;
+
+
+/***/ }),
+
 /***/ 7928:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -652,10 +682,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const label_1 = __importDefault(__nccwpck_require__(4550));
 const author_association_1 = __nccwpck_require__(4504);
 const close_1 = __importDefault(__nccwpck_require__(7577));
-// import assign from "./assign";
-// import review from "./review";
-// import comment from "./comment";
-// import dispatch from "./dispatch";
+const comment_1 = __importDefault(__nccwpck_require__(8448));
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         for (const labelOp of labels) {
@@ -681,9 +708,9 @@ function processChatOps(chatOps, commands) {
                 // case 'review':
                 //   await review(chatOp, commands)
                 //   break
-                // case 'comment':
-                //   await comment(chatOp, commands)
-                //   break
+                case 'comment':
+                    yield comment_1.default(chatOp, commands);
+                    break;
                 // case 'dispatch':
                 //   await dispatch(chatOp, commands)
                 //   break

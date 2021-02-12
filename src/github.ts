@@ -64,14 +64,14 @@ function getDetails(): string {
   let details = ''
   details += '\n'
   details += '<details><summary>Details</summary>'
-  details += '\n'
+  details += '\n\n'
   details += `I am a bot created to help the [${organisation}](${ownerUrl}) developers manage community feedback and contributions.`
   details += ' '
   details += `You can check out my [manifest file](${repoUrl}/blob/master/${configPath}) to understand my behavior and what I can do.`
   details += ' '
   details +=
     'If you want to use this for your project, you can check out the [fuxingloh/oss-governance](https://github.com/fuxingloh/oss-governance) repository.'
-  details += '\n'
+  details += '\n\n'
   details += '</details>'
   return details
 }

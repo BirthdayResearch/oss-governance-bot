@@ -1,10 +1,11 @@
-import close from '../../src/operations/close'
+import comment from '../../src/operations/comment'
 import {Command, Commands} from "../../src/command";
 import * as github from "@actions/github";
 import * as core from "@actions/core";
 import nock from "nock";
 
-const patchIssue = jest.fn()
+const postComments = jest.fn()
+
 
 beforeAll(() => {
   jest.spyOn(core, 'getInput').mockImplementation(name => {
@@ -25,9 +26,9 @@ beforeAll(() => {
   }
 
   nock('https://api.github.com')
-    .patch('/repos/owner/repo/issues/1')
+    .post('/repos/owner/repo/issues/1/comments')
     .reply(200, function (_, body) {
-      patchIssue(body)
+      postComments(body)
       return {}
     }).persist()
 })
@@ -39,24 +40,30 @@ afterAll(() => {
 async function runOp(cmd: string, list: string[] = [], others: any = {}) {
   const commands = new Commands(list.map(t => new Command((t))))
 
-  await close({
+  await comment({
     cmd: cmd,
-    type: 'close',
+    type: 'comment',
     ...others,
   }, commands)
 }
 
-it('should close with /close', async () => {
-  await runOp('/close', ['/close'])
-  await expect(patchIssue).toHaveBeenCalledWith({"state": "closed"})
+it('should comment with /comment', async () => {
+  await runOp('/comment', ['/comment'], {
+    comment: '@$AUTHOR: Hey this is comment example.'
+  })
+  await expect(postComments).toHaveBeenCalled()
 });
 
-it('should close with /close-it', async () => {
-  await runOp('/close-it', ['/close-it'])
-  await expect(patchIssue).toHaveBeenCalledWith({"state": "closed"})
+it('should comment with /comment-it', async () => {
+  await runOp('/comment-it', ['/comment-it'], {
+    comment: '@$AUTHOR: Hey this is comment example.'
+  })
+  await expect(postComments).toHaveBeenCalled()
 });
 
-it('should not close with /nah', async () => {
-  await runOp('/nah', ['/close'])
-  await expect(patchIssue).not.toHaveBeenCalled()
+it('should not comment with /nah', async () => {
+  await runOp('/nah', ['/comment'], {
+    comment: '@$AUTHOR: Hey this is comment example.'
+  })
+  await expect(postComments).not.toHaveBeenCalled()
 });
