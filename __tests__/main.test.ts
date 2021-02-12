@@ -8,8 +8,8 @@ const error = jest.fn()
 
 beforeEach(() => {
   github.context.eventName = 'issue_comment'
-  github.context.action = 'created'
   github.context.payload = {
+    action: 'created',
     issue: {
       number: 1
     },

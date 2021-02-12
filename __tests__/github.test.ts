@@ -64,6 +64,18 @@ it('pull_request should comment as expected', async () => {
   await expect(postComments).toBeCalled()
 })
 
+it('issue should comment as expected', async () => {
+  github.context.payload = {
+    issue: {
+      number: 1,
+      labels: []
+    }
+  }
+
+  await postComment('a')
+  await expect(postComments).toBeCalled()
+})
+
 it('Organization: should format details as expected', async () => {
   github.context.payload = {
     issue: {
