@@ -125,4 +125,36 @@ describe('comment', function () {
     expectAssociation({owner: true}, 'OWNER', 'comment')
       .toBe(true)
   });
+
+  it('should take comment priority owner', function () {
+    github.context.payload = {
+      comment: {
+        id: 1,
+        author_association: 'OWNER'
+      },
+      issue: {
+        number: 1,
+        author_association: 'MEMBER'
+      }
+    }
+
+    expect(isAuthorAssociationAllowed({owner: true}))
+      .toBe(true)
+  });
+
+  it('should take comment priority member', function () {
+    github.context.payload = {
+      comment: {
+        id: 1,
+        author_association: 'MEMBER'
+      },
+      issue: {
+        number: 1,
+        author_association: 'MEMBER'
+      }
+    }
+
+    expect(isAuthorAssociationAllowed({owner: true}))
+      .toBe(false)
+  });
 });

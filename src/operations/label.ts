@@ -58,10 +58,6 @@ class PrefixLabelSet {
     const removes = []
     const adds = []
 
-    if (this.needs) {
-      adds.push(`needs/${this.prefix}`)
-    }
-
     for (const string of this.existing) {
       if (!this.labels.has(string)) {
         removes.push(string)
@@ -71,6 +67,19 @@ class PrefixLabelSet {
     for (const label of this.labels) {
       if (!this.existing.includes(label)) {
         adds.push(label)
+      }
+    }
+
+    if (this.needs) {
+      if (this.existing.includes(`needs/${this.prefix}`)) {
+        // don't remove
+        const index = removes.indexOf(`needs/${this.prefix}`)
+        if (index > -1) {
+          removes.splice(index, 1)
+        }
+      } else {
+        // add missing
+        adds.push(`needs/${this.prefix}`)
       }
     }
 

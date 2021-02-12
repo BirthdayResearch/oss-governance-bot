@@ -3,7 +3,7 @@ import * as github from '@actions/github'
 
 function getAuthorAssociation(): string | undefined {
   const payload = github.context.payload
-  const current = payload.pull_request || payload.issue || payload.comment
+  const current = payload.comment || payload.pull_request || payload.issue
   return current?.author_association
 }
 

@@ -654,4 +654,30 @@ describe('comments flaky test', () => {
     await expect(postLabels).not.toHaveBeenCalled()
     await expect(postComments).not.toHaveBeenCalled()
   });
+
+  it('needs/kind', async () => {
+    github.context.payload = {
+      action: 'created',
+      comment: {
+        id: 1,
+      },
+      issue: {
+        number: 1,
+        labels: [{name: 'needs/kind'}]
+      }
+    }
+
+    await label({
+      prefix: 'kind',
+      multiple: false,
+      list: ["feature"],
+      needs: {
+        comment: 'TEST'
+      }
+    }, getCommands(['/something else']))
+
+    await expect(postComments).not.toHaveBeenCalled()
+    await expect(postLabels).not.toHaveBeenCalled()
+    await expect(deleteLabels).not.toHaveBeenCalled()
+  });
 })
