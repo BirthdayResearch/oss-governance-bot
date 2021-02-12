@@ -2,11 +2,11 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import nock from "nock";
 import operations from "../../src/operations";
-import {Commands} from "../../src/command";
+import {Command, Commands} from "../../src/command";
 
 const intercepted = jest.fn()
 
-beforeAll(() => {
+beforeEach(() => {
   jest.spyOn(core, 'getInput').mockImplementation(name => {
     return 'token'
   })
@@ -18,51 +18,101 @@ beforeAll(() => {
     }
   })
 
-  nock('https://api.github.com').get(/.+/).reply(intercepted)
-  nock('https://api.github.com').post(/.+/).reply(intercepted)
-  nock('https://api.github.com').delete(/.+/).reply(intercepted)
+  github.context.payload = {
+    issue: {
+      number: 1,
+      labels: [],
+      author_association: 'CONTRIBUTOR'
+    }
+  }
+
+  nock('https://api.github.com').get(/.+/).reply(200, () => {
+    intercepted()
+    return {}
+  }).persist()
+  nock('https://api.github.com').post(/.+/).reply(200, () => {
+    intercepted()
+    return {}
+  }).persist()
+  nock('https://api.github.com').delete(/.+/).reply(200, () => {
+    intercepted()
+    return {}
+  }).persist()
+  nock('https://api.github.com').patch(/.+/).reply(200, () => {
+    intercepted()
+    return {}
+  }).persist()
 })
 
 afterAll(() => {
   jest.clearAllMocks()
 })
 
-describe('labels', () => {
-  it('should not have error', async () => {
-    github.context.payload = {
-      issue: {
-        number: 1,
-        labels: []
-      }
-    }
+function getCommands(list: string[] = []): Commands {
+  return new Commands(list.map(t => new Command((t))))
+}
 
+describe('both', () => {
+  it('should not have error', async () => {
     await operations({
       labels: [
         {
           prefix: 'prefix',
           list: ['a', 'b'],
+          needs: true,
+        }
+      ],
+      chat_ops: [
+        {
+          cmd: '/close',
+          type: 'close'
+        },
+        {
+          cmd: '/no run',
+          type: 'none',
+          author_association: {
+            owner: true
+          }
         }
       ]
-    }, new Commands([]))
+    }, getCommands(['/close', '/prefix a']))
+    await expect(intercepted).toHaveBeenCalledTimes(2)
+  });
+})
+
+describe('labels', () => {
+  it('should not have error', async () => {
+    await operations({
+      labels: [
+        {
+          prefix: 'prefix',
+          list: ['a', 'b'],
+          needs: true,
+        }
+      ]
+    }, getCommands())
+    await expect(intercepted).toHaveBeenCalledTimes(1)
   })
 })
 
 describe('chat-ops', () => {
   it('should not have error', async () => {
-    github.context.payload = {
-      issue: {
-        number: 1,
-        labels: []
-      }
-    }
-
     await operations({
       chat_ops: [
         {
           cmd: '/close',
           type: 'close'
+        },
+        {
+          cmd: '/cc',
+          type: 'none'
+        },
+        {
+          cmd: '/request',
+          type: 'review'
         }
       ]
-    }, new Commands([]))
+    }, getCommands(['/close', '/cc', '/request']))
+    await expect(intercepted).toHaveBeenCalledTimes(1)
   });
 })

@@ -289,7 +289,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
+exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
 function initClient() {
@@ -336,26 +336,6 @@ function removeLabels(labels) {
 }
 exports.removeLabels = removeLabels;
 /**
- * Comment to post with added details.
- *
- * @param body comment
- */
-function postComment(body) {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        const client = initClient();
-        body = body.replace('$AUTHOR', (_a = github.context.payload.sender) === null || _a === void 0 ? void 0 : _a.login);
-        body += getDetails();
-        yield client.issues.createComment({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            issue_number: getNumber(),
-            body: body
-        });
-    });
-}
-exports.postComment = postComment;
-/**
  * Comment details.
  */
 function getDetails() {
@@ -378,6 +358,33 @@ function getDetails() {
     details += '</details>';
     return details;
 }
+/**
+ * Comment to post with added details.
+ *
+ * @param body comment
+ */
+function postComment(body) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = initClient();
+        body = body.replace('$AUTHOR', (_a = github.context.payload.sender) === null || _a === void 0 ? void 0 : _a.login);
+        body += getDetails();
+        yield client.issues.createComment({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            issue_number: getNumber(),
+            body: body
+        });
+    });
+}
+exports.postComment = postComment;
+function patchIssue(changes) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = initClient();
+        yield client.issues.update(Object.assign({ owner: github.context.repo.owner, repo: github.context.repo.repo, issue_number: getNumber() }, changes));
+    });
+}
+exports.patchIssue = patchIssue;
 
 
 /***/ }),
@@ -592,6 +599,38 @@ exports.isAuthorAssociationAllowed = isAuthorAssociationAllowed;
 
 /***/ }),
 
+/***/ 7577:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const github_1 = __nccwpck_require__(5928);
+function default_1(chatOps, commands) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const matched = commands.prefix(chatOps.cmd);
+        if (!matched.length) {
+            return;
+        }
+        yield github_1.patchIssue({
+            state: 'closed'
+        });
+    });
+}
+exports.default = default_1;
+
+
+/***/ }),
+
 /***/ 7928:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -612,7 +651,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const label_1 = __importDefault(__nccwpck_require__(4550));
 const author_association_1 = __nccwpck_require__(4504);
-// import close from "./close";
+const close_1 = __importDefault(__nccwpck_require__(7577));
 // import assign from "./assign";
 // import review from "./review";
 // import comment from "./comment";
@@ -626,42 +665,40 @@ function processLabels(labels, commands) {
         }
     });
 }
-// async function processChatOps(
-//   chatOps: ChatOps[],
-//   commands: Commands
-// ): Promise<void> {
-//   for (const chatOp of chatOps) {
-//     // if (!isAuthorAssociationAllowed(chatOp.author_association)) {
-//     //   continue
-//     // }
-//     // TODO(fuxing): implement chat ops
-//     // switch (chatOp.type) {
-//     //   case 'close':
-//     //     await close(chatOp, commands)
-//     //     break
-//     //   case 'assign':
-//     //     await assign(chatOp, commands)
-//     //     break
-//     //   case 'review':
-//     //     await review(chatOp, commands)
-//     //     break
-//     //   case 'comment':
-//     //     await comment(chatOp, commands)
-//     //     break
-//     //   case 'dispatch':
-//     //     await dispatch(chatOp, commands)
-//     //     break
-//     // }
-//   }
-// }
+function processChatOps(chatOps, commands) {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (const chatOp of chatOps) {
+            if (!author_association_1.isAuthorAssociationAllowed(chatOp.author_association)) {
+                continue;
+            }
+            switch (chatOp.type) {
+                case 'close':
+                    yield close_1.default(chatOp, commands);
+                    break;
+                // case 'assign':
+                //   await assign(chatOp, commands)
+                //   break
+                // case 'review':
+                //   await review(chatOp, commands)
+                //   break
+                // case 'comment':
+                //   await comment(chatOp, commands)
+                //   break
+                // case 'dispatch':
+                //   await dispatch(chatOp, commands)
+                //   break
+            }
+        }
+    });
+}
 function default_1(governance, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         if (governance.labels) {
             yield processLabels(governance.labels, commands);
         }
-        // if (governance.chat_ops) {
-        //   await processChatOps(governance.chat_ops, commands)
-        // }
+        if (governance.chat_ops) {
+            yield processChatOps(governance.chat_ops, commands);
+        }
     });
 }
 exports.default = default_1;
