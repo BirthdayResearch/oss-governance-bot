@@ -71,11 +71,6 @@ issue:
         member: true
         owner: true
 
-    - cmd: /area ui-ux
-      type: comment
-      comment: |
-        @$AUTHOR: Do you want to...
-
 pull_request:
   labels:
     - prefix: kind
@@ -127,3 +122,8 @@ pull_request:
         collaborator: true
         member: true
         owner: true
+
+    - cmd: /comment example
+      type: comment
+      comment: |
+        @$AUTHOR: Hey this is comment example.

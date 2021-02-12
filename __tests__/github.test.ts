@@ -49,9 +49,12 @@ it('should format details as expected', async () => {
   await postComment('a')
   await expect(postComments).toHaveBeenCalledWith({
     body:
-      'a\n' +
-      '<details><summary>Details</summary>\n' +
-      'I am a bot created to help the [Codertocat](https://github.com/Codertocat/) developers manage community feedback and contributions. You can check out my [manifest file](https://github.com/Codertocat/Hello-World/blob/master/config-path/location.yml) to understand my behavior and what I can do. If you want to use this for your project, you can check out the [fuxingloh/oss-governance](https://github.com/fuxingloh/oss-governance) repository.\n' +
+      'a' +
+      '\n' +
+      '<details><summary>Details</summary>' +
+      '\n\n' +
+      'I am a bot created to help the [Codertocat](https://github.com/Codertocat/) developers manage community feedback and contributions. You can check out my [manifest file](https://github.com/Codertocat/Hello-World/blob/master/config-path/location.yml) to understand my behavior and what I can do. If you want to use this for your project, you can check out the [fuxingloh/oss-governance](https://github.com/fuxingloh/oss-governance) repository.' +
+      '\n\n' +
       '</details>'
   })
 })
