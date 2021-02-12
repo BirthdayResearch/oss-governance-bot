@@ -90,4 +90,44 @@ describe('getGovernance', () => {
     const governance = await getGovernance()
     expect(governance?.labels?.length).toBe(2)
   })
+
+  describe('comment', () => {
+    it('should be issue', async function () {
+      github.context.payload = {
+        comment: {
+          id: 1
+        },
+        issue: {
+          number: 1
+        }
+      }
+
+      const {getGovernance} = require('../src/main')
+      const governance = await getGovernance()
+
+      expect(governance?.labels?.length).toBe(5)
+    })
+
+    it('should be pull request', async function () {
+      github.context.payload = {
+        comment: {
+          id: 1
+        },
+        issue: {
+          number: 1,
+          pull_request: {
+            diff_url: 'https://github.com/fuxingloh/oss-governance/pull/9.diff',
+            html_url: 'https://github.com/fuxingloh/oss-governance/pull/9',
+            patch_url:
+              'https://github.com/fuxingloh/oss-governance/pull/9.patch',
+            url: 'https://api.github.com/repos/fuxingloh/oss-governance/pulls/9'
+          }
+        }
+      }
+
+      const {getGovernance} = require('../src/main')
+      const governance = await getGovernance()
+      expect(governance?.labels?.length).toBe(2)
+    })
+  })
 })

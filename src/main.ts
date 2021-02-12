@@ -10,6 +10,16 @@ export async function getGovernance(): Promise<Governance | undefined> {
   const configPath = core.getInput('config-path', {required: true})
   const config: Config = await getConfig(initClient(), configPath)
 
+  if (github.context.payload.comment) {
+    if (github.context.payload.issue?.pull_request) {
+      return config.pull_request
+    }
+
+    if (github.context.payload.issue) {
+      return config.issue
+    }
+  }
+
   if (github.context.payload.issue) {
     return config.issue
   }
