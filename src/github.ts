@@ -110,3 +110,29 @@ export async function patchIssue(changes: any) {
     ...changes
   })
 }
+
+export async function assign(assignees: string[]) {
+  if (!assignees.length) return
+
+  const client = initClient()
+
+  await client.issues.addAssignees({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    issue_number: getNumber()!,
+    assignees: assignees
+  })
+}
+
+export async function requestReviewers(reviewers: string[]) {
+  if (!reviewers.length) return
+
+  const client = initClient()
+
+  await client.pulls.requestReviewers({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    pull_number: getNumber()!,
+    reviewers: reviewers
+  })
+}

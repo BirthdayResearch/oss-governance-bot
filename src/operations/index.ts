@@ -4,6 +4,8 @@ import label from './label'
 import {isAuthorAssociationAllowed} from './author-association'
 import close from './close'
 import comment from './comment'
+import assign from './assign'
+import review from './review'
 
 async function processLabels(
   labels: Label[],
@@ -28,12 +30,12 @@ async function processChatOps(
       case 'close':
         await close(chatOp, commands)
         break
-      // case 'assign':
-      //   await assign(chatOp, commands)
-      //   break
-      // case 'review':
-      //   await review(chatOp, commands)
-      //   break
+      case 'assign':
+        await assign(chatOp, commands)
+        break
+      case 'review':
+        await review(chatOp, commands)
+        break
       case 'comment':
         await comment(chatOp, commands)
         break

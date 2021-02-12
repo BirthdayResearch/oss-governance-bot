@@ -293,7 +293,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
+exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
 function initClient() {
@@ -393,6 +393,34 @@ function patchIssue(changes) {
     });
 }
 exports.patchIssue = patchIssue;
+function assign(assignees) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!assignees.length)
+            return;
+        const client = initClient();
+        yield client.issues.addAssignees({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            issue_number: getNumber(),
+            assignees: assignees
+        });
+    });
+}
+exports.assign = assign;
+function requestReviewers(reviewers) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!reviewers.length)
+            return;
+        const client = initClient();
+        yield client.pulls.requestReviewers({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            pull_number: getNumber(),
+            reviewers: reviewers
+        });
+    });
+}
+exports.requestReviewers = requestReviewers;
 
 
 /***/ }),
@@ -554,6 +582,45 @@ ignore_1.default()
 
 /***/ }),
 
+/***/ 1800:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const github_1 = __nccwpck_require__(5928);
+function default_1(chatOps, commands) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const matched = commands.prefix(chatOps.cmd);
+        if (!matched.length) {
+            return;
+        }
+        const assignees = matched
+            .flatMap(value => value.args)
+            .map(value => {
+            value = value.trim();
+            if (value.startsWith('@')) {
+                return value.replace(/^@/, '');
+            }
+        })
+            .filter(value => value);
+        yield github_1.assign(assignees);
+    });
+}
+exports.default = default_1;
+
+
+/***/ }),
+
 /***/ 4504:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -700,6 +767,8 @@ const label_1 = __importDefault(__nccwpck_require__(4550));
 const author_association_1 = __nccwpck_require__(4504);
 const close_1 = __importDefault(__nccwpck_require__(7577));
 const comment_1 = __importDefault(__nccwpck_require__(8448));
+const assign_1 = __importDefault(__nccwpck_require__(1800));
+const review_1 = __importDefault(__nccwpck_require__(9198));
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         for (const labelOp of labels) {
@@ -719,12 +788,12 @@ function processChatOps(chatOps, commands) {
                 case 'close':
                     yield close_1.default(chatOp, commands);
                     break;
-                // case 'assign':
-                //   await assign(chatOp, commands)
-                //   break
-                // case 'review':
-                //   await review(chatOp, commands)
-                //   break
+                case 'assign':
+                    yield assign_1.default(chatOp, commands);
+                    break;
+                case 'review':
+                    yield review_1.default(chatOp, commands);
+                    break;
                 case 'comment':
                     yield comment_1.default(chatOp, commands);
                     break;
@@ -910,6 +979,45 @@ function sendComment(label) {
         }
     });
 }
+
+
+/***/ }),
+
+/***/ 9198:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const github_1 = __nccwpck_require__(5928);
+function default_1(chatOps, commands) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const matched = commands.prefix(chatOps.cmd);
+        if (!matched.length) {
+            return;
+        }
+        const reviewers = matched
+            .flatMap(value => value.args)
+            .map(value => {
+            value = value.trim();
+            if (value.startsWith('@')) {
+                return value.replace(/^@/, '');
+            }
+        })
+            .filter(value => value);
+        yield github_1.requestReviewers(reviewers);
+    });
+}
+exports.default = default_1;
 
 
 /***/ }),
