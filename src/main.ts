@@ -42,8 +42,6 @@ ignore()
     }
 
     await operations(governance, await command())
-  })
-  .then(() => {
     core.info('oss-governance: completed')
   })
   .catch(error => {

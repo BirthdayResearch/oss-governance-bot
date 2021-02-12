@@ -30,6 +30,18 @@ afterAll(() => {
   jest.clearAllMocks()
 })
 
+it('pull_request should comment as expected', async () => {
+  github.context.payload = {
+    pull_request: {
+      number: 1,
+      labels: []
+    }
+  }
+
+  await postComment('a')
+  await expect(postComments).toBeCalled()
+})
+
 it('Organization: should format details as expected', async () => {
   github.context.payload = {
     issue: {

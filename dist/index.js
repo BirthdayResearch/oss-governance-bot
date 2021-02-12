@@ -43,10 +43,6 @@ class Command {
         this.args = [];
         this.text = text;
     }
-    getArgs(prefix) {
-        const postfix = this.text.split(prefix)[1];
-        return postfix.trim().split(' ');
-    }
 }
 exports.Command = Command;
 class ArgsCommand extends Command {
@@ -588,10 +584,8 @@ ignore_1.default()
         return;
     }
     yield operations_1.default(governance, yield command_1.default());
-}))
-    .then(() => {
     core.info('oss-governance: completed');
-})
+}))
     .catch(error => {
     core.error(error);
     core.setFailed(error.message);
