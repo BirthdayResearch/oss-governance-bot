@@ -58,14 +58,19 @@ function getDetails(): string {
 
   const configPath = core.getInput('config-path', {required: true})
   const repoUrl = repository?.html_url
-  const ownerUrl = repository?.owner.html_url
-  const organisation = repository?.owner.login
+  const owner = repository?.owner
 
   let details = ''
   details += '\n'
   details += '<details><summary>Details</summary>'
   details += '\n\n'
-  details += `I am a bot created to help the [${organisation}](${ownerUrl}) developers manage community feedback and contributions.`
+
+  if (owner?.type === 'Organization') {
+    details += `I am a bot created to help the [${owner?.login}](${owner?.html_url}) developers manage community feedback and contributions.`
+  } else {
+    details += `I am a bot created to help [${owner?.login}](${owner?.html_url}) manage community feedback and contributions.`
+  }
+
   details += ' '
   details += `You can check out my [manifest file](${repoUrl}/blob/master/${configPath}) to understand my behavior and what I can do.`
   details += ' '
