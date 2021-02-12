@@ -636,6 +636,25 @@ exports.default = default_1;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -652,12 +671,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const label_1 = __importDefault(__nccwpck_require__(4550));
 const author_association_1 = __nccwpck_require__(4504);
 const close_1 = __importDefault(__nccwpck_require__(7577));
+const core = __importStar(__nccwpck_require__(2186));
 // import assign from "./assign";
 // import review from "./review";
 // import comment from "./comment";
 // import dispatch from "./dispatch";
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
+        core.info('oss-governance: process Labels');
         for (const labelOp of labels) {
             if (author_association_1.isAuthorAssociationAllowed(labelOp.author_association)) {
                 yield label_1.default(labelOp, commands);
@@ -692,11 +713,12 @@ function processChatOps(chatOps, commands) {
     });
 }
 function default_1(governance, commands) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        if (governance.labels) {
+        if ((_a = governance.labels) === null || _a === void 0 ? void 0 : _a.length) {
             yield processLabels(governance.labels, commands);
         }
-        if (governance.chat_ops) {
+        if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
             yield processChatOps(governance.chat_ops, commands);
         }
     });
