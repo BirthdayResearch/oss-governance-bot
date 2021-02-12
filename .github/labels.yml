@@ -2,9 +2,6 @@
 - color: cfd3d7
   name: duplicate
   description: This issue or pull request already exists
-- color: 0366d6
-  name: dependencies
-  description: Pull requests that update a dependency file
 - color: 7057ff
   name: good first issue
   description: Good for newcomers
@@ -48,6 +45,9 @@
 - color: e7e9eb
   name: kind/refactor
   description: Non feature refactor change
+- color: e7e9eb
+  name: kind/dependencies
+  description: Pull requests that update a dependency file
 
 # Area
 - color: fbca04
