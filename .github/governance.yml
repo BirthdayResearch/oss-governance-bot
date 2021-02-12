@@ -80,7 +80,7 @@ pull_request:
   labels:
     - prefix: kind
       multiple: false
-      list: [ "feature", "fix", "chore", "docs", "refactor" ]
+      list: [ "feature", "fix", "chore", "docs", "refactor", "dependencies" ]
       needs:
         comment: |
           @$AUTHOR: There are no 'kind' label on this PR. You need a 'kind' label to generate the release note automatically.
@@ -90,6 +90,7 @@ pull_request:
           * `/kind chore`
           * `/kind docs`
           * `/kind refactor`
+          * `/kind dependencies`
 
     - prefix: priority
       multiple: false

@@ -3,27 +3,27 @@ tag-template: 'v$RESOLVED_VERSION'
 categories:
   - title: '🚀 Features'
     labels:
-      - 'feat'
+      - 'kind/feature'
   - title: '🐛 Bug Fixes'
     labels:
-      - 'fix'
+      - 'kind/fix'
   - title: '🧰 Maintenance'
     labels:
-      - 'refactor'
-      - 'chore'
-      - 'docs'
+      - 'kind/refactor'
+      - 'kind/chore'
+      - 'kind/docs'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&'
 version-resolver:
   minor:
     labels:
-      - 'feat'
+      - 'kind/feature'
   patch:
     labels:
-      - 'docs'
-      - 'chore'
-      - 'refactor'
-      - 'fix'
+      - 'kind/refactor'
+      - 'kind/chore'
+      - 'kind/docs'
+      - 'kind/fix'
   default: patch
 template: |
   $CHANGES
