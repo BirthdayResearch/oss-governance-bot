@@ -78,7 +78,9 @@ exports.Commands = Commands;
 function getCommands() {
     const payload = github.context.payload;
     const content = payload.comment || payload.pull_request || payload.issue;
-    const body = content === null || content === void 0 ? void 0 : content.body;
+    let body = (content === null || content === void 0 ? void 0 : content.body) || '';
+    // Replace comments so that it's not processed
+    body = body.replace(/<!--(.|\n)*-->/, '');
     return body
         .split('\n')
         .map(text => { var _a; return (_a = /^\/(.+)/.exec(text)) === null || _a === void 0 ? void 0 : _a[0]; })

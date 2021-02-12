@@ -196,3 +196,22 @@ describe('commands', () => {
     })
   })
 })
+
+describe('ignore comments', () => {
+  async function getCommands(body: string): Promise<Commands> {
+    github.context.payload = {
+      issue: {
+        number: 1,
+        body: body
+      }
+    }
+
+    return await command()
+  }
+
+  it('should ignore comments', async () => {
+    const commands = await getCommands('' + '<!--\n' + '/needs label\n' + '-->')
+
+    expect(commands.prefix('/needs').length).toBeFalsy()
+  })
+})
