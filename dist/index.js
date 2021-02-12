@@ -426,7 +426,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const github = __importStar(__nccwpck_require__(5438));
 function is(eventName, actions) {
     return (github.context.eventName === eventName &&
-        actions.includes(github.context.action));
+        actions.includes(github.context.payload.action));
 }
 /**
  * To prevent mistakes, this will ignore invalid workflow trigger
@@ -518,16 +518,12 @@ exports.getGovernance = getGovernance;
 /* eslint github/no-then: off */
 ignore_1.default()
     .then((toIgnore) => __awaiter(void 0, void 0, void 0, function* () {
-    core.info('toIgnore before');
     if (toIgnore)
         return;
-    core.info('toIgnore after');
     const governance = yield getGovernance();
     if (!governance) {
-        core.info('no governance');
         return;
     }
-    core.info('has governance');
     yield operations_1.default(governance, yield command_1.default());
 }))
     .then(() => {
