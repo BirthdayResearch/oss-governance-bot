@@ -117,15 +117,6 @@ pull_request:
         member: true
         owner: true
 
-    - cmd: /retest oss/governance
-      type: dispatch
-      dispatch: "OSS/Governance"
-      author_association:
-        author: true
-        collaborator: true
-        member: true
-        owner: true
-
     - cmd: /comment pr
       type: comment
       comment: |

@@ -43,9 +43,6 @@ async function processChatOps(
       case 'label':
         await labelChatOps(chatOp, commands)
         break
-      // case 'dispatch':
-      //   await dispatch(chatOp, commands)
-      //   break
     }
   }
 }
