@@ -342,13 +342,17 @@ function getDetails() {
     const repository = github.context.payload.repository;
     const configPath = core.getInput('config-path', { required: true });
     const repoUrl = repository === null || repository === void 0 ? void 0 : repository.html_url;
-    const ownerUrl = repository === null || repository === void 0 ? void 0 : repository.owner.html_url;
-    const organisation = repository === null || repository === void 0 ? void 0 : repository.owner.login;
+    const owner = repository === null || repository === void 0 ? void 0 : repository.owner;
     let details = '';
     details += '\n';
     details += '<details><summary>Details</summary>';
     details += '\n\n';
-    details += `I am a bot created to help the [${organisation}](${ownerUrl}) developers manage community feedback and contributions.`;
+    if ((owner === null || owner === void 0 ? void 0 : owner.type) === 'Organization') {
+        details += `I am a bot created to help the [${owner === null || owner === void 0 ? void 0 : owner.login}](${owner === null || owner === void 0 ? void 0 : owner.html_url}) developers manage community feedback and contributions.`;
+    }
+    else {
+        details += `I am a bot created to help [${owner === null || owner === void 0 ? void 0 : owner.login}](${owner === null || owner === void 0 ? void 0 : owner.html_url}) manage community feedback and contributions.`;
+    }
     details += ' ';
     details += `You can check out my [manifest file](${repoUrl}/blob/master/${configPath}) to understand my behavior and what I can do.`;
     details += ' ';
