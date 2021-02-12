@@ -3,6 +3,7 @@ import {AuthorAssociation} from "../../src/config";
 import {isAuthorAssociationAllowed} from "../../src/operations/author-association";
 
 function expectAssociation(association: AuthorAssociation | undefined, type: string, target: string = 'comment') {
+  github.context.payload = {}
   github.context.payload[target] = {
     id: 1,
     author_association: type
@@ -13,90 +14,90 @@ function expectAssociation(association: AuthorAssociation | undefined, type: str
 
 describe('all association', function () {
   it('should empty true', function () {
-    expectAssociation(undefined, 'OWNER').toBeTruthy()
+    expectAssociation(undefined, 'OWNER').toBe(true)
   });
 
   it('should fail invalid match', function () {
-    expectAssociation({collaborator: false}, 'OWNER').toBeFalsy()
+    expectAssociation({collaborator: false}, 'OWNER').toBe(false)
   });
 
   describe('COLLABORATOR', () => {
     it('should collaborator false', function () {
-      expectAssociation({collaborator: false}, 'COLLABORATOR').toBeFalsy()
+      expectAssociation({collaborator: false}, 'COLLABORATOR').toBe(false)
     });
 
     it('should collaborator true', function () {
-      expectAssociation({collaborator: true}, 'COLLABORATOR').toBeTruthy()
+      expectAssociation({collaborator: true}, 'COLLABORATOR').toBe(true)
     });
   })
 
   describe('CONTRIBUTOR', () => {
     it('should contributor false', function () {
-      expectAssociation({contributor: false}, 'CONTRIBUTOR').toBeFalsy()
+      expectAssociation({contributor: false}, 'CONTRIBUTOR').toBe(false)
     });
 
     it('should contributor true', function () {
-      expectAssociation({contributor: true}, 'CONTRIBUTOR').toBeTruthy()
+      expectAssociation({contributor: true}, 'CONTRIBUTOR').toBe(true)
     });
   })
 
   describe('FIRST_TIMER', () => {
     it('should first_timer false', function () {
-      expectAssociation({first_timer: false}, 'FIRST_TIMER').toBeFalsy()
+      expectAssociation({first_timer: false}, 'FIRST_TIMER').toBe(false)
     });
 
     it('should first_timer true', function () {
-      expectAssociation({first_timer: true}, 'FIRST_TIMER').toBeTruthy()
+      expectAssociation({first_timer: true}, 'FIRST_TIMER').toBe(true)
     });
   })
 
   describe('FIRST_TIME_CONTRIBUTOR', () => {
     it('should first_time_contributor false', function () {
-      expectAssociation({first_time_contributor: false}, 'FIRST_TIME_CONTRIBUTOR').toBeFalsy()
+      expectAssociation({first_time_contributor: false}, 'FIRST_TIME_CONTRIBUTOR').toBe(false)
     });
 
     it('should first_time_contributor true', function () {
-      expectAssociation({first_time_contributor: true}, 'FIRST_TIME_CONTRIBUTOR').toBeTruthy()
+      expectAssociation({first_time_contributor: true}, 'FIRST_TIME_CONTRIBUTOR').toBe(true)
     });
   })
 
   describe('MANNEQUIN', () => {
     it('should mannequin false', function () {
-      expectAssociation({mannequin: false}, 'MANNEQUIN').toBeFalsy()
+      expectAssociation({mannequin: false}, 'MANNEQUIN').toBe(false)
     });
 
     it('should mannequin true', function () {
-      expectAssociation({mannequin: true}, 'MANNEQUIN').toBeTruthy()
+      expectAssociation({mannequin: true}, 'MANNEQUIN').toBe(true)
     });
   })
 
   describe('MEMBER', () => {
     it('should member false', function () {
-      expectAssociation({member: false}, 'MEMBER').toBeFalsy()
+      expectAssociation({member: false}, 'MEMBER').toBe(false)
     });
 
     it('should member true', function () {
-      expectAssociation({member: true}, 'MEMBER').toBeTruthy()
+      expectAssociation({member: true}, 'MEMBER').toBe(true)
     });
   })
 
   describe('NONE', () => {
     it('should none false', function () {
-      expectAssociation({none: false}, 'NONE').toBeFalsy()
+      expectAssociation({none: false}, 'NONE').toBe(false)
     });
 
     it('should none true', function () {
-      expectAssociation({none: true}, 'NONE').toBeTruthy()
+      expectAssociation({none: true}, 'NONE').toBe(true)
     });
   })
 
   describe('OWNER', () => {
     it('should owner false', function () {
-      expectAssociation({owner: false}, 'OWNER').toBeFalsy()
+      expectAssociation({owner: false}, 'OWNER').toBe(false)
     });
 
     it('should owner true', function () {
-      expectAssociation({owner: true}, 'OWNER').toBeTruthy()
+      expectAssociation({owner: true}, 'OWNER').toBe(true)
     });
   })
 });
@@ -104,20 +105,20 @@ describe('all association', function () {
 describe('pull_request', function () {
   it('should owner true', function () {
     expectAssociation({owner: true}, 'OWNER', 'pull_request')
-      .toBeTruthy()
+      .toBe(true)
   });
 });
 
 describe('issue', function () {
   it('should owner true', function () {
     expectAssociation({owner: true}, 'OWNER', 'issue')
-      .toBeTruthy()
+      .toBe(true)
   });
 });
 
 describe('comment', function () {
   it('should owner true', function () {
     expectAssociation({owner: true}, 'OWNER', 'comment')
-      .toBeTruthy()
+      .toBe(true)
   });
 });
