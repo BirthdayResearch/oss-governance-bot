@@ -502,9 +502,18 @@ const command_1 = __importDefault(__nccwpck_require__(524));
 const operations_1 = __importDefault(__nccwpck_require__(7928));
 const github_1 = __nccwpck_require__(5928);
 function getGovernance() {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const configPath = core.getInput('config-path', { required: true });
         const config = yield config_1.getConfig(github_1.initClient(), configPath);
+        if (github.context.payload.comment) {
+            if ((_a = github.context.payload.issue) === null || _a === void 0 ? void 0 : _a.pull_request) {
+                return config.pull_request;
+            }
+            if (github.context.payload.issue) {
+                return config.issue;
+            }
+        }
         if (github.context.payload.issue) {
             return config.issue;
         }
