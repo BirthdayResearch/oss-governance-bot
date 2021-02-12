@@ -136,3 +136,27 @@ export async function requestReviewers(reviewers: string[]) {
     reviewers: reviewers
   })
 }
+
+export async function commitStatus(
+  context: string,
+  state: 'success' | 'failure' | 'pending',
+  description?: string,
+  url?: string
+): Promise<void> {
+  if (!github.context.payload.pull_request) {
+    return
+  }
+
+  const client = initClient()
+
+  const sha = github.context.payload.pull_request?.head.sha as string
+  await client.repos.createCommitStatus({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    sha: sha,
+    context: context,
+    state: state,
+    description: description,
+    target_url: url
+  })
+}

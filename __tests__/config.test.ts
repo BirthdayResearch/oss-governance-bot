@@ -148,6 +148,18 @@ describe('invalid config', () => {
       it('pr-label-prefix.yml is invalid', () => {
         return expectInvalid('pr-label-prefix.yml')
       })
+
+      describe('status', () => {
+        it('pr-label-status-context.yml is invalid', () => {
+          return expectInvalid('pr-label-status-context.yml')
+        })
+        it('pr-label-status-empty.yml is invalid', () => {
+          return expectInvalid('pr-label-status-empty.yml')
+        })
+        it('pr-label-status-url.yml is invalid', () => {
+          return expectInvalid('pr-label-status-url.yml')
+        })
+      })
     })
   })
 
@@ -260,6 +272,36 @@ describe('valid config', () => {
     })
     it('label-prefix-list.yml is valid', () => {
       return expectValid('label-prefix-list.yml')
+    })
+
+    describe('label-status', () => {
+      it('label-status.yml is valid', () => {
+        return expectValid('label-status.yml')
+      })
+      it('label-status-context.yml is valid', () => {
+        return expectValid('label-status-context.yml')
+      })
+      it('label-status-description-failure.yml is valid', () => {
+        return expectValid('label-status-description-failure.yml')
+      })
+      it('label-status-description-pending.yml is valid', () => {
+        return expectValid('label-status-description-pending.yml')
+      })
+      it('label-status-description-string.yml is valid', () => {
+        return expectValid('label-status-description-string.yml')
+      })
+      it('label-status-description-success.yml is valid', () => {
+        return expectValid('label-status-description-success.yml')
+      })
+      it('label-status-description-success-failure.yml is valid', () => {
+        return expectValid('label-status-description-success-failure.yml')
+      })
+      it('label-status-description-success-pending.yml is valid', () => {
+        return expectValid('label-status-description-success-pending.yml')
+      })
+      it('label-status-url.yml is valid', () => {
+        return expectValid('label-status-url.yml')
+      })
     })
   })
 })

@@ -1,0 +1,11 @@
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      needs:
+        status:
+          context: Status Context
+          description:
+            failure: Failure description

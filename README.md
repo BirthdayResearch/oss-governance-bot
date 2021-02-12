@@ -5,36 +5,180 @@
 [![Release](https://img.shields.io/github/v/release/fuxingloh/oss-governance)](https://github.com/fuxingloh/oss-governance/releases)
 [![License MIT](https://img.shields.io/github/license/fuxingloh/oss-governance)](https://github.com/fuxingloh/oss-governance/blob/main/LICENSE)
 
-A collection of oss governance policy and techniques to bring efficacy to your open source software project governance.
+`oss-governance` is a GitHub action to help bring efficacy to your open source project governance. In addition to
+providing a chat-bot experience when contributor interact with your project,
+`oss-governance` also provide automation in the form of policy enforcement. Community contributors can trigger chat-ops
+via /slash style commands.
 
-* Speed up issue triaging with automated chat-bot and chat-ops.
+### What it can do for you
+
+* Speed up issue triaging with automated chat-bot and chat-ops operations.
 * Increased code review agility by moving quality control hierarchy from requirements to educational steps.
 * Scale to thousands of contributors without alienating community participation with complex quality control hierarchy.
-* Tool that lives natively and integrate well with the GitHub action/workflow product offering.
+* Tool that lives natively and integrate well with the GitHub action/workflow product offering. You can view the source
+  directly and modify it to your needs.
 
 ## Usage
 
-#### TODOs
+#### `.github/workflow/governance.yml`
 
-- [ ] Details & Information
-- [ ] Banner Image
-- [ ] GitHub Secret for a custom username and image of bot.
-- [ ] Release management
-- [ ] Cleanup dependencies
+```yml
+# .github/workflow/governance.yml
 
-### Examples
+on:
+  pull_request:
+    types: [ synchronize, opened, labeled, unlabeled ]
+  issues:
+    types: [ opened, labeled, unlabeled ]
+  issue_comment:
+    types: [ created ]
 
-### Logic
+jobs:
+  governance:
+    name: Governance
+    runs-on: ubuntu-latest
+    steps:
+      # follows semantic versioning. Lock to different version: v1, v1.5, v1.5.0 or use a commit hash.
+      - uses: fuxingloh/oss-governance@v1
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'  
+          config-path: .github/governance.yml # optional, default to '.github/governance.yml'
+```
 
-1. Parse Governance Config
-2. ignores (bots/workflow)
-3. generate available commands
-4. parse chat-ops (access-control)
-5. run chat-ops (types)
-6. produce prefixed labels (add/remove)
-7. produce needs labels
-8. produce comments
+#### `.github/governance.yml`
 
+```yml
+# .github/governance.yml
+
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      multiple: false
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
+      needs:
+        comment: |
+          @$AUTHOR: This issue is currently awaiting triage.
+
+          The triage/accepted label can be added by org members by writing /triage accepted in a comment.
+
+    - prefix: kind
+      list: [ "feature", "bug", "question" ]
+      multiple: false
+      needs:
+        comment: |
+          @$AUTHOR: There are no 'kind' label on this PR. You need a 'kind' label to generate the release note automatically.
+
+          * `/kind feature`
+          * `/kind bug`
+          * `/kind question`
+
+    - prefix: area
+      list: [ "ui-ux", "semantics", "translation", "security" ]
+      multiple: true
+      needs:
+        comment: |
+          @$AUTHOR: There are no area labels on this issue. Adding an appropriate label will greatly expedite the process for us. You can add as many area as you see fit. **If you are unsure what to do you can ignore this!**
+
+          * `/area ui-ux`
+          * `/area semantics`
+          * `/area translation`
+          * `/area security`
+
+    - prefix: os
+      list: [ "mac", "win", "linux" ]
+      multiple: true
+
+    - prefix: priority
+      multiple: false
+      list: [ "urgent-now", "important-soon" ]
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
+
+  chat_ops:
+    - cmd: /close
+      type: close
+      author_association:
+        author: true
+        collaborator: true
+        member: true
+        owner: true
+
+    - cmd: /cc
+      type: none
+
+    - cmd: /assign
+      type: assign
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
+
+    - cmd: /comment issue
+      type: comment
+      comment: |
+        @$AUTHOR: Hey this is comment issue example.
+
+pull_request:
+  labels:
+    - prefix: kind
+      multiple: false
+      list: [ "feature", "fix", "chore", "docs", "refactor", "dependencies" ]
+      needs:
+        comment: |
+          @$AUTHOR: There are no 'kind' label on this PR. You need a 'kind' label to generate the release automatically.
+
+          * `/kind feature`
+          * `/kind fix`
+          * `/kind chore`
+          * `/kind docs`
+          * `/kind refactor`
+          * `/kind dependencies`
+        status:
+          context: "Kind Label"
+          description:
+            success: Ready for review & merge.
+            failure: Missing kind label to generate release automatically.
+
+    - prefix: priority
+      multiple: false
+      list: [ "urgent-now", "important-soon" ]
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
+
+  chat_ops:
+    - cmd: /close
+      type: close
+      author_association:
+        author: true
+        collaborator: true
+        member: true
+        owner: true
+
+    - cmd: /cc
+      type: none # does not trigger anything
+
+    - cmd: /request
+      type: review
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
+
+    - cmd: /comment pr
+      type: comment
+      comment: |
+        @$AUTHOR: Hey this is comment pr example.
+```
 
 ## Motivation
 
@@ -60,7 +204,6 @@ hooks and deeply integrate with many GitHub offerings.
 ```shell
 npm i # npm 7 is used
 npm run all # to build/check/lint/package
-npm run test # to test
 ```
 
 * For any question please feel free to create an issue.

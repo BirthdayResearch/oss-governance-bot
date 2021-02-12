@@ -6,6 +6,7 @@ import nock from "nock";
 
 const postComments = jest.fn()
 const postLabels = jest.fn()
+const postStatus = jest.fn()
 const deleteLabels = jest.fn()
 
 beforeAll(() => {
@@ -39,6 +40,13 @@ beforeAll(() => {
     .reply(200, function (_, body) {
       const paths = this.req.path.split('/')
       deleteLabels(decodeURIComponent(paths[paths.length - 1]))
+      return {}
+    }).persist()
+
+  nock('https://api.github.com')
+    .post(/\/repos\/owner\/repo\/statuses\/.+/)
+    .reply(200, function (_, body) {
+      postStatus(body)
       return {}
     }).persist()
 })
@@ -452,6 +460,173 @@ describe('labels', () => {
   })
 })
 
+describe('status', () => {
+  it('should have pending status', async () => {
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        labels: [],
+        head: {
+          sha: 'abc'
+        }
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: {
+        status: {
+          context: 'Triage'
+        }
+      }
+    }, getCommands())
+
+    return expect(postStatus).toHaveBeenCalledWith({
+      "context": "Triage",
+      "state": "pending"
+    })
+  })
+
+  it('should have success status', async () => {
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        labels: [],
+        head: {
+          sha: 'abc'
+        }
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: {
+        status: {
+          context: 'Triage'
+        }
+      }
+    }, getCommands(['/triage accepted']))
+
+    return expect(postStatus).toHaveBeenCalledWith({
+      "context": "Triage",
+      "state": "success"
+    })
+  })
+
+  it('should have failure status with description', async () => {
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        labels: [],
+        head: {
+          sha: 'abc'
+        }
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: {
+        status: {
+          context: 'Triage',
+          description: {
+            failure: "Fail Message"
+          }
+        }
+      }
+    }, getCommands())
+
+    return expect(postStatus).toHaveBeenCalledWith({
+      "context": "Triage",
+      "state": "failure"
+    })
+  })
+
+  it('should have success status with description', async () => {
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        labels: [],
+        head: {
+          sha: 'abc'
+        }
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: {
+        status: {
+          context: 'Triage',
+          description: {
+            failure: 'No',
+            success: "Fail Message"
+          }
+        }
+      }
+    }, getCommands(['/triage accepted']))
+
+    return expect(postStatus).toHaveBeenCalledWith({
+      "context": "Triage",
+      "state": "success",
+      "description": "Fail Message",
+    })
+  })
+
+  it('should not have status', async () => {
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        labels: [],
+        head: {
+          sha: 'abc'
+        }
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: true
+    }, getCommands())
+
+    return expect(postStatus).not.toHaveBeenCalled()
+  })
+
+  it('should have url', async () => {
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        labels: [],
+        head: {
+          sha: 'abc'
+        }
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: {
+        status: {
+          context: 'Triage',
+          url: 'https://google.com'
+        }
+      }
+    }, getCommands())
+
+    return expect(postStatus).toHaveBeenCalledWith({
+      "context": "Triage",
+      "state": "pending",
+      "target_url": "https://google.com",
+    })
+  })
+})
+
 describe('comments flaky test', () => {
   it('should have needs/kind removed when /kind fix is commented', async () => {
     github.context.payload = {
@@ -479,5 +654,4 @@ describe('comments flaky test', () => {
     await expect(postLabels).not.toHaveBeenCalled()
     await expect(postComments).not.toHaveBeenCalled()
   });
-
 })
