@@ -51,25 +51,6 @@ export async function removeLabels(labels: string[]): Promise<void> {
 }
 
 /**
- * Comment to post with added details.
- *
- * @param body comment
- */
-export async function postComment(body: string) {
-  const client = initClient()
-
-  body = body.replace('$AUTHOR', github.context.payload.sender?.login)
-  body += getDetails()
-
-  await client.issues.createComment({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    issue_number: getNumber()!,
-    body: body
-  })
-}
-
-/**
  * Comment details.
  */
 function getDetails(): string {
@@ -93,4 +74,34 @@ function getDetails(): string {
   details += '\n'
   details += '</details>'
   return details
+}
+
+/**
+ * Comment to post with added details.
+ *
+ * @param body comment
+ */
+export async function postComment(body: string) {
+  const client = initClient()
+
+  body = body.replace('$AUTHOR', github.context.payload.sender?.login)
+  body += getDetails()
+
+  await client.issues.createComment({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    issue_number: getNumber()!,
+    body: body
+  })
+}
+
+export async function patchIssue(changes: any) {
+  const client = initClient()
+
+  await client.issues.update({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    issue_number: getNumber()!,
+    ...changes
+  })
 }

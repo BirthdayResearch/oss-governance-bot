@@ -3,7 +3,7 @@ import * as github from '@actions/github'
 function is(eventName: string, actions: string[]): boolean {
   return (
     github.context.eventName === eventName &&
-    actions.includes(github.context.action)
+    actions.includes(github.context.payload.action!)
   )
 }
 
