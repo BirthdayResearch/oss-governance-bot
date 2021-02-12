@@ -518,12 +518,16 @@ exports.getGovernance = getGovernance;
 /* eslint github/no-then: off */
 ignore_1.default()
     .then((toIgnore) => __awaiter(void 0, void 0, void 0, function* () {
+    core.info('toIgnore before');
     if (toIgnore)
         return;
+    core.info('toIgnore after');
     const governance = yield getGovernance();
     if (!governance) {
+        core.info('no governance');
         return;
     }
+    core.info('has governance');
     yield operations_1.default(governance, yield command_1.default());
 }))
     .then(() => {
@@ -692,11 +696,12 @@ function processChatOps(chatOps, commands) {
     });
 }
 function default_1(governance, commands) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        if (governance.labels) {
+        if ((_a = governance.labels) === null || _a === void 0 ? void 0 : _a.length) {
             yield processLabels(governance.labels, commands);
         }
-        if (governance.chat_ops) {
+        if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
             yield processChatOps(governance.chat_ops, commands);
         }
     });

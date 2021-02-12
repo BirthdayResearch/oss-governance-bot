@@ -24,13 +24,17 @@ export async function getGovernance(): Promise<Governance | undefined> {
 /* eslint github/no-then: off */
 ignore()
   .then(async toIgnore => {
+    core.info('toIgnore before')
     if (toIgnore) return
+    core.info('toIgnore after')
 
     const governance = await getGovernance()
     if (!governance) {
+      core.info('no governance')
       return
     }
 
+    core.info('has governance')
     await operations(governance, await command())
   })
   .then(() => {
