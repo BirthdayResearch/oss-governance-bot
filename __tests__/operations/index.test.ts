@@ -60,6 +60,14 @@ describe('both', () => {
           prefix: 'prefix',
           list: ['a', 'b'],
           needs: true,
+          author_association: {
+            owner: true
+          }
+        },
+        {
+          prefix: 'another',
+          list: ['a', 'b'],
+          needs: true,
         }
       ],
       chat_ops: [
@@ -110,6 +118,15 @@ describe('chat-ops', () => {
         {
           cmd: '/request',
           type: 'review'
+        },
+        {
+          cmd: '/assign',
+          type: 'assign'
+        },
+        {
+          cmd: '/comment me',
+          type: 'comment',
+          comment: 'abc'
         }
       ]
     }, getCommands(['/close', '/cc', '/request']))
