@@ -866,17 +866,17 @@ function default_1(chatOps, commands) {
             return;
         }
         const add = (_a = chatOps.label) === null || _a === void 0 ? void 0 : _a.add;
-        if (typeof add === 'string') {
+        if (typeof add === 'string' && add) {
             yield github_1.addLabels([add]);
         }
-        if (Array.isArray(add)) {
+        else if (Array.isArray(add)) {
             yield github_1.addLabels(add);
         }
         const remove = (_b = chatOps.label) === null || _b === void 0 ? void 0 : _b.remove;
-        if (typeof remove === 'string') {
+        if (typeof remove === 'string' && remove) {
             yield github_1.removeLabels([remove]);
         }
-        if (Array.isArray(remove)) {
+        else if (Array.isArray(remove)) {
             yield github_1.removeLabels(remove);
         }
     });

@@ -13,19 +13,17 @@ export default async function (
 
   const add = chatOps.label?.add
 
-  if (typeof add === 'string') {
+  if (typeof add === 'string' && add) {
     await addLabels([add])
-  }
-  if (Array.isArray(add)) {
+  } else if (Array.isArray(add)) {
     await addLabels(add)
   }
 
   const remove = chatOps.label?.remove
 
-  if (typeof remove === 'string') {
+  if (typeof remove === 'string' && remove) {
     await removeLabels([remove])
-  }
-  if (Array.isArray(remove)) {
+  } else if (Array.isArray(remove)) {
     await removeLabels(remove)
   }
 }
