@@ -10,13 +10,15 @@ providing a chat-bot experience when contributor interact with your project,
 `oss-governance` also provide automation in the form of policy enforcement. Community contributors can trigger chat-ops
 via /slash style commands.
 
-### What it can do for you
+### What can this do for you
 
 * Speed up issue triaging with automated chat-bot and chat-ops operations.
 * Increased code review agility by moving quality control hierarchy from requirements to educational steps.
 * Scale to thousands of contributors without alienating community participation with complex quality control hierarchy.
 * Tool that lives natively and integrate well with the GitHub action/workflow product offering. You can view the source
   directly and modify it to your needs.
+
+![preview](.github/preview.png)
 
 ## Usage
 
