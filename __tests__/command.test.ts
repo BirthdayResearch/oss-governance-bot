@@ -209,9 +209,54 @@ describe('ignore comments', () => {
     return await command()
   }
 
-  it('should ignore comments', async () => {
+  it('should ignore comments for CR', async () => {
+    const commands = await getCommands('' + '<!--\r' + '/needs label\r' + '-->')
+
+    expect(commands.prefix('/needs').length).toBeFalsy()
+  })
+
+  it('should ignore comments for LF', async () => {
     const commands = await getCommands('' + '<!--\n' + '/needs label\n' + '-->')
 
     expect(commands.prefix('/needs').length).toBeFalsy()
+  })
+
+  it('should ignore comments for CR + LF', async () => {
+    const commands = await getCommands(
+      '' + '<!--\r\n' + '/needs label\r\n' + '-->'
+    )
+
+    expect(commands.prefix('/needs').length).toBeFalsy()
+  })
+
+  it('should ignore comments longer', async () => {
+    const body =
+      '<!--  Thanks for sending a pull request! -->\r\n' +
+      '\r\n' +
+      '#### What kind of PR is this?:\r\n' +
+      '<!--\n' +
+      'Use one of the following kinds:\r\n' +
+      '/kind feature\r\n' +
+      '/kind fix\r\n' +
+      '/kind chore\r\n' +
+      '/kind docs\r\n' +
+      '/kind refactor\r\n' +
+      '-->\r\n' +
+      '\r\n' +
+      '/kind \r\n' +
+      '\r\n' +
+      '#### What this PR does / why we need it:\r\n' +
+      '\r\n' +
+      '#### Which issue(s) does this PR fixes?:\r\n' +
+      '<!--\r\n' +
+      '(Optional) Automatically closes linked issue when PR is merged.\r\n' +
+      'Usage: `Fixes #<issue number>`, or `Fixes (paste link of issue)`.\r\n' +
+      '-->\r\n' +
+      'Fixes #\r\n' +
+      '\r\n' +
+      '#### Additional comments?:\r\n'
+
+    const commands = await getCommands(body)
+    expect(commands.commands.length).toBe(1)
   })
 })
