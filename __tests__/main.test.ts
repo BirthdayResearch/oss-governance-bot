@@ -5,6 +5,7 @@ import fs from 'fs'
 
 const info = jest.fn()
 const error = jest.fn()
+const intercepted = jest.fn()
 
 beforeEach(() => {
   github.context.eventName = 'issue_comment'
@@ -52,6 +53,36 @@ beforeEach(() => {
         encoding: 'utf-8'
       }
     })
+    .persist()
+
+  nock('https://api.github.com')
+    .get(/.+/)
+    .reply(200, () => {
+      intercepted()
+      return {}
+    })
+    .persist()
+  nock('https://api.github.com')
+    .post(/.+/)
+    .reply(200, () => {
+      intercepted()
+      return {}
+    })
+    .persist()
+  nock('https://api.github.com')
+    .delete(/.+/)
+    .reply(200, () => {
+      intercepted()
+      return {}
+    })
+    .persist()
+  nock('https://api.github.com')
+    .patch(/.+/)
+    .reply(200, () => {
+      intercepted()
+      return {}
+    })
+    .persist()
 })
 
 describe('getGovernance', () => {
@@ -133,5 +164,38 @@ describe('getGovernance', () => {
       const governance = await getGovernance()
       expect(governance?.labels?.length).toBe(2)
     })
+  })
+})
+
+describe('runGovernance', () => {
+  it('should be issue', async function () {
+    jest.setTimeout(10000)
+    github.context.payload = {
+      issue: {
+        number: 1
+      }
+    }
+
+    const {runGovernance} = require('../src/main')
+    await runGovernance()
+    await expect(info).toHaveBeenCalledWith('oss-governance: completed')
+    await expect(intercepted).toHaveBeenCalled()
+  })
+
+  it('should be pull request', async function () {
+    jest.setTimeout(10000)
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        head: {
+          sha: '123'
+        }
+      }
+    }
+
+    const {runGovernance} = require('../src/main')
+    await runGovernance()
+    await expect(info).toHaveBeenCalledWith('oss-governance: completed')
+    await expect(intercepted).toHaveBeenCalled()
   })
 })

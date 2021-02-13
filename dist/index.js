@@ -2,6 +2,68 @@ require('./sourcemap-register.js');module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 249:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isAuthorAssociationAllowed = void 0;
+const github = __importStar(__nccwpck_require__(5438));
+function getAuthorAssociation() {
+    const payload = github.context.payload;
+    const current = payload.comment || payload.pull_request || payload.issue;
+    return current === null || current === void 0 ? void 0 : current.author_association;
+}
+function isAuthorAssociationAllowed(authorAssociation) {
+    if (!authorAssociation) {
+        return true;
+    }
+    switch (getAuthorAssociation()) {
+        case 'COLLABORATOR':
+            return !!authorAssociation.collaborator;
+        case 'CONTRIBUTOR':
+            return !!authorAssociation.contributor;
+        case 'FIRST_TIMER':
+            return !!authorAssociation.first_timer;
+        case 'FIRST_TIME_CONTRIBUTOR':
+            return !!authorAssociation.first_time_contributor;
+        case 'MANNEQUIN':
+            return !!authorAssociation.mannequin;
+        case 'MEMBER':
+            return !!authorAssociation.member;
+        case 'NONE':
+            return !!authorAssociation.none;
+        case 'OWNER':
+            return !!authorAssociation.owner;
+        default:
+            return false;
+    }
+}
+exports.isAuthorAssociationAllowed = isAuthorAssociationAllowed;
+
+
+/***/ }),
+
 /***/ 524:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -575,7 +637,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getGovernance = void 0;
+exports.runGovernance = exports.getGovernance = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const config_1 = __nccwpck_require__(88);
@@ -606,17 +668,24 @@ function getGovernance() {
     });
 }
 exports.getGovernance = getGovernance;
+function runGovernance() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const governance = yield getGovernance();
+        if (!governance) {
+            return;
+        }
+        const commands = yield command_1.default();
+        yield operations_1.default(governance, commands);
+        core.info('oss-governance: completed');
+    });
+}
+exports.runGovernance = runGovernance;
 /* eslint github/no-then: off */
 ignore_1.default()
     .then((toIgnore) => __awaiter(void 0, void 0, void 0, function* () {
     if (toIgnore)
         return;
-    const governance = yield getGovernance();
-    if (!governance) {
-        return;
-    }
-    yield operations_1.default(governance, yield command_1.default());
-    core.info('oss-governance: completed');
+    yield runGovernance();
 }))
     .catch(error => {
     core.error(error);
@@ -661,68 +730,6 @@ function default_1(chatOps, commands) {
     });
 }
 exports.default = default_1;
-
-
-/***/ }),
-
-/***/ 4504:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isAuthorAssociationAllowed = void 0;
-const github = __importStar(__nccwpck_require__(5438));
-function getAuthorAssociation() {
-    const payload = github.context.payload;
-    const current = payload.comment || payload.pull_request || payload.issue;
-    return current === null || current === void 0 ? void 0 : current.author_association;
-}
-function isAuthorAssociationAllowed(authorAssociation) {
-    if (!authorAssociation) {
-        return true;
-    }
-    switch (getAuthorAssociation()) {
-        case 'COLLABORATOR':
-            return !!authorAssociation.collaborator;
-        case 'CONTRIBUTOR':
-            return !!authorAssociation.contributor;
-        case 'FIRST_TIMER':
-            return !!authorAssociation.first_timer;
-        case 'FIRST_TIME_CONTRIBUTOR':
-            return !!authorAssociation.first_time_contributor;
-        case 'MANNEQUIN':
-            return !!authorAssociation.mannequin;
-        case 'MEMBER':
-            return !!authorAssociation.member;
-        case 'NONE':
-            return !!authorAssociation.none;
-        case 'OWNER':
-            return !!authorAssociation.owner;
-        default:
-            return false;
-    }
-}
-exports.isAuthorAssociationAllowed = isAuthorAssociationAllowed;
 
 
 /***/ }),
@@ -808,7 +815,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const label_1 = __importDefault(__nccwpck_require__(4550));
-const author_association_1 = __nccwpck_require__(4504);
+const author_association_1 = __nccwpck_require__(249);
 const close_1 = __importDefault(__nccwpck_require__(7577));
 const comment_1 = __importDefault(__nccwpck_require__(8448));
 const assign_1 = __importDefault(__nccwpck_require__(1800));
@@ -1090,9 +1097,14 @@ function sendStatus(label, success) {
             return;
         }
         function description() {
-            var _a;
-            return typeof (status === null || status === void 0 ? void 0 : status.description) === 'string'
-                ? status === null || status === void 0 ? void 0 : status.description : (_a = status === null || status === void 0 ? void 0 : status.description) === null || _a === void 0 ? void 0 : _a.success;
+            var _a, _b;
+            if (typeof (status === null || status === void 0 ? void 0 : status.description) === 'string') {
+                return status === null || status === void 0 ? void 0 : status.description;
+            }
+            if (success) {
+                return (_a = status === null || status === void 0 ? void 0 : status.description) === null || _a === void 0 ? void 0 : _a.success;
+            }
+            return (_b = status === null || status === void 0 ? void 0 : status.description) === null || _b === void 0 ? void 0 : _b.failure;
         }
         function state() {
             var _a;
@@ -1102,9 +1114,10 @@ function sendStatus(label, success) {
             if (typeof (status === null || status === void 0 ? void 0 : status.description) === 'string') {
                 return 'failure';
             }
-            return typeof ((_a = status === null || status === void 0 ? void 0 : status.description) === null || _a === void 0 ? void 0 : _a.failure) === 'string'
-                ? 'failure'
-                : 'pending';
+            if (typeof ((_a = status === null || status === void 0 ? void 0 : status.description) === null || _a === void 0 ? void 0 : _a.failure) === 'string') {
+                return 'failure';
+            }
+            return 'pending';
         }
         yield github_1.commitStatus(status.context, state(), description(), status.url);
     });

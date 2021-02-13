@@ -1,7 +1,7 @@
 import {ChatOps, Governance, Label} from '../config'
 import {Commands} from '../command'
 import label from './label'
-import {isAuthorAssociationAllowed} from './author-association'
+import {isAuthorAssociationAllowed} from '../author-association'
 import close from './close'
 import comment from './comment'
 import assign from './assign'
