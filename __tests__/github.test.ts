@@ -161,4 +161,23 @@ describe('commit status', () => {
       state: 'pending'
     })
   })
+
+  it('open pull_request will not have head.sha ', async () => {
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        head: {
+          sha: '123'
+        }
+      }
+    }
+
+    await commitStatus('Hey', 'pending', 'descriptions')
+    await expect(getPulls).not.toHaveBeenCalled()
+    await expect(postStatus).toHaveBeenCalledWith({
+      context: 'Hey',
+      description: 'descriptions',
+      state: 'pending'
+    })
+  })
 })

@@ -31,18 +31,23 @@ export async function getGovernance(): Promise<Governance | undefined> {
   throw new Error('Could not get pull_request or issue from context')
 }
 
+export async function runGovernance(): Promise<void> {
+  const governance = await getGovernance()
+  if (!governance) {
+    return
+  }
+
+  const commands = await command()
+  await operations(governance, commands)
+  core.info('oss-governance: completed')
+}
+
 /* eslint github/no-then: off */
 ignore()
   .then(async toIgnore => {
     if (toIgnore) return
 
-    const governance = await getGovernance()
-    if (!governance) {
-      return
-    }
-
-    await operations(governance, await command())
-    core.info('oss-governance: completed')
+    await runGovernance()
   })
   .catch(error => {
     core.error(error)

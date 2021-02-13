@@ -532,6 +532,35 @@ describe('status', () => {
       needs: {
         status: {
           context: 'Triage',
+          description: "Fail Message"
+        }
+      }
+    }, getCommands())
+
+    return expect(postStatus).toHaveBeenCalledWith({
+      "context": "Triage",
+      "state": "failure",
+      "description": "Fail Message",
+    })
+  })
+
+  it('should have failure status with description', async () => {
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        labels: [],
+        head: {
+          sha: 'abc'
+        }
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: {
+        status: {
+          context: 'Triage',
           description: {
             failure: "Fail Message"
           }
@@ -541,7 +570,8 @@ describe('status', () => {
 
     return expect(postStatus).toHaveBeenCalledWith({
       "context": "Triage",
-      "state": "failure"
+      "state": "failure",
+      "description": "Fail Message",
     })
   })
 
@@ -564,7 +594,7 @@ describe('status', () => {
           context: 'Triage',
           description: {
             failure: 'No',
-            success: "Fail Message"
+            success: "Success Message"
           }
         }
       }
@@ -573,7 +603,7 @@ describe('status', () => {
     return expect(postStatus).toHaveBeenCalledWith({
       "context": "Triage",
       "state": "success",
-      "description": "Fail Message",
+      "description": "Success Message",
     })
   })
 

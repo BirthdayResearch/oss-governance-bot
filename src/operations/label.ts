@@ -176,9 +176,15 @@ async function sendStatus(label: Label, success: boolean) {
   }
 
   function description(): string | undefined {
-    return typeof status?.description === 'string'
-      ? status?.description
-      : status?.description?.success
+    if (typeof status?.description === 'string') {
+      return status?.description
+    }
+
+    if (success) {
+      return status?.description?.success
+    }
+
+    return status?.description?.failure
   }
 
   function state(): 'success' | 'failure' | 'pending' {
@@ -190,9 +196,11 @@ async function sendStatus(label: Label, success: boolean) {
       return 'failure'
     }
 
-    return typeof status?.description?.failure === 'string'
-      ? 'failure'
-      : 'pending'
+    if (typeof status?.description?.failure === 'string') {
+      return 'failure'
+    }
+
+    return 'pending'
   }
 
   await commitStatus(status.context, state(), description(), status.url)
