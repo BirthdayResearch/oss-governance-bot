@@ -620,6 +620,23 @@ function is(eventName, actions) {
         actions.includes(github.context.payload.action));
 }
 /**
+ * Ignore labeled race condition where it get created before needs labels.
+ * Not sure what is a better way to do this.
+ */
+function ignoreLabeledRaceCondition() {
+    var _a, _b, _c, _d;
+    const payload = github.context.payload;
+    if (is('issues', ['labeled'])) {
+        return (Date.parse((_a = payload.issue) === null || _a === void 0 ? void 0 : _a.created_at) + 5000 >=
+            Date.parse((_b = payload.issue) === null || _b === void 0 ? void 0 : _b.updated_at));
+    }
+    if (is('pull_request', ['labeled'])) {
+        return (Date.parse((_c = payload.pull_request) === null || _c === void 0 ? void 0 : _c.created_at) + 5000 >=
+            Date.parse((_d = payload.pull_request) === null || _d === void 0 ? void 0 : _d.updated_at));
+    }
+    return false;
+}
+/**
  * To prevent mistakes, this will ignore invalid workflow trigger
  */
 function default_1() {
@@ -628,6 +645,9 @@ function default_1() {
         const payload = github.context.payload;
         // Ignore Non 'User' to prevent infinite loop
         if (((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User') {
+            return true;
+        }
+        if (ignoreLabeledRaceCondition()) {
             return true;
         }
         if (is('issue_comment', ['created'])) {
@@ -1070,14 +1090,14 @@ function processChatOps(chatOps, commands) {
 function default_1(governance, commands) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        if ((_a = governance.labels) === null || _a === void 0 ? void 0 : _a.length) {
-            yield processLabels(governance.labels, commands);
-        }
-        if ((_b = governance.captures) === null || _b === void 0 ? void 0 : _b.length) {
+        if ((_a = governance.captures) === null || _a === void 0 ? void 0 : _a.length) {
             yield processCaptures(governance.captures);
         }
-        if ((_c = governance.chat_ops) === null || _c === void 0 ? void 0 : _c.length) {
+        if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
             yield processChatOps(governance.chat_ops, commands);
+        }
+        if ((_c = governance.labels) === null || _c === void 0 ? void 0 : _c.length) {
+            yield processLabels(governance.labels, commands);
         }
     });
 }
@@ -1223,7 +1243,9 @@ function default_1(label, commands) {
             }
             const adding = commands
                 .prefix(`/${label.prefix}`)
-                .flatMap(add => add.args.map(value => `${label.prefix}/${value}`));
+                .flatMap(add => add.args
+                .filter(value => label.list.includes(value))
+                .map(value => `${label.prefix}/${value}`));
             for (const value of adding) {
                 labelSet.add(value);
             }

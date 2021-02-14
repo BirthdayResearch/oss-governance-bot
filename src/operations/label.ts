@@ -130,7 +130,11 @@ export default async function (
 
     const adding = commands
       .prefix(`/${label.prefix}`)
-      .flatMap(add => add.args.map(value => `${label.prefix}/${value}`))
+      .flatMap(add =>
+        add.args
+          .filter(value => label.list.includes(value))
+          .map(value => `${label.prefix}/${value}`)
+      )
 
     for (const value of adding) {
       labelSet.add(value)

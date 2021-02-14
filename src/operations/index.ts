@@ -69,15 +69,15 @@ export default async function (
   governance: Governance,
   commands: Commands
 ): Promise<any> {
-  if (governance.labels?.length) {
-    await processLabels(governance.labels, commands)
-  }
-
   if (governance.captures?.length) {
     await processCaptures(governance.captures)
   }
 
   if (governance.chat_ops?.length) {
     await processChatOps(governance.chat_ops, commands)
+  }
+
+  if (governance.labels?.length) {
+    await processLabels(governance.labels, commands)
   }
 }

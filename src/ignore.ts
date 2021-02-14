@@ -8,6 +8,30 @@ function is(eventName: string, actions: string[]): boolean {
 }
 
 /**
+ * Ignore labeled race condition where it get created before needs labels.
+ * Not sure what is a better way to do this.
+ */
+function ignoreLabeledRaceCondition(): boolean {
+  const payload = github.context.payload
+
+  if (is('issues', ['labeled'])) {
+    return (
+      Date.parse(payload.issue?.created_at) + 5000 >=
+      Date.parse(payload.issue?.updated_at)
+    )
+  }
+
+  if (is('pull_request', ['labeled'])) {
+    return (
+      Date.parse(payload.pull_request?.created_at) + 5000 >=
+      Date.parse(payload.pull_request?.updated_at)
+    )
+  }
+
+  return false
+}
+
+/**
  * To prevent mistakes, this will ignore invalid workflow trigger
  */
 export default async function (): Promise<boolean> {
@@ -15,6 +39,10 @@ export default async function (): Promise<boolean> {
 
   // Ignore Non 'User' to prevent infinite loop
   if (payload.sender?.type !== 'User') {
+    return true
+  }
+
+  if (ignoreLabeledRaceCondition()) {
     return true
   }
 

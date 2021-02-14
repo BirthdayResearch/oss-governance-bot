@@ -520,6 +520,26 @@ describe('needs', () => {
 })
 
 describe('labels', () => {
+  it('should only add approved labels with command', async function () {
+    github.context.eventName = 'issues'
+    github.context.payload = {
+      action: 'opened',
+      issue: {
+        number: 1,
+        labels: []
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+    }, getCommands(['/triage random']))
+
+    await expect(postLabels).not.toHaveBeenCalled()
+    await expect(deleteLabels).not.toHaveBeenCalled()
+  });
+
+
   it('should have removed labels with command', async function () {
     github.context.eventName = 'issues'
     github.context.payload = {
@@ -900,7 +920,7 @@ describe('status', () => {
   });
 })
 
-describe('comments flaky test', () => {
+describe('flaky test', () => {
   it('should have needs/kind removed when /kind fix is commented', async () => {
     github.context.eventName = 'issue_comment'
     github.context.payload = {
@@ -953,6 +973,38 @@ describe('comments flaky test', () => {
 
     await expect(postComments).not.toHaveBeenCalled()
     await expect(postLabels).not.toHaveBeenCalled()
+    await expect(deleteLabels).not.toHaveBeenCalled()
+  });
+
+  it('should have removed labels with command', async function () {
+    github.context.eventName = 'issues'
+    github.context.payload = {
+      action: 'opened',
+      issue: {
+        number: 1,
+        labels: [{name: 'kind/bug'}]
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: {
+        comment: 'Required triage'
+      }
+    }, getCommands(['/area ui-ux']))
+
+    await label({
+      prefix: 'area',
+      list: ['ui-ux', 'semantics', 'translation', 'security'],
+      multiple: true,
+      needs: {
+        comment: 'Required area'
+      }
+    }, getCommands(['/area ui-ux']))
+
+    await expect(postComments).toHaveBeenCalledTimes(1)
+    await expect(postLabels).toHaveBeenCalledTimes(2)
     await expect(deleteLabels).not.toHaveBeenCalled()
   });
 })
