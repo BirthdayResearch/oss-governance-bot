@@ -198,4 +198,31 @@ describe('runGovernance', () => {
     await expect(info).toHaveBeenCalledWith('oss-governance: completed')
     await expect(intercepted).toHaveBeenCalled()
   })
+
+  it('should return no governance', async function () {
+    jest.setTimeout(10000)
+    github.context.payload = {
+      pull_request: {
+        number: 1,
+        head: {
+          sha: '123'
+        }
+      }
+    }
+    jest.spyOn(core, 'getInput').mockImplementation(name => {
+      switch (name) {
+        case 'github-token':
+          return 'token'
+        case 'config-path':
+          return '__tests__/fixtures/config-valid/version.yml'
+        default:
+          return ''
+      }
+    })
+
+    const {runGovernance} = require('../src/main')
+    await runGovernance()
+    await expect(info).not.toHaveBeenCalled()
+    await expect(intercepted).not.toHaveBeenCalled()
+  })
 })

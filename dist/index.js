@@ -695,7 +695,7 @@ ignore_1.default()
 
 /***/ }),
 
-/***/ 1800:
+/***/ 9842:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -734,7 +734,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 7577:
+/***/ 6665:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -766,7 +766,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 8448:
+/***/ 4874:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -796,83 +796,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 7928:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const label_1 = __importDefault(__nccwpck_require__(4550));
-const author_association_1 = __nccwpck_require__(249);
-const close_1 = __importDefault(__nccwpck_require__(7577));
-const comment_1 = __importDefault(__nccwpck_require__(8448));
-const assign_1 = __importDefault(__nccwpck_require__(1800));
-const review_1 = __importDefault(__nccwpck_require__(9198));
-const label_chat_ops_1 = __importDefault(__nccwpck_require__(9557));
-function processLabels(labels, commands) {
-    return __awaiter(this, void 0, void 0, function* () {
-        for (const labelOp of labels) {
-            if (author_association_1.isAuthorAssociationAllowed(labelOp.author_association)) {
-                yield label_1.default(labelOp, commands);
-            }
-        }
-    });
-}
-function processChatOps(chatOps, commands) {
-    return __awaiter(this, void 0, void 0, function* () {
-        for (const chatOp of chatOps) {
-            if (!author_association_1.isAuthorAssociationAllowed(chatOp.author_association)) {
-                continue;
-            }
-            switch (chatOp.type) {
-                case 'close':
-                    yield close_1.default(chatOp, commands);
-                    break;
-                case 'assign':
-                    yield assign_1.default(chatOp, commands);
-                    break;
-                case 'review':
-                    yield review_1.default(chatOp, commands);
-                    break;
-                case 'comment':
-                    yield comment_1.default(chatOp, commands);
-                    break;
-                case 'label':
-                    yield label_chat_ops_1.default(chatOp, commands);
-                    break;
-            }
-        }
-    });
-}
-function default_1(governance, commands) {
-    var _a, _b;
-    return __awaiter(this, void 0, void 0, function* () {
-        if ((_a = governance.labels) === null || _a === void 0 ? void 0 : _a.length) {
-            yield processLabels(governance.labels, commands);
-        }
-        if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
-            yield processChatOps(governance.chat_ops, commands);
-        }
-    });
-}
-exports.default = default_1;
-
-
-/***/ }),
-
-/***/ 9557:
+/***/ 6852:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -908,6 +832,121 @@ function default_1(chatOps, commands) {
         }
         else if (Array.isArray(remove)) {
             yield github_1.removeLabels(remove);
+        }
+    });
+}
+exports.default = default_1;
+
+
+/***/ }),
+
+/***/ 1090:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const github_1 = __nccwpck_require__(5928);
+function default_1(chatOps, commands) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const matched = commands.prefix(chatOps.cmd);
+        if (!matched.length) {
+            return;
+        }
+        const reviewers = matched
+            .flatMap(value => value.args)
+            .map(value => {
+            value = value.trim();
+            if (value.startsWith('@')) {
+                return value.replace(/^@/, '');
+            }
+        })
+            .filter(value => value);
+        yield github_1.requestReviewers(reviewers);
+    });
+}
+exports.default = default_1;
+
+
+/***/ }),
+
+/***/ 7928:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const author_association_1 = __nccwpck_require__(249);
+const label_1 = __importDefault(__nccwpck_require__(4550));
+const close_1 = __importDefault(__nccwpck_require__(6665));
+const comment_1 = __importDefault(__nccwpck_require__(4874));
+const assign_1 = __importDefault(__nccwpck_require__(9842));
+const review_1 = __importDefault(__nccwpck_require__(1090));
+const label_2 = __importDefault(__nccwpck_require__(6852));
+function processLabels(labels, commands) {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (const labelOp of labels) {
+            if (author_association_1.isAuthorAssociationAllowed(labelOp.author_association)) {
+                yield label_1.default(labelOp, commands);
+            }
+        }
+    });
+}
+function processChatOps(chatOps, commands) {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (const chatOp of chatOps) {
+            if (!author_association_1.isAuthorAssociationAllowed(chatOp.author_association)) {
+                continue;
+            }
+            switch (chatOp.type) {
+                case 'close':
+                    yield close_1.default(chatOp, commands);
+                    break;
+                case 'assign':
+                    yield assign_1.default(chatOp, commands);
+                    break;
+                case 'review':
+                    yield review_1.default(chatOp, commands);
+                    break;
+                case 'comment':
+                    yield comment_1.default(chatOp, commands);
+                    break;
+                case 'label':
+                    yield label_2.default(chatOp, commands);
+                    break;
+            }
+        }
+    });
+}
+function default_1(governance, commands) {
+    var _a, _b;
+    return __awaiter(this, void 0, void 0, function* () {
+        if ((_a = governance.labels) === null || _a === void 0 ? void 0 : _a.length) {
+            yield processLabels(governance.labels, commands);
+        }
+        if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
+            yield processChatOps(governance.chat_ops, commands);
         }
     });
 }
@@ -1122,45 +1161,6 @@ function sendStatus(label, success) {
         yield github_1.commitStatus(status.context, state(), description(), status.url);
     });
 }
-
-
-/***/ }),
-
-/***/ 9198:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const github_1 = __nccwpck_require__(5928);
-function default_1(chatOps, commands) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const matched = commands.prefix(chatOps.cmd);
-        if (!matched.length) {
-            return;
-        }
-        const reviewers = matched
-            .flatMap(value => value.args)
-            .map(value => {
-            value = value.trim();
-            if (value.startsWith('@')) {
-                return value.replace(/^@/, '');
-            }
-        })
-            .filter(value => value);
-        yield github_1.requestReviewers(reviewers);
-    });
-}
-exports.default = default_1;
 
 
 /***/ }),

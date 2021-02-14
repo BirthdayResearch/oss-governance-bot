@@ -1,5 +1,5 @@
-import review from '../../src/operations/review'
-import {Command, Commands} from "../../src/command";
+import review from '../../../src/operations/chat-ops/review'
+import {Command, Commands} from "../../../src/command";
 import * as github from "@actions/github";
 import * as core from "@actions/core";
 import nock from "nock";
