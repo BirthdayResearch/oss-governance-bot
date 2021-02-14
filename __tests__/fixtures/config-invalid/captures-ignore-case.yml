@@ -1,0 +1,7 @@
+version: v1
+
+issue:
+  captures:
+    - regex: "- Operating System: *(macos|mac) *"
+      ignore_case: many
+      label: 'os/mac'

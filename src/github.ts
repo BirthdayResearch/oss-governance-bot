@@ -185,3 +185,15 @@ export async function commitStatus(
     await sendStatus(response.data.head.sha)
   }
 }
+
+export async function hasReleaseByTag(tag: string): Promise<boolean> {
+  const client = initClient()
+
+  const release = client.repos.getReleaseByTag({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    tag: tag
+  })
+
+  return release.then(() => true).catch(() => false)
+}

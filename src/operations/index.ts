@@ -1,7 +1,8 @@
-import {ChatOps, Governance, Label} from '../config'
+import {Capture, ChatOps, Governance, Label} from '../config'
 import {Commands} from '../command'
 import {isAuthorAssociationAllowed} from '../author-association'
 import label from './label'
+import capture from './capture'
 import chatOpsClose from './chat-ops/close'
 import chatOpsComment from './chat-ops/comment'
 import chatOpsAssign from './chat-ops/assign'
@@ -16,6 +17,18 @@ async function processLabels(
   for (const labelOp of labels) {
     if (isAuthorAssociationAllowed(labelOp.author_association)) {
       await label(labelOp, commands)
+    }
+  }
+}
+
+async function processCaptures(captures: Capture[]): Promise<void> {
+  if (!isCreatedOpened()) {
+    return
+  }
+
+  for (const captureOp of captures) {
+    if (isAuthorAssociationAllowed(captureOp.author_association)) {
+      await capture(captureOp)
     }
   }
 }
@@ -58,6 +71,10 @@ export default async function (
 ): Promise<any> {
   if (governance.labels?.length) {
     await processLabels(governance.labels, commands)
+  }
+
+  if (governance.captures?.length) {
+    await processCaptures(governance.captures)
   }
 
   if (governance.chat_ops?.length) {

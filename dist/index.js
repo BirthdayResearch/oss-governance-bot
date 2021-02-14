@@ -106,7 +106,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getCommands = exports.Commands = exports.ArgsCommand = exports.Command = void 0;
+exports.getCommands = exports.getBody = exports.Commands = exports.ArgsCommand = exports.Command = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 class Command {
     constructor(text) {
@@ -141,7 +141,7 @@ class Commands {
     }
 }
 exports.Commands = Commands;
-function getCommands() {
+function getBody() {
     const payload = github.context.payload;
     const content = payload.comment || payload.pull_request || payload.issue;
     let body = (content === null || content === void 0 ? void 0 : content.body) || '';
@@ -149,7 +149,11 @@ function getCommands() {
     body = body.replace('\r', '\n');
     body = body.replace('\r\n', '\n');
     body = body.replace(/<!--(.|\r|\n)*?-->/g, '');
-    return body
+    return body;
+}
+exports.getBody = getBody;
+function getCommands() {
+    return getBody()
         .split('\n')
         .map(text => { var _a; return (_a = /^\/(.+)/.exec(text)) === null || _a === void 0 ? void 0 : _a[0]; })
         .filter((cmd) => !!cmd)
@@ -261,6 +265,17 @@ const Label = t.intersection([
         ])
     })
 ]);
+const Capture = t.intersection([
+    t.type({
+        regex: t.string,
+        label: t.string
+    }),
+    t.partial({
+        author_association: AuthorAssociation,
+        ignore_case: t.boolean,
+        github_release: t.boolean
+    })
+]);
 const CommentChatOps = t.intersection([
     t.type({
         cmd: t.string,
@@ -301,6 +316,7 @@ const GenericChatOps = t.intersection([
 const ChatOps = t.union([GenericChatOps, LabelChatOps, CommentChatOps]);
 const Governance = t.partial({
     labels: t.array(Label),
+    captures: t.array(Capture),
     chat_ops: t.array(ChatOps)
 });
 const Config = t.intersection([
@@ -377,7 +393,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
+exports.hasReleaseByTag = exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
 function initClient() {
@@ -547,6 +563,18 @@ function commitStatus(context, state, description, url) {
     });
 }
 exports.commitStatus = commitStatus;
+function hasReleaseByTag(tag) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = initClient();
+        const release = client.repos.getReleaseByTag({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            tag: tag
+        });
+        return release.then(() => true).catch(() => false);
+    });
+}
+exports.hasReleaseByTag = hasReleaseByTag;
 
 
 /***/ }),
@@ -723,6 +751,57 @@ ignore_1.default()
     core.error(error);
     core.setFailed(error.message);
 });
+
+
+/***/ }),
+
+/***/ 3884:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const command_1 = __nccwpck_require__(524);
+const github_1 = __nccwpck_require__(5928);
+function parseLabel(capture, array) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let capturedText = (array[1] || '').trim();
+        if (capture.github_release) {
+            // Automatically parse semantic release
+            capturedText = capturedText.replace(/^v/, '');
+            if (!(yield github_1.hasReleaseByTag(`v${capturedText}`)) &&
+                !(yield github_1.hasReleaseByTag(capturedText))) {
+                return;
+            }
+        }
+        return capture.label.replace('$CAPTURED', capturedText);
+    });
+}
+function default_1(capture) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const regex = new RegExp(capture.regex, `${capture.ignore_case ? 'i' : ''}`);
+        for (const line of command_1.getBody().split('\n')) {
+            const array = regex.exec(line);
+            if (!array) {
+                continue;
+            }
+            const label = yield parseLabel(capture, array);
+            if (label) {
+                yield github_1.addLabels([label]);
+            }
+        }
+    });
+}
+exports.default = default_1;
 
 
 /***/ }),
@@ -931,6 +1010,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const author_association_1 = __nccwpck_require__(249);
 const label_1 = __importDefault(__nccwpck_require__(4550));
+const capture_1 = __importDefault(__nccwpck_require__(3884));
 const close_1 = __importDefault(__nccwpck_require__(6665));
 const comment_1 = __importDefault(__nccwpck_require__(4874));
 const assign_1 = __importDefault(__nccwpck_require__(9842));
@@ -942,6 +1022,18 @@ function processLabels(labels, commands) {
         for (const labelOp of labels) {
             if (author_association_1.isAuthorAssociationAllowed(labelOp.author_association)) {
                 yield label_1.default(labelOp, commands);
+            }
+        }
+    });
+}
+function processCaptures(captures) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!ignore_1.isCreatedOpened()) {
+            return;
+        }
+        for (const captureOp of captures) {
+            if (author_association_1.isAuthorAssociationAllowed(captureOp.author_association)) {
+                yield capture_1.default(captureOp);
             }
         }
     });
@@ -976,12 +1068,15 @@ function processChatOps(chatOps, commands) {
     });
 }
 function default_1(governance, commands) {
-    var _a, _b;
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         if ((_a = governance.labels) === null || _a === void 0 ? void 0 : _a.length) {
             yield processLabels(governance.labels, commands);
         }
-        if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
+        if ((_b = governance.captures) === null || _b === void 0 ? void 0 : _b.length) {
+            yield processCaptures(governance.captures);
+        }
+        if ((_c = governance.chat_ops) === null || _c === void 0 ? void 0 : _c.length) {
             yield processChatOps(governance.chat_ops, commands);
         }
     });

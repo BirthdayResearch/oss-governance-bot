@@ -194,11 +194,44 @@ describe('invalid config', () => {
       })
     })
   })
+
+  describe('captures', () => {
+    it('captures-empty.yml is invalid', () => {
+      return expectInvalid('captures-empty.yml')
+    })
+    it('captures-github-release.yml is invalid', () => {
+      return expectInvalid('captures-github-release.yml')
+    })
+    it('captures-ignore-case.yml is invalid', () => {
+      return expectInvalid('captures-ignore-case.yml')
+    })
+    it('captures-label.yml is invalid', () => {
+      return expectInvalid('captures-label.yml')
+    })
+    it('captures-regex.yml is invalid', () => {
+      return expectInvalid('captures-regex.yml')
+    })
+  })
 })
 
 describe('valid config', () => {
   it('version.yml is valid', () => {
     return expectValid('version.yml')
+  })
+
+  describe('captures', () => {
+    it('captures-all.yml is valid', () => {
+      return expectValid('captures-all.yml')
+    })
+    it('captures-ignore-case.yml is valid', () => {
+      return expectValid('captures-ignore-case.yml')
+    })
+    it('captures-minimal.yml is valid', () => {
+      return expectValid('captures-minimal.yml')
+    })
+    it('captures-version.yml is valid', () => {
+      return expectValid('captures-version.yml')
+    })
   })
 
   describe('chat-ops', () => {
