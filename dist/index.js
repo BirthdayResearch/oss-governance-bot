@@ -585,6 +585,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isCreatedOpened = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 function is(eventName, actions) {
     return (github.context.eventName === eventName &&
@@ -604,7 +605,7 @@ function default_1() {
         if (is('issue_comment', ['created'])) {
             return false;
         }
-        if (is('pull_request', ['opened', 'labeled', 'unlabeled'])) {
+        if (is('pull_request', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
             return false;
         }
         if (is('issues', ['opened', 'labeled', 'unlabeled'])) {
@@ -614,6 +615,19 @@ function default_1() {
     });
 }
 exports.default = default_1;
+function isCreatedOpened() {
+    if (is('issue_comment', ['created'])) {
+        return true;
+    }
+    if (is('pull_request', ['opened'])) {
+        return true;
+    }
+    if (is('issues', ['opened'])) {
+        return true;
+    }
+    return false;
+}
+exports.isCreatedOpened = isCreatedOpened;
 
 
 /***/ }),
@@ -922,6 +936,7 @@ const comment_1 = __importDefault(__nccwpck_require__(4874));
 const assign_1 = __importDefault(__nccwpck_require__(9842));
 const review_1 = __importDefault(__nccwpck_require__(1090));
 const label_2 = __importDefault(__nccwpck_require__(6852));
+const ignore_1 = __nccwpck_require__(5404);
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         for (const labelOp of labels) {
@@ -933,6 +948,9 @@ function processLabels(labels, commands) {
 }
 function processChatOps(chatOps, commands) {
     return __awaiter(this, void 0, void 0, function* () {
+        if (!ignore_1.isCreatedOpened()) {
+            return;
+        }
         for (const chatOp of chatOps) {
             if (!author_association_1.isAuthorAssociationAllowed(chatOp.author_association)) {
                 continue;
@@ -1009,6 +1027,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const github_1 = __nccwpck_require__(5928);
 const github = __importStar(__nccwpck_require__(5438));
+const ignore_1 = __nccwpck_require__(5404);
 class PrefixLabelSet {
     constructor(prefix) {
         this.needs = false;
@@ -1101,25 +1120,25 @@ function default_1(label, commands) {
          * @return whether any prefixed label is present
          */
         function computeLabels() {
-            return __awaiter(this, void 0, void 0, function* () {
-                const removing = commands
-                    .prefix(`/${label.prefix}-remove`)
-                    .flatMap(add => add.args.map(value => `${label.prefix}/${value}`));
-                for (const value of removing) {
-                    labelSet.remove(value);
-                }
-                const adding = commands
-                    .prefix(`/${label.prefix}`)
-                    .flatMap(add => add.args.map(value => `${label.prefix}/${value}`));
-                for (const value of adding) {
-                    labelSet.add(value);
-                }
-                labelSet.setMultiple(label.multiple === undefined || label.multiple);
-                labelSet.setNeeds(needs());
-                yield labelSet.persist();
-            });
+            const removing = commands
+                .prefix(`/${label.prefix}-remove`)
+                .flatMap(add => add.args.map(value => `${label.prefix}/${value}`));
+            for (const value of removing) {
+                labelSet.remove(value);
+            }
+            const adding = commands
+                .prefix(`/${label.prefix}`)
+                .flatMap(add => add.args.map(value => `${label.prefix}/${value}`));
+            for (const value of adding) {
+                labelSet.add(value);
+            }
         }
-        yield computeLabels();
+        if (ignore_1.isCreatedOpened()) {
+            computeLabels();
+        }
+        labelSet.setMultiple(label.multiple === undefined || label.multiple);
+        labelSet.setNeeds(needs());
+        yield labelSet.persist();
         if (labelSet.needs) {
             yield sendComment(label);
         }
@@ -1127,6 +1146,11 @@ function default_1(label, commands) {
     });
 }
 exports.default = default_1;
+/**
+ * This only run on opened action so that it's not duplicated everytime a user comment.
+ *
+ * @param label to send comment to
+ */
 function sendComment(label) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {

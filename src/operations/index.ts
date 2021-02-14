@@ -7,6 +7,7 @@ import chatOpsComment from './chat-ops/comment'
 import chatOpsAssign from './chat-ops/assign'
 import chatOpsReview from './chat-ops/review'
 import chatOpsLabel from './chat-ops/label'
+import {isCreatedOpened} from '../ignore'
 
 async function processLabels(
   labels: Label[],
@@ -23,6 +24,10 @@ async function processChatOps(
   chatOps: ChatOps[],
   commands: Commands
 ): Promise<void> {
+  if (!isCreatedOpened()) {
+    return
+  }
+
   for (const chatOp of chatOps) {
     if (!isAuthorAssociationAllowed(chatOp.author_association)) {
       continue

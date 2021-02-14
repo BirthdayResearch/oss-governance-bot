@@ -22,7 +22,7 @@ export default async function (): Promise<boolean> {
     return false
   }
 
-  if (is('pull_request', ['opened', 'labeled', 'unlabeled'])) {
+  if (is('pull_request', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
     return false
   }
 
@@ -31,4 +31,20 @@ export default async function (): Promise<boolean> {
   }
 
   return true
+}
+
+export function isCreatedOpened(): boolean {
+  if (is('issue_comment', ['created'])) {
+    return true
+  }
+
+  if (is('pull_request', ['opened'])) {
+    return true
+  }
+
+  if (is('issues', ['opened'])) {
+    return true
+  }
+
+  return false
 }

@@ -8,6 +8,7 @@ import {
   removeLabels
 } from '../github'
 import * as github from '@actions/github'
+import {isCreatedOpened} from '../ignore'
 
 class PrefixLabelSet {
   public prefix: string
@@ -118,7 +119,7 @@ export default async function (
    * Compute labels to add and remove
    * @return whether any prefixed label is present
    */
-  async function computeLabels() {
+  function computeLabels() {
     const removing = commands
       .prefix(`/${label.prefix}-remove`)
       .flatMap(add => add.args.map(value => `${label.prefix}/${value}`))
@@ -134,13 +135,15 @@ export default async function (
     for (const value of adding) {
       labelSet.add(value)
     }
-
-    labelSet.setMultiple(label.multiple === undefined || label.multiple)
-    labelSet.setNeeds(needs())
-    await labelSet.persist()
   }
 
-  await computeLabels()
+  if (isCreatedOpened()) {
+    computeLabels()
+  }
+
+  labelSet.setMultiple(label.multiple === undefined || label.multiple)
+  labelSet.setNeeds(needs())
+  await labelSet.persist()
 
   if (labelSet.needs) {
     await sendComment(label)
@@ -149,6 +152,11 @@ export default async function (
   await sendStatus(label, !labelSet.needs)
 }
 
+/**
+ * This only run on opened action so that it's not duplicated everytime a user comment.
+ *
+ * @param label to send comment to
+ */
 async function sendComment(label: Label) {
   if (github.context.payload.action !== 'opened') {
     return
