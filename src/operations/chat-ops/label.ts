@@ -1,6 +1,6 @@
-import {LabelChatOps} from '../config'
-import {Commands} from '../command'
-import {addLabels, removeLabels} from '../github'
+import {LabelChatOps} from '../../config'
+import {Commands} from '../../command'
+import {addLabels, removeLabels} from '../../github'
 
 export default async function (
   chatOps: LabelChatOps,

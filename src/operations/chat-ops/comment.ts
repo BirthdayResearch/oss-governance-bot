@@ -1,6 +1,6 @@
-import {CommentChatOps} from '../config'
-import {Commands} from '../command'
-import {postComment} from '../github'
+import {CommentChatOps} from '../../config'
+import {Commands} from '../../command'
+import {postComment} from '../../github'
 
 export default async function (
   chatOps: CommentChatOps,

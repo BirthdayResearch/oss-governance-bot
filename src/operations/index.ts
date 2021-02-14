@@ -1,12 +1,12 @@
 import {ChatOps, Governance, Label} from '../config'
 import {Commands} from '../command'
-import label from './label'
 import {isAuthorAssociationAllowed} from '../author-association'
-import close from './close'
-import comment from './comment'
-import assign from './assign'
-import review from './review'
-import labelChatOps from './label-chat-ops'
+import label from './label'
+import chatOpsClose from './chat-ops/close'
+import chatOpsComment from './chat-ops/comment'
+import chatOpsAssign from './chat-ops/assign'
+import chatOpsReview from './chat-ops/review'
+import chatOpsLabel from './chat-ops/label'
 
 async function processLabels(
   labels: Label[],
@@ -29,19 +29,19 @@ async function processChatOps(
     }
     switch (chatOp.type) {
       case 'close':
-        await close(chatOp, commands)
+        await chatOpsClose(chatOp, commands)
         break
       case 'assign':
-        await assign(chatOp, commands)
+        await chatOpsAssign(chatOp, commands)
         break
       case 'review':
-        await review(chatOp, commands)
+        await chatOpsReview(chatOp, commands)
         break
       case 'comment':
-        await comment(chatOp, commands)
+        await chatOpsComment(chatOp, commands)
         break
       case 'label':
-        await labelChatOps(chatOp, commands)
+        await chatOpsLabel(chatOp, commands)
         break
     }
   }

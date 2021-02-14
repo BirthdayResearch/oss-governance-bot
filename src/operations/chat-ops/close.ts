@@ -1,6 +1,6 @@
-import {ChatOps} from '../config'
-import {Commands} from '../command'
-import {patchIssue} from '../github'
+import {ChatOps} from '../../config'
+import {Commands} from '../../command'
+import {patchIssue} from '../../github'
 
 export default async function (
   chatOps: ChatOps,
