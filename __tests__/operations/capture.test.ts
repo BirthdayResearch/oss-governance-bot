@@ -315,4 +315,35 @@ describe('version', () => {
     })
     await expect(postLabels).toHaveBeenCalledWith({labels: ['v/1.5.0']})
   });
+
+  it('both version does not exist', async () => {
+    github.context.eventName = 'issues'
+    github.context.payload = {
+      action: 'opened',
+      issue: {
+        number: 1,
+        labels: [],
+        body: '- Version: 1.5.0\r\n- Operating System:mac'
+      }
+    }
+
+    nock('https://api.github.com')
+      .get('/repos/owner/repo/releases/tags/v1.5.0')
+      .reply(404, function (_, body) {
+        return {}
+      })
+
+    nock('https://api.github.com')
+      .get('/repos/owner/repo/releases/tags/1.5.0')
+      .reply(404, function (_, body) {
+        return {}
+      })
+
+    await capture({
+      regex: "- Version: *(.+) *",
+      label: 'v/$CAPTURED',
+      github_release: true
+    })
+    await expect(postLabels).not.toHaveBeenCalled()
+  });
 })
