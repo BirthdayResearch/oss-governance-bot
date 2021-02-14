@@ -40,7 +40,7 @@ export class Commands {
   }
 }
 
-export function getCommands(): Command[] {
+export function getBody(): string {
   const payload = github.context.payload
   const content = payload.comment || payload.pull_request || payload.issue
 
@@ -49,8 +49,11 @@ export function getCommands(): Command[] {
   body = body.replace('\r', '\n')
   body = body.replace('\r\n', '\n')
   body = body.replace(/<!--(.|\r|\n)*?-->/g, '')
-
   return body
+}
+
+export function getCommands(): Command[] {
+  return getBody()
     .split('\n')
     .map(text => /^\/(.+)/.exec(text)?.[0])
     .filter((cmd): cmd is string => !!cmd)

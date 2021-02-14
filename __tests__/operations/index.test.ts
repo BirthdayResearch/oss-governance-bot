@@ -24,6 +24,7 @@ beforeEach(() => {
     issue: {
       number: 1,
       labels: [],
+      body: 'Hello friends\n- Operating System: linux \r\n- Version: v1.5.0',
       author_association: 'CONTRIBUTOR'
     }
   }
@@ -54,7 +55,7 @@ function getCommands(list: string[] = []): Commands {
   return new Commands(list.map(t => new Command((t))))
 }
 
-describe('both', () => {
+describe('all', () => {
   it('should not have error', async () => {
     await operations({
       labels: [
@@ -72,6 +73,17 @@ describe('both', () => {
           needs: true,
         }
       ],
+      captures: [
+        {
+          regex: "- Operating System: *(linux) *",
+          label: 'os/linux'
+        },
+        {
+          regex: "- Version: *(.+) *",
+          label: 'v/$CAPTURED',
+          github_release: true
+        }
+      ],
       chat_ops: [
         {
           cmd: '/close',
@@ -85,8 +97,8 @@ describe('both', () => {
           }
         }
       ]
-    }, getCommands(['/close', '/prefix a']))
-    await expect(intercepted).toHaveBeenCalledTimes(2)
+    }, getCommands(['/close', '/prefix a', '/another a']))
+    await expect(intercepted).toHaveBeenCalledTimes(5)
   });
 })
 
@@ -102,6 +114,25 @@ describe('labels', () => {
       ]
     }, getCommands())
     await expect(intercepted).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('captures', () => {
+  it('should not have error', async () => {
+    await operations({
+      captures: [
+        {
+          regex: "- Operating System: *(linux) *",
+          label: 'os/linux'
+        },
+        {
+          regex: "- Version: *(.+) *",
+          label: 'v/$CAPTURED',
+          github_release: true
+        }
+      ]
+    }, getCommands())
+    await expect(intercepted).toHaveBeenCalledTimes(3)
   })
 })
 

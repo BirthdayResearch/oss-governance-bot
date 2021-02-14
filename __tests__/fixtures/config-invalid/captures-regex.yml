@@ -1,0 +1,6 @@
+version: v1
+
+issue:
+  captures:
+    - regex: [ "- Operating System: *(macos|mac) *", "- Operating System: *(windows|window|win|win) *" ]
+      label: 'os/mac'

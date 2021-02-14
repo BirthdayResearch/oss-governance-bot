@@ -1,0 +1,7 @@
+version: v1
+
+issue:
+  captures:
+    - regex: "- Operating System: *(linux) *"
+      ignore_case: true
+      label: 'os/linux'

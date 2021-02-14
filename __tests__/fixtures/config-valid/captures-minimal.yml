@@ -1,0 +1,6 @@
+version: v1
+
+issue:
+  captures:
+    - regex: "- Version: *(.+)"
+      label: 'version/$CAPTURED'

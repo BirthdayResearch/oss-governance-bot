@@ -58,6 +58,18 @@ const Label = t.intersection([
   })
 ])
 
+const Capture = t.intersection([
+  t.type({
+    regex: t.string,
+    label: t.string
+  }),
+  t.partial({
+    author_association: AuthorAssociation,
+    ignore_case: t.boolean,
+    github_release: t.boolean
+  })
+])
+
 const CommentChatOps = t.intersection([
   t.type({
     cmd: t.string,
@@ -102,6 +114,7 @@ const ChatOps = t.union([GenericChatOps, LabelChatOps, CommentChatOps])
 
 const Governance = t.partial({
   labels: t.array(Label),
+  captures: t.array(Capture),
   chat_ops: t.array(ChatOps)
 })
 
@@ -117,6 +130,7 @@ const Config = t.intersection([
 
 /* eslint no-redeclare: off */
 export type Label = t.TypeOf<typeof Label>
+export type Capture = t.TypeOf<typeof Capture>
 export type AuthorAssociation = t.TypeOf<typeof AuthorAssociation>
 export type CommentChatOps = t.TypeOf<typeof CommentChatOps>
 export type LabelChatOps = t.TypeOf<typeof LabelChatOps>
