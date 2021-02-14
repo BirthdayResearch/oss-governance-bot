@@ -1,13 +1,19 @@
 import ignore, {isCreatedOpened} from '../src/ignore'
 import * as github from '@actions/github'
 
-function set(eventName: string, action: string, userType: string) {
+function set(
+  eventName: string,
+  action: string,
+  userType: string,
+  options: any = {}
+) {
   github.context.eventName = eventName
   github.context.payload = {
     action: action,
     sender: {
       type: userType
-    }
+    },
+    ...options
   }
 }
 
@@ -97,6 +103,83 @@ describe('pull_request', () => {
     set('pull_request', 'edited', 'User')
     await expectIgnore(true)
   })
+
+  it('should ignore if updated only 1s has passed', async () => {
+    set('pull_request', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:03:59Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 2s has passed', async () => {
+    set('pull_request', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:00Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 3s has passed', async () => {
+    set('pull_request', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:01Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 4s has passed', async () => {
+    set('pull_request', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:02Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 5s has passed', async () => {
+    set('pull_request', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:03Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should not ignore if updated 10s later', async () => {
+    set('pull_request', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:08Z'
+      }
+    })
+    await expectIgnore(false)
+  })
+
+  it('should not ignore if updated more than 1min later', async () => {
+    set('pull_request', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:51Z',
+        updated_at: '2021-02-01T09:04:59Z'
+      }
+    })
+    await expectIgnore(false)
+  })
 })
 
 describe('issues', () => {
@@ -128,6 +211,83 @@ describe('issues', () => {
   it('should ignore edited', async () => {
     set('issues', 'edited', 'User')
     await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 1s has passed', async () => {
+    set('issues', 'labeled', 'User', {
+      issue: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:03:59Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 2s has passed', async () => {
+    set('issues', 'labeled', 'User', {
+      issue: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:00Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 3s has passed', async () => {
+    set('issues', 'labeled', 'User', {
+      issue: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:01Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 4s has passed', async () => {
+    set('issues', 'labeled', 'User', {
+      issue: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:02Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 5s has passed', async () => {
+    set('issues', 'labeled', 'User', {
+      issue: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:03Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should not ignore if updated 10s later', async () => {
+    set('issues', 'labeled', 'User', {
+      issue: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:08Z'
+      }
+    })
+    await expectIgnore(false)
+  })
+
+  it('should not ignore if updated more than 1min later', async () => {
+    set('issues', 'labeled', 'User', {
+      issue: {
+        number: 1,
+        created_at: '2021-02-01T07:03:51Z',
+        updated_at: '2021-02-01T09:04:59Z'
+      }
+    })
+    await expectIgnore(false)
   })
 })
 
