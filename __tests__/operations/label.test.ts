@@ -61,7 +61,9 @@ function getCommands(list: string[] = []): Commands {
 
 describe('needs', () => {
   it('should have needs/triage when needs is true', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: []
@@ -78,7 +80,9 @@ describe('needs', () => {
   });
 
   it('should have needs/triage when needs.comment is present', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: []
@@ -97,7 +101,9 @@ describe('needs', () => {
   });
 
   it('should have needs/triage when /needs triage is commented', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: []
@@ -113,7 +119,9 @@ describe('needs', () => {
   });
 
   it('should not have needs/triage when /needs triage is commented because its already present', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: [{name: 'triage/accepted'}]
@@ -131,7 +139,9 @@ describe('needs', () => {
   });
 
   it('should have needs/triage removed when labeled', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: [{name: 'needs/triage'}, {name: 'triage/accepted'}]
@@ -149,7 +159,9 @@ describe('needs', () => {
   });
 
   it('should have needs/triage removed when /triage accepted', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: [{name: 'needs/triage'}]
@@ -166,6 +178,7 @@ describe('needs', () => {
   });
 
   it('should have needs/kind removed when /kind fix is commented', async function () {
+    github.context.eventName = 'issue_comment'
     github.context.payload = {
       action: 'created',
       comment: {
@@ -191,7 +204,9 @@ describe('needs', () => {
   });
 
   it('should have needs/triage removed when /triage accepted when needs:true', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: [{name: 'needs/triage'}]
@@ -209,7 +224,9 @@ describe('needs', () => {
   });
 
   it('should have needs/triage removed when /triage accepted when needs comments is available', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: [{name: 'needs/triage'}]
@@ -230,7 +247,9 @@ describe('needs', () => {
   });
 
   it('should have needs/triage removed when /triage rejected', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: [{name: 'needs/triage'}]
@@ -248,6 +267,7 @@ describe('needs', () => {
   });
 
   it('should have comment when needs/triage is present and opened', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
       action: 'opened',
       issue: {
@@ -270,6 +290,7 @@ describe('needs', () => {
   });
 
   it('should not have comment when needs/triage is present and opened', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
       action: 'opened',
       issue: {
@@ -290,6 +311,7 @@ describe('needs', () => {
   });
 
   it('should not have comment when needs/triage is present as its edited', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
       action: 'edited',
       issue: {
@@ -312,7 +334,9 @@ describe('needs', () => {
   });
 
   it('should not have commented', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: []
@@ -326,11 +350,180 @@ describe('needs', () => {
 
     return expect(postComments).not.toHaveBeenCalled()
   });
+
+  describe('is not created or opened', () => {
+    it('should have called because pull_request synchronize', async function () {
+      github.context.eventName = 'pull_request'
+      github.context.payload = {
+        action: 'synchronize',
+        pull_request: {
+          number: 1,
+          labels: []
+        }
+      }
+
+      await label({
+        prefix: 'triage',
+        list: ['accepted'],
+        needs: true
+      }, getCommands())
+
+      await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
+      await expect(postStatus).not.toHaveBeenCalled()
+      await expect(postComments).not.toHaveBeenCalled()
+      await expect(deleteLabels).not.toHaveBeenCalled()
+    });
+
+    it('should have called with status because pull_request synchronize', async function () {
+      github.context.eventName = 'pull_request'
+      github.context.payload = {
+        action: 'synchronize',
+        pull_request: {
+          number: 1,
+          labels: [],
+          head: {
+            sha: '123'
+          }
+        }
+      }
+
+      await label({
+        prefix: 'triage',
+        list: ['accepted'],
+        needs: {
+          status: {
+            context: 'Context'
+          }
+        }
+      }, getCommands())
+
+      await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
+      await expect(postStatus).toHaveBeenCalled()
+      await expect(postComments).not.toHaveBeenCalled()
+      await expect(deleteLabels).not.toHaveBeenCalled()
+    });
+
+    it('should have called with status because pull_request unlabeled', async function () {
+      github.context.eventName = 'pull_request'
+      github.context.payload = {
+        action: 'unlabeled',
+        pull_request: {
+          number: 1,
+          labels: [],
+          head: {
+            sha: '123'
+          }
+        }
+      }
+
+      await label({
+        prefix: 'triage',
+        list: ['accepted'],
+        needs: {
+          status: {
+            context: 'Context'
+          }
+        }
+      }, getCommands(['/triage accepted']))
+
+      await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
+      await expect(postStatus).toHaveBeenCalled()
+      await expect(postComments).not.toHaveBeenCalled()
+      await expect(deleteLabels).not.toHaveBeenCalled()
+    });
+
+    it('should have called because pull_request edited', async function () {
+      github.context.eventName = 'pull_request'
+      github.context.payload = {
+        action: 'edited',
+        pull_request: {
+          number: 1,
+          labels: []
+        }
+      }
+
+      await label({
+        prefix: 'triage',
+        list: ['accepted'],
+        needs: true
+      }, getCommands())
+
+      await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
+      await expect(postStatus).not.toHaveBeenCalled()
+      await expect(postComments).not.toHaveBeenCalled()
+      await expect(deleteLabels).not.toHaveBeenCalled()
+    });
+
+    it('should not have called because issues labeled', async function () {
+      github.context.eventName = 'issues'
+      github.context.payload = {
+        action: 'labeled',
+        issue: {
+          number: 1,
+          labels: [{name: 'needs/triage'}]
+        }
+      }
+
+      await label({
+        prefix: 'triage',
+        list: ['accepted'],
+        needs: true
+      }, getCommands(['/triage accepted']))
+
+      await expect(postLabels).not.toHaveBeenCalled()
+      await expect(postComments).not.toHaveBeenCalled()
+      await expect(deleteLabels).not.toHaveBeenCalled()
+    });
+
+    it('should have needs/triage called because issues labeled', async function () {
+      github.context.eventName = 'issues'
+      github.context.payload = {
+        action: 'labeled',
+        issue: {
+          number: 1,
+          labels: []
+        }
+      }
+
+      await label({
+        prefix: 'triage',
+        list: ['accepted'],
+        needs: true
+      }, getCommands(['/triage accepted']))
+
+      await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
+      await expect(postComments).not.toHaveBeenCalled()
+      await expect(deleteLabels).not.toHaveBeenCalled()
+    });
+
+    it('should have needs/triage called because pull_request labeled', async function () {
+      github.context.eventName = 'pull_request'
+      github.context.payload = {
+        action: 'labeled',
+        pull_request: {
+          number: 1,
+          labels: []
+        }
+      }
+
+      await label({
+        prefix: 'triage',
+        list: ['accepted'],
+        needs: true
+      }, getCommands(['/triage accepted']))
+
+      await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
+      await expect(postComments).not.toHaveBeenCalled()
+      await expect(deleteLabels).not.toHaveBeenCalled()
+    });
+  })
 })
 
 describe('labels', () => {
-  it('should have removed labels with comment', async function () {
+  it('should have removed labels with command', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: [{name: 'triage/accepted'}]
@@ -346,8 +539,10 @@ describe('labels', () => {
     await expect(deleteLabels).toHaveBeenCalledWith('triage/accepted')
   });
 
-  it('should have added labels with comment', async function () {
+  it('should have added labels with command', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: [{name: 'triage/accepted'}]
@@ -364,8 +559,10 @@ describe('labels', () => {
     await expect(deleteLabels).not.toHaveBeenCalled()
   });
 
-  it('should have added multiple labels with comment', async function () {
+  it('should have added multiple labels with command', async function () {
+    github.context.eventName = 'issues'
     github.context.payload = {
+      action: 'opened',
       issue: {
         number: 1,
         labels: []
@@ -383,7 +580,9 @@ describe('labels', () => {
 
   describe('multiples', () => {
     it('false: should have one label', async function () {
+      github.context.eventName = 'issues'
       github.context.payload = {
+        action: 'opened',
         issue: {
           number: 1,
           labels: [{name: 'triage/b'}]
@@ -403,7 +602,9 @@ describe('labels', () => {
     })
 
     it('true: should have many label', async function () {
+      github.context.eventName = 'issues'
       github.context.payload = {
+        action: 'opened',
         issue: {
           number: 1,
           labels: [{name: 'triage/b'}]
@@ -422,7 +623,9 @@ describe('labels', () => {
     })
 
     it('should have needs/triage removed when /triage accepted', async function () {
+      github.context.eventName = 'issues'
       github.context.payload = {
+        action: 'opened',
         issue: {
           number: 1,
           labels: [{name: 'needs/triage'}]
@@ -440,7 +643,9 @@ describe('labels', () => {
     });
 
     it('should have needs/triage removed when /triage accepted when needs:true', async function () {
+      github.context.eventName = 'issues'
       github.context.payload = {
+        action: 'opened',
         issue: {
           number: 1,
           labels: [{name: 'needs/triage'}]
@@ -462,7 +667,9 @@ describe('labels', () => {
 
 describe('status', () => {
   it('should have pending status', async () => {
+    github.context.eventName = 'pull_request'
     github.context.payload = {
+      action: 'opened',
       pull_request: {
         number: 1,
         labels: [],
@@ -489,7 +696,9 @@ describe('status', () => {
   })
 
   it('should have success status', async () => {
+    github.context.eventName = 'pull_request'
     github.context.payload = {
+      action: 'opened',
       pull_request: {
         number: 1,
         labels: [],
@@ -516,7 +725,9 @@ describe('status', () => {
   })
 
   it('should have failure status with description', async () => {
+    github.context.eventName = 'pull_request'
     github.context.payload = {
+      action: 'opened',
       pull_request: {
         number: 1,
         labels: [],
@@ -545,7 +756,9 @@ describe('status', () => {
   })
 
   it('should have failure status with description', async () => {
+    github.context.eventName = 'pull_request'
     github.context.payload = {
+      action: 'opened',
       pull_request: {
         number: 1,
         labels: [],
@@ -576,7 +789,9 @@ describe('status', () => {
   })
 
   it('should have success status with description', async () => {
+    github.context.eventName = 'pull_request'
     github.context.payload = {
+      action: 'opened',
       pull_request: {
         number: 1,
         labels: [],
@@ -608,7 +823,9 @@ describe('status', () => {
   })
 
   it('should not have status', async () => {
+    github.context.eventName = 'pull_request'
     github.context.payload = {
+      action: 'opened',
       pull_request: {
         number: 1,
         labels: [],
@@ -628,7 +845,9 @@ describe('status', () => {
   })
 
   it('should have url', async () => {
+    github.context.eventName = 'pull_request'
     github.context.payload = {
+      action: 'opened',
       pull_request: {
         number: 1,
         labels: [],
@@ -655,10 +874,35 @@ describe('status', () => {
       "target_url": "https://google.com",
     })
   })
+
+  it('should not have status because it is not a pull_request', async () => {
+    github.context.eventName = 'issues'
+    github.context.payload = {
+      action: 'opened',
+      issue: {
+        number: 1,
+        labels: [],
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      list: ['accepted'],
+      needs: {
+        status: {
+          context: 'Triage',
+          url: 'https://google.com'
+        }
+      }
+    }, getCommands())
+
+    return expect(postStatus).not.toHaveBeenCalled()
+  });
 })
 
 describe('comments flaky test', () => {
   it('should have needs/kind removed when /kind fix is commented', async () => {
+    github.context.eventName = 'issue_comment'
     github.context.payload = {
       action: 'created',
       comment: {
@@ -686,6 +930,7 @@ describe('comments flaky test', () => {
   });
 
   it('needs/kind', async () => {
+    github.context.eventName = 'issue_comment'
     github.context.payload = {
       action: 'created',
       comment: {

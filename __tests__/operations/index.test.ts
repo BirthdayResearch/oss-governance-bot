@@ -18,7 +18,9 @@ beforeEach(() => {
     }
   })
 
+  github.context.eventName = 'issues'
   github.context.payload = {
+    action: 'opened',
     issue: {
       number: 1,
       labels: [],

@@ -7,10 +7,19 @@ function getAuthorAssociation(): string | undefined {
   return current?.author_association
 }
 
+function isCommentUserIssueAuthor(): boolean {
+  const payload = github.context.payload
+  return payload.comment?.user?.login === payload.issue?.user?.login
+}
+
 export function isAuthorAssociationAllowed(
   authorAssociation: AuthorAssociation | undefined
 ): boolean {
   if (!authorAssociation) {
+    return true
+  }
+
+  if (authorAssociation.author && isCommentUserIssueAuthor()) {
     return true
   }
 

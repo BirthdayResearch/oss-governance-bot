@@ -1,4 +1,4 @@
-import ignore from '../src/ignore'
+import ignore, {isCreatedOpened} from '../src/ignore'
 import * as github from '@actions/github'
 
 function set(eventName: string, action: string, userType: string) {
@@ -78,6 +78,11 @@ describe('pull_request', () => {
     await expectIgnore(false)
   })
 
+  it('should not ignore synchronize', async () => {
+    set('pull_request', 'synchronize', 'User')
+    await expectIgnore(false)
+  })
+
   it('should ignore opened if Bot', async () => {
     set('pull_request', 'opened', 'Bot')
     await expectIgnore(true)
@@ -123,5 +128,42 @@ describe('issues', () => {
   it('should ignore edited', async () => {
     set('issues', 'edited', 'User')
     await expectIgnore(true)
+  })
+})
+
+describe('isCreatedOpened', () => {
+  async function expectCreatedOpened(expected: boolean): Promise<void> {
+    await expect.assertions(1)
+    await expect(isCreatedOpened()).toBe(expected)
+  }
+
+  it('issue_comment created should be true', async () => {
+    set('issue_comment', 'created', 'User')
+    await expectCreatedOpened(true)
+  })
+
+  it('pull_request opened should be true', async () => {
+    set('pull_request', 'opened', 'User')
+    await expectCreatedOpened(true)
+  })
+
+  it('issues opened should be true', async () => {
+    set('issues', 'opened', 'User')
+    await expectCreatedOpened(true)
+  })
+
+  it('issue_comment edited should be true', async () => {
+    set('issue_comment', 'edited', 'User')
+    await expectCreatedOpened(false)
+  })
+
+  it('pull_request labeled should be true', async () => {
+    set('pull_request', 'labeled', 'User')
+    await expectCreatedOpened(false)
+  })
+
+  it('issues labeled should be true', async () => {
+    set('issues', 'labeled', 'User')
+    await expectCreatedOpened(false)
   })
 })
