@@ -126,7 +126,8 @@ issue:
     - cmd: /comment issue
       type: comment
       comment: |
-        @$AUTHOR: Hey this is comment issue example.
+        @$ISSUE_AUTHOR: Hey this is comment issue example for issue/pr author.
+        @$AUTHOR: Hey this is comment issue example for sender author.
 
 pull_request:
   labels:
@@ -297,6 +298,9 @@ issue:
 
 ### ChatOps: comment
 
+* `$AUTHOR` is the user that send the /chat-ops, comment/issue/pull_request.
+* `$ISSUE_AUTHOR` is the user that owns the current issue/pull_request.
+
 ```yml
 version: v1
 
@@ -305,7 +309,8 @@ issue:
     - cmd: /comment me
       type: comment
       comment: |
-        @$AUTHOR: Hey this is comment example.
+        @$ISSUE_AUTHOR: Hey this is comment issue example for issue/pr author.
+        @$AUTHOR: Hey this is comment issue example for sender author.
 ```
 
 ## Motivation

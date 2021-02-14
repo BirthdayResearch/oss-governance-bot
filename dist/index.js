@@ -34,8 +34,16 @@ function getAuthorAssociation() {
     const current = payload.comment || payload.pull_request || payload.issue;
     return current === null || current === void 0 ? void 0 : current.author_association;
 }
+function isCommentUserIssueAuthor() {
+    var _a, _b, _c, _d;
+    const payload = github.context.payload;
+    return ((_b = (_a = payload.comment) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.login) === ((_d = (_c = payload.issue) === null || _c === void 0 ? void 0 : _c.user) === null || _d === void 0 ? void 0 : _d.login);
+}
 function isAuthorAssociationAllowed(authorAssociation) {
     if (!authorAssociation) {
+        return true;
+    }
+    if (authorAssociation.author && isCommentUserIssueAuthor()) {
         return true;
     }
     switch (getAuthorAssociation()) {
@@ -442,6 +450,15 @@ function getDetails() {
     details += '</details>';
     return details;
 }
+function getIssueUserLogin() {
+    var _a, _b;
+    if (github.context.payload.issue) {
+        return (_a = github.context.payload.issue.user) === null || _a === void 0 ? void 0 : _a.login;
+    }
+    if (github.context.payload.pull_request) {
+        return (_b = github.context.payload.pull_request.user) === null || _b === void 0 ? void 0 : _b.login;
+    }
+}
 /**
  * Comment to post with added details.
  *
@@ -452,6 +469,7 @@ function postComment(body) {
     return __awaiter(this, void 0, void 0, function* () {
         const client = initClient();
         body = body.replace('$AUTHOR', (_a = github.context.payload.sender) === null || _a === void 0 ? void 0 : _a.login);
+        body = body.replace('$ISSUE_AUTHOR', getIssueUserLogin());
         body += getDetails();
         yield client.issues.createComment({
             owner: github.context.repo.owner,

@@ -163,3 +163,72 @@ describe('comment', function () {
     expect(isAuthorAssociationAllowed({owner: true})).toBe(false)
   })
 })
+
+describe('comment/issue author', function () {
+  it('comment author is issue author', function () {
+    github.context.payload = {
+      comment: {
+        id: 1,
+        author_association: 'OWNER',
+        user: {
+          login: 'defich',
+          type: 'ORGANIZATION'
+        }
+      },
+      issue: {
+        number: 1,
+        author_association: 'OWNER',
+        user: {
+          login: 'defich'
+        }
+      }
+    }
+
+    expect(isAuthorAssociationAllowed({author: true})).toBe(true)
+  })
+
+  it('comment author is not issue author', function () {
+    github.context.payload = {
+      comment: {
+        id: 1,
+        author_association: 'OWNER',
+        user: {
+          login: 'defich',
+          type: 'ORGANIZATION'
+        }
+      },
+      issue: {
+        number: 1,
+        author_association: 'MEMBER',
+        user: {
+          login: 'fuxingloh'
+        }
+      }
+    }
+
+    expect(isAuthorAssociationAllowed({author: true})).toBe(false)
+  })
+
+  it('comment author is not issue author but is member', function () {
+    github.context.payload = {
+      comment: {
+        id: 1,
+        author_association: 'MEMBER',
+        user: {
+          login: 'fuxingloh',
+          type: 'USER'
+        }
+      },
+      issue: {
+        number: 1,
+        author_association: 'OWNER',
+        user: {
+          login: 'defich',
+          type: 'ORGANIZATION'
+        }
+      }
+    }
+
+    expect(isAuthorAssociationAllowed({author: true, member: true})).toBe(true)
+  })
+})

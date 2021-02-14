@@ -81,6 +81,15 @@ function getDetails(): string {
   return details
 }
 
+function getIssueUserLogin(): string | undefined {
+  if (github.context.payload.issue) {
+    return github.context.payload.issue.user?.login
+  }
+  if (github.context.payload.pull_request) {
+    return github.context.payload.pull_request.user?.login
+  }
+}
+
 /**
  * Comment to post with added details.
  *
@@ -90,6 +99,7 @@ export async function postComment(body: string) {
   const client = initClient()
 
   body = body.replace('$AUTHOR', github.context.payload.sender?.login)
+  body = body.replace('$ISSUE_AUTHOR', getIssueUserLogin()!)
   body += getDetails()
 
   await client.issues.createComment({
