@@ -171,7 +171,7 @@ describe('comment/issue author', function () {
         id: 1,
         author_association: 'OWNER',
         user: {
-          login: 'defich',
+          login: 'DeFiCh',
           type: 'ORGANIZATION'
         }
       },
@@ -179,7 +179,7 @@ describe('comment/issue author', function () {
         number: 1,
         author_association: 'OWNER',
         user: {
-          login: 'defich'
+          login: 'DeFiCh'
         }
       }
     }
@@ -193,7 +193,7 @@ describe('comment/issue author', function () {
         id: 1,
         author_association: 'OWNER',
         user: {
-          login: 'defich',
+          login: 'DeFiCh',
           type: 'ORGANIZATION'
         }
       },
@@ -223,7 +223,7 @@ describe('comment/issue author', function () {
         number: 1,
         author_association: 'OWNER',
         user: {
-          login: 'defich',
+          login: 'DeFiCh',
           type: 'ORGANIZATION'
         }
       }

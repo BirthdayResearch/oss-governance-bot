@@ -1,22 +1,37 @@
 # OSS Governance
 
-[![codecov](https://codecov.io/gh/fuxingloh/oss-governance/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/fuxingloh/oss-governance)
-[![CodeFactor](https://www.codefactor.io/repository/github/fuxingloh/oss-governance/badge)](https://www.codefactor.io/repository/github/fuxingloh/oss-governance)
-[![Release](https://img.shields.io/github/v/release/fuxingloh/oss-governance)](https://github.com/fuxingloh/oss-governance/releases)
-[![License MIT](https://img.shields.io/github/license/fuxingloh/oss-governance)](https://github.com/fuxingloh/oss-governance/blob/main/LICENSE)
+[![codecov](https://codecov.io/gh/DeFiCh/oss-governance/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/DeFiCh/oss-governance)
+[![Release](https://img.shields.io/github/v/release/DeFiCh/oss-governance)](https://github.com/DeFiCh/oss-governance/releases)
+[![License MIT](https://img.shields.io/github/license/DeFiCh/oss-governance)](https://github.com/DeFiCh/oss-governance/blob/main/LICENSE)
 
-`oss-governance` is a GitHub action to help bring efficacy to your open source project governance. In addition to
-providing a chat-bot experience when contributor interact with your project,
-`oss-governance` also provide automation in the form of policy enforcement. Community contributors can trigger chat-ops
-via /slash style commands.
+<!-- 3 Arc: Context - Problem - Solution -->
 
-### What can this do for you
+In [DeFiChain](https://defichain.com/), our projects are open source, and our primary vision is to enable decentralized
+finance with Bitcoin-grade security, strength and immutability. [It's a blockchain dedicated to fast, intelligent and
+transparent financial services, accessible by everyone](https://defichain.com/white-paper/).
+
+Although putting our project on GitHub makes it transparent and visible for public contributions, it's far from making
+it maintainable. For new contributors, creating an issue or pull request and successfully sending it is a mountainous
+journey in itself. Quality control hierarchy such as 'Triage', 'Conventional Commits', 'CI steps' and 'Code review'
+often deter contributors from contributing due to the complex nature of each OSS governance policy.
+
+A healthy open source projects must be able to scale to thousands of contributors. This project is an attempt to bring
+efficacy to the process by lowering the barrier of entry for community participation. The onus should be on the
+reviewers or ChatBot/ChatOp to guide the contributor through a series of education (governance/triage requirements) or
+adjustment (code review changes).
+
+This project is created to fully utilize the GitHub generous open source policy. It runs on GitHub Actions workflow
+hooks and deeply integrate with many GitHub offerings. In addition to providing a chat-bot experience when contributor
+interact with your project, `oss-governance` also provide automation in the form of policy enforcement. Community
+contributors can trigger chat-ops via /slash style commands.
+
+## What can OSS Governance do for you?
 
 * Speed up issue triaging with automated chat-bot and chat-ops operations.
 * Increased code review agility by moving quality control hierarchy from requirements to educational steps.
 * Scale to thousands of contributors without alienating community participation with complex quality control hierarchy.
-* Tool that lives natively and integrate well with the GitHub action/workflow product offering. You can view the source
-  directly and modify it to your needs.
+* A GitHub Action that lives natively and integrate well with the GitHub action/workflow product offering. You can view
+  the source directly and modify it to your needs.
 
 ![preview](.github/preview.png)
 
@@ -40,8 +55,8 @@ jobs:
     name: Governance
     runs-on: ubuntu-latest
     steps:
-      # Semantic versioning, lock to different version: v1, v1.5, v1.5.0 or a commit hash.
-      - uses: fuxingloh/oss-governance@v1
+      # Semantic versioning, lock to different version: v1, v1.x or a commit hash.
+      - uses: DeFiCh/oss-governance@v1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'  
           config-path: .github/governance.yml # optional, default to '.github/governance.yml'
@@ -313,22 +328,6 @@ issue:
         @$AUTHOR: Hey this is comment issue example for sender author.
 ```
 
-## Motivation
-
-Open Source Software project governance is increasingly complex and autonomous. Putting your project on GitHub is a
-usually first step to making your project open. Making your project visible is far from making it maintainable. For new
-contributors, creating a pull request and successfully sending it is a mountainous journey in itself. Quality control
-hierarchy such as 'Conventional Commits', 'CI steps' and 'Code review' often deter contributors from contributing due to
-the complex nature of each OSS governance policy.
-
-A healthy open source projects must be able to scale to thousands of contributors. This project is an attempt to bring
-efficacy to the process by lowering the barrier of entry for community participation. The onus should be on the
-reviewers or ChatBot/ChatOp to guide the contributor through a series of education (governance/triage requirements) or
-adjustment (code review changes).
-
-This project is created to fully utilize the GitHub generous open source policy. It runs on GitHub Actions workflow
-hooks and deeply integrate with many GitHub offerings.
-
 ## Development & Contribution
 
 > IntelliJ IDEA is the IDE of choice for writing and maintaining this code library. IntelliJ's files are included for
@@ -340,7 +339,7 @@ npm run all # to build/check/lint/package
 ```
 
 * For any question please feel free to create an issue.
-* Pull request are welcomed too!
+* Pull request for non-breaking features are welcomed too!
 
 ## Prior art
 

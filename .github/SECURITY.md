@@ -3,7 +3,7 @@
 ## Supported Version
 
 Only the latest version is supported. You can view the latest
-releases [here](https://github.com/fuxingloh/oss-governance/releases).
+releases [here](https://github.com/DeFiCh/oss-governance/releases).
 
 ## Reporting a Vulnerability
 
