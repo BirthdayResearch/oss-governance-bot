@@ -13,5 +13,9 @@ jobs:
     name: Uses
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
+
       - uses: ./
+        with:
+          # You can use a PAT so that it shows up as a user instead of github-actions
+          github-token: ${{ secrets.DEFICHAIN_BOT_PAT_OSS_GOVERNANCE }}

@@ -58,6 +58,7 @@ jobs:
       # Semantic versioning, lock to different version: v1, v1.x or a commit hash.
       - uses: DeFiCh/oss-governance@v1
         with:
+          # You can use a PAT so that it shows up as a user instead of github-actions
           github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'  
           config-path: .github/governance.yml # optional, default to '.github/governance.yml'
 ```

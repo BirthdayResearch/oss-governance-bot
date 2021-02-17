@@ -201,7 +201,7 @@ describe('comment/issue author', function () {
         number: 1,
         author_association: 'MEMBER',
         user: {
-          login: 'fuxingloh'
+          login: 'DeFiChMember'
         }
       }
     }
@@ -215,7 +215,7 @@ describe('comment/issue author', function () {
         id: 1,
         author_association: 'MEMBER',
         user: {
-          login: 'fuxingloh',
+          login: 'DeFiChMember',
           type: 'USER'
         }
       },

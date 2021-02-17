@@ -18,55 +18,21 @@ issue:
     - prefix: kind
       list: [ "feature", "bug", "question" ]
       multiple: false
-      needs:
-        comment: |
-          @$AUTHOR: There are no 'kind' label on this PR. You need a 'kind' label to generate the release note automatically.
-
-          * `/kind feature`
-          * `/kind bug`
-          * `/kind question`
+      needs: true
 
     - prefix: area
-      list: [ "ui-ux", "semantics", "translation", "security" ]
+      list: [ "security", "documentation", "chat-ops", "labels", "captures", "permission" ]
       multiple: true
       needs:
         comment: |
           @$AUTHOR: There are no area labels on this issue. Adding an appropriate label will greatly expedite the process for us. You can add as many area as you see fit. **If you are unsure what to do you can ignore this!**
 
-          * `/area ui-ux`
-          * `/area semantics`
-          * `/area translation`
+          * `/area labels`
+          * `/area chat-ops`
+          * `/area documentation`
           * `/area security`
-
-    - prefix: os
-      list: [ "mac", "win", "linux" ]
-      multiple: true
-
-    - prefix: priority
-      multiple: false
-      list: [ "urgent-now", "important-soon" ]
-      author_association:
-        collaborator: true
-        member: true
-        owner: true
-
-  captures:
-    - regex: "- Version: *(.+)"
-      github_release: true
-      ignore_case: true
-      label: 'version/$CAPTURED'
-
-    - regex: "- Operating System: *(macos|mac) *"
-      ignore_case: true
-      label: 'os/mac'
-
-    - regex: "- Operating System: *(windows|window|win|win) *"
-      ignore_case: true
-      label: 'os/win'
-
-    - regex: "- Operating System: *(linux) *"
-      ignore_case: true
-      label: 'os/linux'
+          * `/area captures`
+          * `/area permission`
 
   chat_ops:
     - cmd: /close
@@ -86,11 +52,6 @@ issue:
         collaborator: true
         member: true
         owner: true
-
-    - cmd: /comment issue
-      type: comment
-      comment: |
-        @$AUTHOR: Hey this is comment issue example.
 
 pull_request:
   labels:
@@ -131,7 +92,7 @@ pull_request:
         owner: true
 
     - cmd: /cc
-      type: none # does not trigger anything
+      type: none
 
     - cmd: /request
       type: review
@@ -139,8 +100,3 @@ pull_request:
         collaborator: true
         member: true
         owner: true
-
-    - cmd: /comment pr
-      type: comment
-      comment: |
-        @$AUTHOR: Hey this is comment pr example.

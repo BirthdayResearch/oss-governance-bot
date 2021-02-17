@@ -108,7 +108,7 @@ describe('getGovernance', () => {
     const {getGovernance} = require('../src/main')
     const governance = await getGovernance()
 
-    expect(governance?.labels?.length).toBe(5)
+    expect(governance?.labels?.length).toBe(3)
   })
 
   it('should be pull request', async function () {
@@ -139,7 +139,7 @@ describe('getGovernance', () => {
       const {getGovernance} = require('../src/main')
       const governance = await getGovernance()
 
-      expect(governance?.labels?.length).toBe(5)
+      expect(governance?.labels?.length).toBe(3)
     })
 
     it('should be pull request', async function () {

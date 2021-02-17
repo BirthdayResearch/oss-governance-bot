@@ -7,7 +7,7 @@ labels: kind/bug
 <!-- 
 Please use this template while reporting a bug and provide as much info as possible.
 
-If the matter is security related, please disclose it privately via security@fuxing.dev
+If the matter is security related, please disclose it privately via oss@defichain.com
 -->
 
 #### What happened:
@@ -17,8 +17,3 @@ If the matter is security related, please disclose it privately via security@fux
 #### How to reproduce it (as minimally and precisely as possible):
 
 #### Anything else we need to know?:
-
-#### Environment:
-- Version:
-- Operating System:
-- Others:

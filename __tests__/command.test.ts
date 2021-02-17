@@ -119,15 +119,15 @@ describe('commands', () => {
   })
 
   it('should authors', async () => {
-    const commands = await getCommands('/review @fuxing @tommy')
+    const commands = await getCommands('/review @jess @tommy')
 
-    expect(commands.prefix('@fuxing').length).toBeFalsy()
+    expect(commands.prefix('@jess').length).toBeFalsy()
     expect(commands.prefix('@tommy').length).toBeFalsy()
     expect(commands.prefix('/review').length).toBeTruthy()
-    expect(commands.prefix('/review @fuxing').length).toBeTruthy()
-    expect(commands.prefix('/review @fuxing')[0].args).toStrictEqual(['@tommy'])
+    expect(commands.prefix('/review @jess').length).toBeTruthy()
+    expect(commands.prefix('/review @jess')[0].args).toStrictEqual(['@tommy'])
     expect(commands.prefix('/review')[0].args).toStrictEqual([
-      '@fuxing',
+      '@jess',
       '@tommy'
     ])
   })
