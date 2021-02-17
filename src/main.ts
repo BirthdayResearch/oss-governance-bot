@@ -33,13 +33,18 @@ export async function getGovernance(): Promise<Governance | undefined> {
 
 export async function runGovernance(): Promise<void> {
   const governance = await getGovernance()
+  core.info('main: fetched governance.yml')
+
   if (!governance) {
     return
   }
 
+  core.info('main: parsing commands')
   const commands = await command()
+
+  core.info('main: running operations')
   await operations(governance, commands)
-  core.info('oss-governance: completed')
+  core.info('main: completed operations')
 }
 
 /* eslint github/no-then: off */
@@ -49,7 +54,4 @@ ignore()
 
     await runGovernance()
   })
-  .catch(error => {
-    core.error(error)
-    core.setFailed(error.message)
-  })
+  .catch(error => core.error(error))

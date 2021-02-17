@@ -177,7 +177,7 @@ describe('runGovernance', () => {
 
     const {runGovernance} = require('../src/main')
     await runGovernance()
-    await expect(info).toHaveBeenCalledWith('oss-governance: completed')
+    await expect(info).toHaveBeenCalledWith('main: completed operations')
     await expect(intercepted).toHaveBeenCalled()
   })
 
@@ -194,7 +194,7 @@ describe('runGovernance', () => {
 
     const {runGovernance} = require('../src/main')
     await runGovernance()
-    await expect(info).toHaveBeenCalledWith('oss-governance: completed')
+    await expect(info).toHaveBeenCalledWith('main: completed operations')
     await expect(intercepted).toHaveBeenCalled()
   })
 
@@ -221,7 +221,7 @@ describe('runGovernance', () => {
 
     const {runGovernance} = require('../src/main')
     await runGovernance()
-    await expect(info).not.toHaveBeenCalled()
+    await expect(info).toHaveBeenCalledTimes(1)
     await expect(intercepted).not.toHaveBeenCalled()
   })
 })

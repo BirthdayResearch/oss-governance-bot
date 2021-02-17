@@ -751,12 +751,15 @@ exports.getGovernance = getGovernance;
 function runGovernance() {
     return __awaiter(this, void 0, void 0, function* () {
         const governance = yield getGovernance();
+        core.info('main: fetched governance.yml');
         if (!governance) {
             return;
         }
+        core.info('main: parsing commands');
         const commands = yield command_1.default();
+        core.info('main: running operations');
         yield operations_1.default(governance, commands);
-        core.info('oss-governance: completed');
+        core.info('main: completed operations');
     });
 }
 exports.runGovernance = runGovernance;
@@ -767,10 +770,7 @@ ignore_1.default()
         return;
     yield runGovernance();
 }))
-    .catch(error => {
-    core.error(error);
-    core.setFailed(error.message);
-});
+    .catch(error => core.error(error));
 
 
 /***/ }),
@@ -1015,6 +1015,25 @@ exports.default = default_1;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -1037,6 +1056,7 @@ const assign_1 = __importDefault(__nccwpck_require__(9842));
 const review_1 = __importDefault(__nccwpck_require__(1090));
 const label_2 = __importDefault(__nccwpck_require__(6852));
 const ignore_1 = __nccwpck_require__(5404);
+const core = __importStar(__nccwpck_require__(2186));
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         for (const labelOp of labels) {
@@ -1091,12 +1111,15 @@ function default_1(governance, commands) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         if ((_a = governance.captures) === null || _a === void 0 ? void 0 : _a.length) {
+            core.info('operations: processing captures');
             yield processCaptures(governance.captures);
         }
         if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
+            core.info('operations: processing chat ops');
             yield processChatOps(governance.chat_ops, commands);
         }
         if ((_c = governance.labels) === null || _c === void 0 ? void 0 : _c.length) {
+            core.info('operations: processing labels');
             yield processLabels(governance.labels, commands);
         }
     });
