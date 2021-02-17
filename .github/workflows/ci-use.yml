@@ -17,6 +17,6 @@ jobs:
 
       - uses: ./
         with:
-          # You can use a PAT to post a comment so that it shows up as a user instead of github-actions
+          # You can use a PAT to post a comment/label so that it shows up as a user instead of github-actions
           # Set the user to Triage, full repo scope.
-          comment-token: ${{ secrets.DEFICHAIN_BOT_PAT_OSS_GOVERNANCE }}
+          bot-token: ${{ secrets.DEFICHAIN_BOT_PAT_OSS_GOVERNANCE }}

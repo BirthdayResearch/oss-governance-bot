@@ -1,4 +1,5 @@
 import * as github from '@actions/github'
+import {getBotUserId} from './github'
 
 function is(eventName: string, actions: string[]): boolean {
   return (
@@ -32,17 +33,32 @@ function ignoreLabeledRaceCondition(): boolean {
 }
 
 /**
- * To prevent mistakes, this will ignore invalid workflow trigger
+ * Ignore non 'User' to prevent infinite loop.
+ * Also ignores if sender is bot-token user
  */
-export default async function (): Promise<boolean> {
+async function ignoreBot(): Promise<boolean> {
   const payload = github.context.payload
 
-  // Ignore Non 'User' to prevent infinite loop
   if (payload.sender?.type !== 'User') {
     return true
   }
 
+  if (payload.sender?.id === (await getBotUserId())) {
+    return true
+  }
+
+  return false
+}
+
+/**
+ * To prevent mistakes, this will ignore invalid workflow trigger
+ */
+export default async function (): Promise<boolean> {
   if (ignoreLabeledRaceCondition()) {
+    return true
+  }
+
+  if (await ignoreBot()) {
     return true
   }
 

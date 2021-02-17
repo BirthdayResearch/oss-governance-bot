@@ -393,13 +393,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.hasReleaseByTag = exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
+exports.hasReleaseByTag = exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.getBotUserId = exports.initClient = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
 function initClient(token = core.getInput('github-token')) {
     return github.getOctokit(token);
 }
 exports.initClient = initClient;
+function getBotUserId() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = initClient(core.getInput('bot-token'));
+        const user = yield client.users.getAuthenticated();
+        return user.data.id;
+    });
+}
+exports.getBotUserId = getBotUserId;
 function getNumber() {
     var _a, _b;
     return (((_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number) || ((_b = github.context.payload.issue) === null || _b === void 0 ? void 0 : _b.number));
@@ -414,7 +422,7 @@ function addLabels(labels) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!labels.length)
             return;
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield client.issues.addLabels({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -428,7 +436,7 @@ function removeLabels(labels) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!labels.length)
             return;
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield Promise.all(labels.map(name => client.issues.removeLabel({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -483,7 +491,7 @@ function getIssueUserLogin() {
 function postComment(body) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const client = initClient(core.getInput('comment-token'));
+        const client = initClient(core.getInput('bot-token'));
         body = body.replace('$AUTHOR', (_a = github.context.payload.sender) === null || _a === void 0 ? void 0 : _a.login);
         body = body.replace('$ISSUE_AUTHOR', getIssueUserLogin());
         body += getDetails();
@@ -498,7 +506,7 @@ function postComment(body) {
 exports.postComment = postComment;
 function patchIssue(changes) {
     return __awaiter(this, void 0, void 0, function* () {
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield client.issues.update(Object.assign({ owner: github.context.repo.owner, repo: github.context.repo.repo, issue_number: getNumber() }, changes));
     });
 }
@@ -507,7 +515,7 @@ function assign(assignees) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!assignees.length)
             return;
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield client.issues.addAssignees({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -521,7 +529,7 @@ function requestReviewers(reviewers) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!reviewers.length)
             return;
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield client.pulls.requestReviewers({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -615,6 +623,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.isCreatedOpened = void 0;
 const github = __importStar(__nccwpck_require__(5438));
+const github_1 = __nccwpck_require__(5928);
 function is(eventName, actions) {
     return (github.context.eventName === eventName &&
         actions.includes(github.context.payload.action));
@@ -637,17 +646,31 @@ function ignoreLabeledRaceCondition() {
     return false;
 }
 /**
- * To prevent mistakes, this will ignore invalid workflow trigger
+ * Ignore non 'User' to prevent infinite loop.
+ * Also ignores if sender is bot-token user
  */
-function default_1() {
-    var _a;
+function ignoreBot() {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const payload = github.context.payload;
-        // Ignore Non 'User' to prevent infinite loop
         if (((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User') {
             return true;
         }
+        if (((_b = payload.sender) === null || _b === void 0 ? void 0 : _b.id) === (yield github_1.getBotUserId())) {
+            return true;
+        }
+        return false;
+    });
+}
+/**
+ * To prevent mistakes, this will ignore invalid workflow trigger
+ */
+function default_1() {
+    return __awaiter(this, void 0, void 0, function* () {
         if (ignoreLabeledRaceCondition()) {
+            return true;
+        }
+        if (yield ignoreBot()) {
             return true;
         }
         if (is('issue_comment', ['created'])) {

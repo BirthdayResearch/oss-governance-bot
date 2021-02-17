@@ -14,7 +14,7 @@ inputs:
     description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT) for everything else'
     required: false
     default: ${{ github.token }}
-  comment-token:
+  bot-token:
     description: 'GITHUB_TOKEN or a `repo` scoped Personal Access Token (PAT) to post comment as a user'
     required: false
     default: ${{ github.token }}
