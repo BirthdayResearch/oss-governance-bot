@@ -58,8 +58,10 @@ jobs:
       # Semantic versioning, lock to different version: v1, v1.x or a commit hash.
       - uses: DeFiCh/oss-governance@v1
         with:
-          # You can use a PAT so that it shows up as a user instead of github-actions
-          github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'  
+          # You can use a PAT to post a comment so that it shows up as a user instead of github-actions
+          # Set the user to Triage, full repo scope.
+          comment-token: ${{ secrets.DEFICHAIN_BOT_PAT_OSS_GOVERNANCE }} # optional, default to '${{ github.token }}'
+          github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'
           config-path: .github/governance.yml # optional, default to '.github/governance.yml'
 ```
 

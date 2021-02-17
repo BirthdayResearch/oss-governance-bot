@@ -396,8 +396,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.hasReleaseByTag = exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
-function initClient() {
-    const token = core.getInput('github-token');
+function initClient(token = core.getInput('github-token')) {
     return github.getOctokit(token);
 }
 exports.initClient = initClient;
@@ -447,6 +446,7 @@ function getDetails() {
     const configPath = core.getInput('config-path', { required: true });
     const repoUrl = repository === null || repository === void 0 ? void 0 : repository.html_url;
     const owner = repository === null || repository === void 0 ? void 0 : repository.owner;
+    const branch = repository === null || repository === void 0 ? void 0 : repository.default_branch;
     let details = '';
     details += '\n';
     details += '<details><summary>Details</summary>';
@@ -458,7 +458,7 @@ function getDetails() {
         details += `I am a bot created to help [${owner === null || owner === void 0 ? void 0 : owner.login}](${owner === null || owner === void 0 ? void 0 : owner.html_url}) manage community feedback and contributions.`;
     }
     details += ' ';
-    details += `You can check out my [manifest file](${repoUrl}/blob/master/${configPath}) to understand my behavior and what I can do.`;
+    details += `You can check out my [manifest file](${repoUrl}/blob/${branch}/${configPath}) to understand my behavior and what I can do.`;
     details += ' ';
     details +=
         'If you want to use this for your project, you can check out the [DeFiCh/oss-governance](https://github.com/DeFiCh/oss-governance) repository.';
@@ -483,7 +483,7 @@ function getIssueUserLogin() {
 function postComment(body) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const client = initClient();
+        const client = initClient(core.getInput('comment-token'));
         body = body.replace('$AUTHOR', (_a = github.context.payload.sender) === null || _a === void 0 ? void 0 : _a.login);
         body = body.replace('$ISSUE_AUTHOR', getIssueUserLogin());
         body += getDetails();
@@ -770,7 +770,10 @@ ignore_1.default()
         return;
     yield runGovernance();
 }))
-    .catch(error => core.error(error));
+    .catch(error => {
+    core.error(error);
+    core.setFailed(error);
+});
 
 
 /***/ }),
@@ -1115,7 +1118,7 @@ function default_1(governance, commands) {
             yield processCaptures(governance.captures);
         }
         if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
-            core.info('operations: processing chat ops');
+            core.info('operations: processing chatops');
             yield processChatOps(governance.chat_ops, commands);
         }
         if ((_c = governance.labels) === null || _c === void 0 ? void 0 : _c.length) {

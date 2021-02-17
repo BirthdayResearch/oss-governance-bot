@@ -54,4 +54,7 @@ ignore()
 
     await runGovernance()
   })
-  .catch(error => core.error(error))
+  .catch(error => {
+    core.error(error)
+    core.setFailed(error)
+  })

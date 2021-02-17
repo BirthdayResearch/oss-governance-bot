@@ -76,7 +76,7 @@ export default async function (
   }
 
   if (governance.chat_ops?.length) {
-    core.info('operations: processing chat ops')
+    core.info('operations: processing chatops')
     await processChatOps(governance.chat_ops, commands)
   }
 
