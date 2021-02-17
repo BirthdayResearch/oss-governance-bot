@@ -461,7 +461,7 @@ function getDetails() {
     details += `You can check out my [manifest file](${repoUrl}/blob/master/${configPath}) to understand my behavior and what I can do.`;
     details += ' ';
     details +=
-        'If you want to use this for your project, you can check out the [fuxingloh/oss-governance](https://github.com/fuxingloh/oss-governance) repository.';
+        'If you want to use this for your project, you can check out the [DeFiCh/oss-governance](https://github.com/DeFiCh/oss-governance) repository.';
     details += '\n\n';
     details += '</details>';
     return details;
