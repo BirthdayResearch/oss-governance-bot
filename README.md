@@ -1,9 +1,9 @@
 # OSS Governance
 
-[![codecov](https://codecov.io/gh/fuxingloh/oss-governance/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/fuxingloh/oss-governance)
-[![CodeFactor](https://www.codefactor.io/repository/github/fuxingloh/oss-governance/badge)](https://www.codefactor.io/repository/github/fuxingloh/oss-governance)
-[![Release](https://img.shields.io/github/v/release/fuxingloh/oss-governance)](https://github.com/fuxingloh/oss-governance/releases)
-[![License MIT](https://img.shields.io/github/license/fuxingloh/oss-governance)](https://github.com/fuxingloh/oss-governance/blob/main/LICENSE)
+[![codecov](https://codecov.io/gh/DeFiCh/oss-governance/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/DeFiCh/oss-governance)
+[![CodeFactor](https://www.codefactor.io/repository/github/DeFiCh/oss-governance/badge)](https://www.codefactor.io/repository/github/DeFiCh/oss-governance)
+[![Release](https://img.shields.io/github/v/release/DeFiCh/oss-governance)](https://github.com/DeFiCh/oss-governance/releases)
+[![License MIT](https://img.shields.io/github/license/DeFiCh/oss-governance)](https://github.com/DeFiCh/oss-governance/blob/main/LICENSE)
 
 `oss-governance` is a GitHub action to help bring efficacy to your open source project governance. In addition to
 providing a chat-bot experience when contributor interact with your project,
@@ -40,8 +40,8 @@ jobs:
     name: Governance
     runs-on: ubuntu-latest
     steps:
-      # Semantic versioning, lock to different version: v1, v1.5, v1.5.0 or a commit hash.
-      - uses: fuxingloh/oss-governance@v1
+      # Semantic versioning, lock to different version: v1, v1.x or a commit hash.
+      - uses: DeFiCh/oss-governance@v1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'  
           config-path: .github/governance.yml # optional, default to '.github/governance.yml'
