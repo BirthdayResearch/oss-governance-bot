@@ -11,7 +11,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
 
       - run: npm ci
       - run: npm run build
@@ -20,10 +20,6 @@ jobs:
       - run: npm run pack
       - run: npm run test:coverage
 
-      - uses: EndBug/add-and-commit@v6
+      - uses: EndBug/add-and-commit@b3c7c1e078a023d75fb0bd326e02962575ce0519
         with:
-          add: 'dist'
-          author_name: dist
-          author_email: oss@fuxing.dev
-          message: 'npm run ncc, dist updated'
-          signoff: true
+          message: 'Diff from format, lint and pack'

@@ -17,9 +17,6 @@
   name: needs/priority
   description: Needs a priority label
 - color: f9d0c4
-  name: needs/os
-  description: Needs os label
-- color: f9d0c4
   name: needs/triage
   description: Waiting for triage to be accepted
 
@@ -70,14 +67,6 @@
 - color: d93f0b
   name: priority/important-soon
   description: Will be important soon
-
-# OS
-- color: c5def5
-  name: os/mac
-- color: c5def5
-  name: os/win
-- color: c5def5
-  name: os/linux
 
 # Triage
 - color: c2e0c6

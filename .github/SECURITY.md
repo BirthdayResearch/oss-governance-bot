@@ -7,4 +7,4 @@ releases [here](https://github.com/DeFiCh/oss-governance/releases).
 
 ## Reporting a Vulnerability
 
-Please disclose it privately via security@fuxing.dev
+Please disclose it privately via oss@defichain.com

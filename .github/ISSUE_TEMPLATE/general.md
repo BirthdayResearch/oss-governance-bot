@@ -5,6 +5,6 @@ labels: kind/question
 ---
 
 <!--
-If the matter is security related, please disclose it privately via security@fuxing.dev
+If the matter is security related, please disclose it privately via oss@defichain.com
 -->
 

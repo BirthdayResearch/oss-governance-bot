@@ -29,6 +29,8 @@ beforeEach(() => {
     switch (name) {
       case 'github-token':
         return 'token'
+      case 'bot-token':
+        return 'token'
       case 'config-path':
         return '.github/governance.yml'
       default:
@@ -108,7 +110,7 @@ describe('getGovernance', () => {
     const {getGovernance} = require('../src/main')
     const governance = await getGovernance()
 
-    expect(governance?.labels?.length).toBe(5)
+    expect(governance?.labels?.length).toBe(3)
   })
 
   it('should be pull request', async function () {
@@ -139,7 +141,7 @@ describe('getGovernance', () => {
       const {getGovernance} = require('../src/main')
       const governance = await getGovernance()
 
-      expect(governance?.labels?.length).toBe(5)
+      expect(governance?.labels?.length).toBe(3)
     })
 
     it('should be pull request', async function () {
@@ -177,7 +179,7 @@ describe('runGovernance', () => {
 
     const {runGovernance} = require('../src/main')
     await runGovernance()
-    await expect(info).toHaveBeenCalledWith('oss-governance: completed')
+    await expect(info).toHaveBeenCalledWith('main: completed operations')
     await expect(intercepted).toHaveBeenCalled()
   })
 
@@ -194,7 +196,7 @@ describe('runGovernance', () => {
 
     const {runGovernance} = require('../src/main')
     await runGovernance()
-    await expect(info).toHaveBeenCalledWith('oss-governance: completed')
+    await expect(info).toHaveBeenCalledWith('main: completed operations')
     await expect(intercepted).toHaveBeenCalled()
   })
 
@@ -221,7 +223,7 @@ describe('runGovernance', () => {
 
     const {runGovernance} = require('../src/main')
     await runGovernance()
-    await expect(info).not.toHaveBeenCalled()
+    await expect(info).toHaveBeenCalledTimes(1)
     await expect(intercepted).not.toHaveBeenCalled()
   })
 })

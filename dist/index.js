@@ -393,14 +393,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.hasReleaseByTag = exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.initClient = void 0;
+exports.hasReleaseByTag = exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.getBotUserId = exports.initClient = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
-function initClient() {
-    const token = core.getInput('github-token');
+function initClient(token = core.getInput('github-token')) {
     return github.getOctokit(token);
 }
 exports.initClient = initClient;
+function getBotUserId() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const client = initClient(core.getInput('bot-token'));
+        const user = yield client.users.getAuthenticated();
+        return user.data.id;
+    });
+}
+exports.getBotUserId = getBotUserId;
 function getNumber() {
     var _a, _b;
     return (((_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number) || ((_b = github.context.payload.issue) === null || _b === void 0 ? void 0 : _b.number));
@@ -415,7 +422,7 @@ function addLabels(labels) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!labels.length)
             return;
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield client.issues.addLabels({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -429,7 +436,7 @@ function removeLabels(labels) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!labels.length)
             return;
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield Promise.all(labels.map(name => client.issues.removeLabel({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -447,6 +454,7 @@ function getDetails() {
     const configPath = core.getInput('config-path', { required: true });
     const repoUrl = repository === null || repository === void 0 ? void 0 : repository.html_url;
     const owner = repository === null || repository === void 0 ? void 0 : repository.owner;
+    const branch = repository === null || repository === void 0 ? void 0 : repository.default_branch;
     let details = '';
     details += '\n';
     details += '<details><summary>Details</summary>';
@@ -458,7 +466,7 @@ function getDetails() {
         details += `I am a bot created to help [${owner === null || owner === void 0 ? void 0 : owner.login}](${owner === null || owner === void 0 ? void 0 : owner.html_url}) manage community feedback and contributions.`;
     }
     details += ' ';
-    details += `You can check out my [manifest file](${repoUrl}/blob/master/${configPath}) to understand my behavior and what I can do.`;
+    details += `You can check out my [manifest file](${repoUrl}/blob/${branch}/${configPath}) to understand my behavior and what I can do.`;
     details += ' ';
     details +=
         'If you want to use this for your project, you can check out the [DeFiCh/oss-governance](https://github.com/DeFiCh/oss-governance) repository.';
@@ -483,7 +491,7 @@ function getIssueUserLogin() {
 function postComment(body) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         body = body.replace('$AUTHOR', (_a = github.context.payload.sender) === null || _a === void 0 ? void 0 : _a.login);
         body = body.replace('$ISSUE_AUTHOR', getIssueUserLogin());
         body += getDetails();
@@ -498,7 +506,7 @@ function postComment(body) {
 exports.postComment = postComment;
 function patchIssue(changes) {
     return __awaiter(this, void 0, void 0, function* () {
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield client.issues.update(Object.assign({ owner: github.context.repo.owner, repo: github.context.repo.repo, issue_number: getNumber() }, changes));
     });
 }
@@ -507,7 +515,7 @@ function assign(assignees) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!assignees.length)
             return;
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield client.issues.addAssignees({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -521,7 +529,7 @@ function requestReviewers(reviewers) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!reviewers.length)
             return;
-        const client = initClient();
+        const client = initClient(core.getInput('bot-token'));
         yield client.pulls.requestReviewers({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -615,6 +623,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.isCreatedOpened = void 0;
 const github = __importStar(__nccwpck_require__(5438));
+const github_1 = __nccwpck_require__(5928);
 function is(eventName, actions) {
     return (github.context.eventName === eventName &&
         actions.includes(github.context.payload.action));
@@ -637,17 +646,31 @@ function ignoreLabeledRaceCondition() {
     return false;
 }
 /**
- * To prevent mistakes, this will ignore invalid workflow trigger
+ * Ignore non 'User' to prevent infinite loop.
+ * Also ignores if sender is bot-token user
  */
-function default_1() {
-    var _a;
+function ignoreBot() {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const payload = github.context.payload;
-        // Ignore Non 'User' to prevent infinite loop
         if (((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User') {
             return true;
         }
+        if (((_b = payload.sender) === null || _b === void 0 ? void 0 : _b.id) === (yield github_1.getBotUserId())) {
+            return true;
+        }
+        return false;
+    });
+}
+/**
+ * To prevent mistakes, this will ignore invalid workflow trigger
+ */
+function default_1() {
+    return __awaiter(this, void 0, void 0, function* () {
         if (ignoreLabeledRaceCondition()) {
+            return true;
+        }
+        if (yield ignoreBot()) {
             return true;
         }
         if (is('issue_comment', ['created'])) {
@@ -751,12 +774,15 @@ exports.getGovernance = getGovernance;
 function runGovernance() {
     return __awaiter(this, void 0, void 0, function* () {
         const governance = yield getGovernance();
+        core.info('main: fetched governance.yml');
         if (!governance) {
             return;
         }
+        core.info('main: parsing commands');
         const commands = yield command_1.default();
+        core.info('main: running operations');
         yield operations_1.default(governance, commands);
-        core.info('oss-governance: completed');
+        core.info('main: completed operations');
     });
 }
 exports.runGovernance = runGovernance;
@@ -769,7 +795,7 @@ ignore_1.default()
 }))
     .catch(error => {
     core.error(error);
-    core.setFailed(error.message);
+    core.setFailed(error);
 });
 
 
@@ -1015,6 +1041,25 @@ exports.default = default_1;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -1037,6 +1082,7 @@ const assign_1 = __importDefault(__nccwpck_require__(9842));
 const review_1 = __importDefault(__nccwpck_require__(1090));
 const label_2 = __importDefault(__nccwpck_require__(6852));
 const ignore_1 = __nccwpck_require__(5404);
+const core = __importStar(__nccwpck_require__(2186));
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         for (const labelOp of labels) {
@@ -1091,12 +1137,15 @@ function default_1(governance, commands) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         if ((_a = governance.captures) === null || _a === void 0 ? void 0 : _a.length) {
+            core.info('operations: processing captures');
             yield processCaptures(governance.captures);
         }
         if ((_b = governance.chat_ops) === null || _b === void 0 ? void 0 : _b.length) {
+            core.info('operations: processing chatops');
             yield processChatOps(governance.chat_ops, commands);
         }
         if ((_c = governance.labels) === null || _c === void 0 ? void 0 : _c.length) {
+            core.info('operations: processing labels');
             yield processLabels(governance.labels, commands);
         }
     });

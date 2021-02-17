@@ -9,6 +9,7 @@ import chatOpsAssign from './chat-ops/assign'
 import chatOpsReview from './chat-ops/review'
 import chatOpsLabel from './chat-ops/label'
 import {isCreatedOpened} from '../ignore'
+import * as core from '@actions/core'
 
 async function processLabels(
   labels: Label[],
@@ -70,14 +71,17 @@ export default async function (
   commands: Commands
 ): Promise<any> {
   if (governance.captures?.length) {
+    core.info('operations: processing captures')
     await processCaptures(governance.captures)
   }
 
   if (governance.chat_ops?.length) {
+    core.info('operations: processing chatops')
     await processChatOps(governance.chat_ops, commands)
   }
 
   if (governance.labels?.length) {
+    core.info('operations: processing labels')
     await processLabels(governance.labels, commands)
   }
 }

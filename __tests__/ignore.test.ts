@@ -1,5 +1,8 @@
 import ignore, {isCreatedOpened} from '../src/ignore'
 import * as github from '@actions/github'
+import nock from 'nock'
+import fs from 'fs'
+import * as core from '@actions/core'
 
 function set(
   eventName: string,
@@ -11,7 +14,9 @@ function set(
   github.context.payload = {
     action: action,
     sender: {
-      type: userType
+      type: userType,
+      login: 'defichain-bot',
+      id: 100000
     },
     ...options
   }
@@ -24,6 +29,19 @@ async function expectIgnore(expected: boolean): Promise<void> {
 
 beforeEach(() => {
   set('issue_comment', 'created', 'User')
+
+  jest.spyOn(core, 'getInput').mockImplementation(name => {
+    return 'eg-bot-token'
+  })
+
+  nock('https://api.github.com')
+    .get('/user')
+    .reply(200, function () {
+      return {
+        login: 'real-human',
+        id: 9999
+      }
+    })
 })
 
 afterAll(() => {
@@ -42,6 +60,19 @@ describe('sender', () => {
 
   it('should ignore Bot', async () => {
     set('issue_comment', 'created', 'Bot')
+    await expectIgnore(true)
+  })
+
+  it('should ignore bot-token', async () => {
+    github.context.eventName = 'issue_comment'
+    github.context.payload = {
+      action: 'created',
+      sender: {
+        type: 'User',
+        login: 'real-human',
+        id: 9999
+      }
+    }
     await expectIgnore(true)
   })
 })

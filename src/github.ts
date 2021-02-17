@@ -2,9 +2,16 @@ import * as github from '@actions/github'
 import * as core from '@actions/core'
 import {GitHub} from '@actions/github/lib/utils'
 
-export function initClient(): InstanceType<typeof GitHub> {
-  const token = core.getInput('github-token')
+export function initClient(
+  token: string = core.getInput('github-token')
+): InstanceType<typeof GitHub> {
   return github.getOctokit(token)
+}
+
+export async function getBotUserId(): Promise<number> {
+  const client = initClient(core.getInput('bot-token'))
+  const user = await client.users.getAuthenticated()
+  return user.data.id
 }
 
 function getNumber(): number | undefined {
@@ -23,7 +30,7 @@ export function getLabels(): string[] {
 export async function addLabels(labels: string[]): Promise<void> {
   if (!labels.length) return
 
-  const client = initClient()
+  const client = initClient(core.getInput('bot-token'))
 
   await client.issues.addLabels({
     owner: github.context.repo.owner,
@@ -36,7 +43,7 @@ export async function addLabels(labels: string[]): Promise<void> {
 export async function removeLabels(labels: string[]): Promise<void> {
   if (!labels.length) return
 
-  const client = initClient()
+  const client = initClient(core.getInput('bot-token'))
 
   await Promise.all(
     labels.map(name =>
@@ -59,6 +66,7 @@ function getDetails(): string {
   const configPath = core.getInput('config-path', {required: true})
   const repoUrl = repository?.html_url
   const owner = repository?.owner
+  const branch = repository?.default_branch
 
   let details = ''
   details += '\n'
@@ -72,7 +80,7 @@ function getDetails(): string {
   }
 
   details += ' '
-  details += `You can check out my [manifest file](${repoUrl}/blob/master/${configPath}) to understand my behavior and what I can do.`
+  details += `You can check out my [manifest file](${repoUrl}/blob/${branch}/${configPath}) to understand my behavior and what I can do.`
   details += ' '
   details +=
     'If you want to use this for your project, you can check out the [DeFiCh/oss-governance](https://github.com/DeFiCh/oss-governance) repository.'
@@ -96,7 +104,7 @@ function getIssueUserLogin(): string | undefined {
  * @param body comment
  */
 export async function postComment(body: string) {
-  const client = initClient()
+  const client = initClient(core.getInput('bot-token'))
 
   body = body.replace('$AUTHOR', github.context.payload.sender?.login)
   body = body.replace('$ISSUE_AUTHOR', getIssueUserLogin()!)
@@ -111,7 +119,7 @@ export async function postComment(body: string) {
 }
 
 export async function patchIssue(changes: any) {
-  const client = initClient()
+  const client = initClient(core.getInput('bot-token'))
 
   await client.issues.update({
     owner: github.context.repo.owner,
@@ -124,7 +132,7 @@ export async function patchIssue(changes: any) {
 export async function assign(assignees: string[]) {
   if (!assignees.length) return
 
-  const client = initClient()
+  const client = initClient(core.getInput('bot-token'))
 
   await client.issues.addAssignees({
     owner: github.context.repo.owner,
@@ -137,7 +145,7 @@ export async function assign(assignees: string[]) {
 export async function requestReviewers(reviewers: string[]) {
   if (!reviewers.length) return
 
-  const client = initClient()
+  const client = initClient(core.getInput('bot-token'))
 
   await client.pulls.requestReviewers({
     owner: github.context.repo.owner,

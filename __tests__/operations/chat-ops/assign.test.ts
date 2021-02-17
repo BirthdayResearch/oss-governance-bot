@@ -46,37 +46,37 @@ async function runOp(cmd: string, list: string[] = [], others: any = {}) {
   }, commands)
 }
 
-it('should assign with /assign @fuxing', async () => {
-  await runOp('/assign', ['/assign @fuxing'])
-  await expect(postAssignees).toHaveBeenCalledWith({"assignees": ["fuxing"]})
+it('should assign with /assign @jenny', async () => {
+  await runOp('/assign', ['/assign @jenny'])
+  await expect(postAssignees).toHaveBeenCalledWith({"assignees": ["jenny"]})
 });
 
-it('should assign with /assign @fuxing @clarie', async () => {
-  await runOp('/assign', ['/assign @fuxing @clarie'])
-  await expect(postAssignees).toHaveBeenCalledWith({"assignees": ["fuxing", "clarie"]})
+it('should assign with /assign @jenny @clarie', async () => {
+  await runOp('/assign', ['/assign @jenny @clarie'])
+  await expect(postAssignees).toHaveBeenCalledWith({"assignees": ["jenny", "clarie"]})
 });
 
-it('should not assign with /assign fuxing', async () => {
-  await runOp('/assign', ['/assign fuxing'])
+it('should not assign with /assign jenny', async () => {
+  await runOp('/assign', ['/assign jenny'])
   await expect(postAssignees).not.toHaveBeenCalled()
 });
 
-it('should not assign with /assign fuxing abc', async () => {
-  await runOp('/assign', ['/assign fuxing abc'])
+it('should not assign with /assign jessica abc', async () => {
+  await runOp('/assign', ['/assign jessica abc'])
   await expect(postAssignees).not.toHaveBeenCalled()
 });
 
-it('should not assign with /assign to @fuxing', async () => {
-  await runOp('/assign', ['/assign to @fuxing'])
-  await expect(postAssignees).toHaveBeenCalledWith({"assignees": ["fuxing"]})
+it('should not assign with /assign to @jessica', async () => {
+  await runOp('/assign', ['/assign to @jessica'])
+  await expect(postAssignees).toHaveBeenCalledWith({"assignees": ["jessica"]})
 });
 
-it('should assign with /foward', async () => {
-  await runOp('/forward', ['/forward @fuxing'])
-  await expect(postAssignees).toHaveBeenCalledWith({"assignees": ["fuxing"]})
+it('should assign with /forward', async () => {
+  await runOp('/forward', ['/forward @jessica'])
+  await expect(postAssignees).toHaveBeenCalledWith({"assignees": ["jessica"]})
 });
 
 it('should not close with /nah', async () => {
-  await runOp('/nah', ['/assign @fuxing'])
+  await runOp('/nah', ['/assign @jessica'])
   await expect(postAssignees).not.toHaveBeenCalled()
 });
