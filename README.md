@@ -1,14 +1,16 @@
 # OSS Governance
 
 [![codecov](https://codecov.io/gh/DeFiCh/oss-governance/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/DeFiCh/oss-governance)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a43f22b8c3c74fe9b6b58935a01fff4e)](https://www.codacy.com/gh/DeFiCh/oss-governance/dashboard)
 [![Release](https://img.shields.io/github/v/release/DeFiCh/oss-governance)](https://github.com/DeFiCh/oss-governance/releases)
 [![License MIT](https://img.shields.io/github/license/DeFiCh/oss-governance)](https://github.com/DeFiCh/oss-governance/blob/main/LICENSE)
 
 <!-- 3 Arc: Context - Problem - Solution -->
 
 In [DeFiChain](https://defichain.com/), our projects are open source, and our primary vision is to enable decentralized
-finance with Bitcoin-grade security, strength and immutability. [It's a blockchain dedicated to fast, intelligent and
-transparent financial services, accessible by everyone](https://defichain.com/white-paper/).
+finance with Bitcoin-grade security, strength and
+immutability. [It's a blockchain dedicated to fast, intelligent and transparent financial services, accessible by everyone](https://defichain.com/white-paper/)
+.
 
 Although putting our project on GitHub makes it transparent and visible for public contributions, it's far from making
 it maintainable. For new contributors, creating an issue or pull request and successfully sending it is a mountainous
@@ -60,7 +62,7 @@ jobs:
         with:
           # You can use a PAT to post a comment/label so that it shows up as a user instead of github-actions
           # Set the user to Triage, full repo scope.
-          bot-token: ${{ secrets.DEFICHAIN_BOT_PAT_OSS_GOVERNANCE }} # optional, default to '${{ github.token }}'
+          bot-token: ${{secrets.BOT_PAT}} # optional, default to '${{ github.token }}'
           github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'
           config-path: .github/governance.yml # optional, default to '.github/governance.yml'
 ```
