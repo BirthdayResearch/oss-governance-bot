@@ -1,3 +1,5 @@
+<img src="icon.png" width="120" height="120" align="left" style="margin-right:24px"/>
+
 # OSS Governance
 
 [![codecov](https://codecov.io/gh/DeFiCh/oss-governance/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/DeFiCh/oss-governance)
@@ -35,7 +37,7 @@ contributors can trigger chat-ops via /slash style commands.
 * A GitHub Action that lives natively and integrate well with the GitHub action/workflow product offering. You can view
   the source directly and modify it to your needs.
 
-![preview](.github/preview.png)
+![preview](preview.png)
 
 ## Usage
 
@@ -45,7 +47,7 @@ contributors can trigger chat-ops via /slash style commands.
 # .github/workflow/governance.yml
 
 on:
-  pull_request:
+  pull_request_target:
     types: [ synchronize, opened, labeled, unlabeled ]
   issues:
     types: [ opened, labeled, unlabeled ]
