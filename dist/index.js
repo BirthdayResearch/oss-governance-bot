@@ -633,7 +633,7 @@ function is(eventName, actions) {
  * Not sure what is a better way to do this.
  */
 function ignoreLabeledRaceCondition() {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e, _f;
     const payload = github.context.payload;
     if (is('issues', ['labeled'])) {
         return (Date.parse((_a = payload.issue) === null || _a === void 0 ? void 0 : _a.created_at) + 5000 >=
@@ -642,6 +642,10 @@ function ignoreLabeledRaceCondition() {
     if (is('pull_request', ['labeled'])) {
         return (Date.parse((_c = payload.pull_request) === null || _c === void 0 ? void 0 : _c.created_at) + 5000 >=
             Date.parse((_d = payload.pull_request) === null || _d === void 0 ? void 0 : _d.updated_at));
+    }
+    if (is('pull_request_target', ['labeled'])) {
+        return (Date.parse((_e = payload.pull_request) === null || _e === void 0 ? void 0 : _e.created_at) + 5000 >=
+            Date.parse((_f = payload.pull_request) === null || _f === void 0 ? void 0 : _f.updated_at));
     }
     return false;
 }
@@ -679,6 +683,9 @@ function default_1() {
         if (is('pull_request', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
             return false;
         }
+        if (is('pull_request_target', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
+            return false;
+        }
         if (is('issues', ['opened', 'labeled', 'unlabeled'])) {
             return false;
         }
@@ -691,6 +698,9 @@ function isCreatedOpened() {
         return true;
     }
     if (is('pull_request', ['opened'])) {
+        return true;
+    }
+    if (is('pull_request_target', ['opened'])) {
         return true;
     }
     if (is('issues', ['opened'])) {
