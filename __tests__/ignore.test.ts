@@ -213,6 +213,120 @@ describe('pull_request', () => {
   })
 })
 
+describe('pull_request_target', () => {
+  it('should not ignore opened', async () => {
+    set('pull_request_target', 'opened', 'User')
+    await expectIgnore(false)
+  })
+
+  it('should not ignore unlabeled', async () => {
+    set('pull_request_target', 'labeled', 'User')
+    await expectIgnore(false)
+  })
+
+  it('should not ignore unlabeled', async () => {
+    set('pull_request_target', 'unlabeled', 'User')
+    await expectIgnore(false)
+  })
+
+  it('should not ignore synchronize', async () => {
+    set('pull_request_target', 'synchronize', 'User')
+    await expectIgnore(false)
+  })
+
+  it('should ignore opened if Bot', async () => {
+    set('pull_request_target', 'opened', 'Bot')
+    await expectIgnore(true)
+  })
+
+  it('should ignore locked', async () => {
+    set('pull_request_target', 'locked', 'User')
+    await expectIgnore(true)
+  })
+
+  it('should ignore edited', async () => {
+    set('pull_request_target', 'edited', 'User')
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 1s has passed', async () => {
+    set('pull_request_target', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:03:59Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 2s has passed', async () => {
+    set('pull_request_target', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:00Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 3s has passed', async () => {
+    set('pull_request_target', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:01Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 4s has passed', async () => {
+    set('pull_request_target', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:02Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore if updated only 5s has passed', async () => {
+    set('pull_request_target', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:03Z'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should not ignore if updated 10s later', async () => {
+    set('pull_request_target', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:08Z'
+      }
+    })
+    await expectIgnore(false)
+  })
+
+  it('should not ignore if updated more than 1min later', async () => {
+    set('pull_request_target', 'labeled', 'User', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:51Z',
+        updated_at: '2021-02-01T09:04:59Z'
+      }
+    })
+    await expectIgnore(false)
+  })
+})
+
 describe('issues', () => {
   it('should not ignore opened', async () => {
     set('issues', 'opened', 'User')
@@ -221,6 +335,11 @@ describe('issues', () => {
 
   it('should not ignore labeled', async () => {
     set('pull_request', 'labeled', 'User')
+    await expectIgnore(false)
+  })
+
+  it('should not ignore labeled', async () => {
+    set('pull_request_target', 'labeled', 'User')
     await expectIgnore(false)
   })
 
@@ -338,6 +457,11 @@ describe('isCreatedOpened', () => {
     await expectCreatedOpened(true)
   })
 
+  it('pull_request_target opened should be true', async () => {
+    set('pull_request_target', 'opened', 'User')
+    await expectCreatedOpened(true)
+  })
+
   it('issues opened should be true', async () => {
     set('issues', 'opened', 'User')
     await expectCreatedOpened(true)
@@ -350,6 +474,11 @@ describe('isCreatedOpened', () => {
 
   it('pull_request labeled should be true', async () => {
     set('pull_request', 'labeled', 'User')
+    await expectCreatedOpened(false)
+  })
+
+  it('pull_request_target labeled should be true', async () => {
+    set('pull_request_target', 'labeled', 'User')
     await expectCreatedOpened(false)
   })
 

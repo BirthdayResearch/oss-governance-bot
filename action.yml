@@ -1,6 +1,6 @@
 name: 'OSS Governance'
-description: 'Collection of documentations and tool to bring efficacy to your open source software project governance.'
-author: 'Fuxing Loh'
+description: 'Speed up issue triaging with automated chat-bot and chat-ops operations. Increased code review agility by moving quality control hierarchy from requirements to educational steps.'
+author: 'DeFiChain Foundation'
 branding:
   icon: zap
   color: white

@@ -29,6 +29,13 @@ function ignoreLabeledRaceCondition(): boolean {
     )
   }
 
+  if (is('pull_request_target', ['labeled'])) {
+    return (
+      Date.parse(payload.pull_request?.created_at) + 5000 >=
+      Date.parse(payload.pull_request?.updated_at)
+    )
+  }
+
   return false
 }
 
@@ -70,6 +77,12 @@ export default async function (): Promise<boolean> {
     return false
   }
 
+  if (
+    is('pull_request_target', ['synchronize', 'opened', 'labeled', 'unlabeled'])
+  ) {
+    return false
+  }
+
   if (is('issues', ['opened', 'labeled', 'unlabeled'])) {
     return false
   }
@@ -83,6 +96,10 @@ export function isCreatedOpened(): boolean {
   }
 
   if (is('pull_request', ['opened'])) {
+    return true
+  }
+
+  if (is('pull_request_target', ['opened'])) {
     return true
   }
 

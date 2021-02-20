@@ -23,7 +23,11 @@
     "project management",
     "goverenance"
   ],
-  "author": "Fuxing Loh",
+  "author": {
+    "name": "DeFiChain Foundation",
+    "email": "engineering@defichain.com",
+    "url": "https://defichain.com/"
+  },
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.6",
