@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  pull_request:
+  pull_request_target:
     types: [ synchronize, opened, labeled, unlabeled ]
   issues:
     types: [ opened, labeled, unlabeled ]
@@ -19,4 +19,4 @@ jobs:
         with:
           # You can use a PAT to post a comment/label so that it shows up as a user instead of github-actions
           # Set the user to Triage, full repo scope.
-          bot-token: ${{ secrets.DEFICHAIN_BOT_PAT_OSS_GOVERNANCE }}
+          bot-token: ${{ secrets.DEFICHAIN_BOT_GITHUB_TOKEN }}
