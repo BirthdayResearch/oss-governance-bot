@@ -2,7 +2,7 @@
   "name": "oss-governance",
   "version": "0.0.0",
   "private": true,
-  "description": "",
+  "description": "Speed up issue triaging with automated chat-bot and chat-ops operations with quality control hierarchy",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
