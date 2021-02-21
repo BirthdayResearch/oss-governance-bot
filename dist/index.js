@@ -758,6 +758,9 @@ const ignore_1 = __importDefault(__nccwpck_require__(5404));
 const command_1 = __importDefault(__nccwpck_require__(524));
 const operations_1 = __importDefault(__nccwpck_require__(7928));
 const github_1 = __nccwpck_require__(5928);
+/**
+ * @return the current governance config based on the context, it could be 'pull_request' or 'issue'.
+ */
 function getGovernance() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -781,6 +784,9 @@ function getGovernance() {
     });
 }
 exports.getGovernance = getGovernance;
+/**
+ * Get governance config, parse and run commands from context.
+ */
 function runGovernance() {
     return __awaiter(this, void 0, void 0, function* () {
         const governance = yield getGovernance();
