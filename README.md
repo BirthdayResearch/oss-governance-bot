@@ -1,11 +1,11 @@
 <img src="icon.png" width="120" height="120" align="left" style="margin-right:32px"/>
 
-# OSS Governance
+# OSS Governance Bot
 
-[![codecov](https://codecov.io/gh/DeFiCh/oss-governance/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/DeFiCh/oss-governance)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a43f22b8c3c74fe9b6b58935a01fff4e)](https://www.codacy.com/gh/DeFiCh/oss-governance/dashboard)
-[![Release](https://img.shields.io/github/v/release/DeFiCh/oss-governance)](https://github.com/DeFiCh/oss-governance/releases)
-[![License MIT](https://img.shields.io/github/license/DeFiCh/oss-governance)](https://github.com/DeFiCh/oss-governance/blob/main/LICENSE)
+[![codecov](https://codecov.io/gh/DeFiCh/oss-governance-bot/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/DeFiCh/oss-governance-bot)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a43f22b8c3c74fe9b6b58935a01fff4e)](https://www.codacy.com/gh/DeFiCh/oss-governance-bot/dashboard)
+[![Release](https://img.shields.io/github/v/release/DeFiCh/oss-governance-bot)](https://github.com/DeFiCh/oss-governance-bot/releases)
+[![License MIT](https://img.shields.io/github/license/DeFiCh/oss-governance-bot)](https://github.com/DeFiCh/oss-governance-bot/blob/main/LICENSE)
 
 <!-- 3 Arc: Context - Problem - Solution -->
 
@@ -25,10 +25,10 @@ adjustment (code review changes).
 
 This project is created to fully utilize the GitHub generous open source policy. It runs on GitHub Actions workflow
 hooks and deeply integrate with many GitHub offerings. In addition to providing a chat-bot experience when contributor
-interact with your project, `oss-governance` also provide automation in the form of policy enforcement. Community
+interact with your project, `oss-governance-bot` also provide automation in the form of policy enforcement. Community
 contributors can trigger chat-ops via /slash style commands.
 
-## What can OSS Governance do for you?
+## What can OSS Governance Bot do for you?
 
 * Speed up issue triaging with automated chat-bot and chat-ops operations.
 * Increased code review agility by moving quality control hierarchy from requirements to educational steps.
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Semantic versioning, lock to different version: v1, v1.x or a commit hash.
-      - uses: DeFiCh/oss-governance@v1
+      - uses: DeFiCh/oss-governance-bot@v1
         with:
           # You can use a PAT to post a comment/label so that it shows up as a user instead of github-actions
           # Set the user to Triage, full repo scope.

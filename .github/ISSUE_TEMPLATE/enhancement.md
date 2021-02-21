@@ -1,6 +1,6 @@
 ---
 name: Enhancement Request
-about: Suggest an enhancement to the oss-governance project
+about: Suggest an enhancement to the oss-governance-bot project
 labels: kind/feature
 ---
 

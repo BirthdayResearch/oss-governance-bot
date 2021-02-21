@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug encountered with using oss-governance
+about: Report a bug encountered with using oss-governance-bot
 labels: kind/bug
 ---
 
