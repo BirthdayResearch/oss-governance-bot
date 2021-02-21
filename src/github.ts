@@ -119,7 +119,7 @@ export async function postComment(body: string) {
 }
 
 export async function patchIssue(changes: any) {
-  const client = initClient(core.getInput('bot-token'))
+  const client = initClient()
 
   await client.issues.update({
     owner: github.context.repo.owner,

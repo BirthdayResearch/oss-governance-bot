@@ -1,5 +1,5 @@
-# Generic useful labels
-- color: cfd3d7
+# GitHub generic useful labels
+- color: c4d471
   name: duplicate
   description: This issue or pull request already exists
 - color: 7057ff
@@ -7,16 +7,16 @@
   description: Good for newcomers
 
 # Needs
-- color: f9d0c4
+- color: cc40d8
   name: needs/kind
   description: Needs kind label
-- color: f9d0c4
+- color: cc40d8
   name: needs/area
   description: Needs area label(s)
-- color: f9d0c4
+- color: cc40d8
   name: needs/priority
   description: Needs a priority label
-- color: f9d0c4
+- color: cc40d8
   name: needs/triage
   description: Waiting for triage to be accepted
 
@@ -69,6 +69,6 @@
   description: Will be important soon
 
 # Triage
-- color: c2e0c6
+- color: b1f488
   name: triage/accepted
   description: Triage has been accepted

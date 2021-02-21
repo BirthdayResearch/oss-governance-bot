@@ -506,7 +506,7 @@ function postComment(body) {
 exports.postComment = postComment;
 function patchIssue(changes) {
     return __awaiter(this, void 0, void 0, function* () {
-        const client = initClient(core.getInput('bot-token'));
+        const client = initClient();
         yield client.issues.update(Object.assign({ owner: github.context.repo.owner, repo: github.context.repo.repo, issue_number: getNumber() }, changes));
     });
 }
