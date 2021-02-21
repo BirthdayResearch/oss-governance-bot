@@ -1,6 +1,6 @@
 ---
 name: General Question
-about: General question about using oss-governance for your project/organisation
+about: General question about using oss-governance-bot for your project/organisation
 labels: kind/question
 ---
 

@@ -153,10 +153,13 @@ describe('getGovernance', () => {
         issue: {
           number: 1,
           pull_request: {
-            diff_url: 'https://github.com/DeFiCh/oss-governance/pull/9.diff',
-            html_url: 'https://github.com/DeFiCh/oss-governance/pull/9',
-            patch_url: 'https://github.com/DeFiCh/oss-governance/pull/9.patch',
-            url: 'https://api.github.com/repos/DeFiCh/oss-governance/pulls/9'
+            diff_url:
+              'https://github.com/DeFiCh/oss-governance-bot/pull/9.diff',
+            html_url: 'https://github.com/DeFiCh/oss-governance-bot/pull/9',
+            patch_url:
+              'https://github.com/DeFiCh/oss-governance-bot/pull/9.patch',
+            url:
+              'https://api.github.com/repos/DeFiCh/oss-governance-bot/pulls/9'
           }
         }
       }

@@ -1,5 +1,5 @@
 {
-  "name": "oss-governance",
+  "name": "oss-governance-bot",
   "version": "0.0.0",
   "private": true,
   "description": "Speed up issue triaging with automated chat-bot and chat-ops operations with quality control hierarchy",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DeFiCh/oss-governance.git"
+    "url": "git+https://github.com/DeFiCh/oss-governance-bot.git"
   },
   "keywords": [
     "actions",
