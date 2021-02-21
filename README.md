@@ -1,4 +1,4 @@
-<img src="icon.png" width="120" height="120" align="left" style="margin-right:24px"/>
+<img src="icon.png" width="120" height="120" align="left" style="margin-right:32px"/>
 
 # OSS Governance
 
@@ -9,10 +9,9 @@
 
 <!-- 3 Arc: Context - Problem - Solution -->
 
-In [DeFiChain](https://defichain.com/), our projects are open source, and our primary vision is to enable decentralized
-finance with Bitcoin-grade security, strength and
-immutability. [It's a blockchain dedicated to fast, intelligent and transparent financial services, accessible by everyone](https://defichain.com/white-paper/)
-.
+[DeFiChain](https://defichain.com/) - Decentralized finance enabled on
+Bitcoin. [A blockchain dedicated to fast, intelligent and transparent financial services, accessible by everyone.](https://defichain.com/white-paper/)
+To achieve that, our projects have to be open source and accessible by anyone.
 
 Although putting our project on GitHub makes it transparent and visible for public contributions, it's far from making
 it maintainable. For new contributors, creating an issue or pull request and successfully sending it is a mountainous
