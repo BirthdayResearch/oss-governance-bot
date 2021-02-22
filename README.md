@@ -334,6 +334,36 @@ issue:
         @$AUTHOR: Hey this is comment issue example for sender author.
 ```
 
+### ChatOps: label
+
+Add or remove labels via chat ops.
+
+```yml
+version: v1
+
+issue:
+  chat_ops:
+    - cmd: /label me
+      type: label
+      label:
+        add: kind/me
+        remove: [ 'label/remove', 'label/that' ]
+```
+
+### Captures: Regex
+
+Capture labels based on regex, optionally validate them against github_release.
+
+```yml
+version: v1
+
+issue:
+  captures:
+    - regex: "- Version: *(.+)"
+      github_release: true # validate against github_release
+      label: 'version/$CAPTURED'
+```
+
 ## Development & Contribution
 
 > IntelliJ IDEA is the IDE of choice for writing and maintaining this code library. IntelliJ's files are included for
