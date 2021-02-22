@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/oss-governance.iml" filepath="$PROJECT_DIR$/.idea/oss-governance.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/oss-governance-bot.iml" filepath="$PROJECT_DIR$/.idea/oss-governance-bot.iml" />
     </modules>
   </component>
 </project>
