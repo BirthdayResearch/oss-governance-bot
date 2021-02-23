@@ -9,6 +9,7 @@ import {
 } from '../github'
 import * as github from '@actions/github'
 import {isCreatedOpened} from '../ignore'
+import {isAuthorAssociationAllowed} from '../author-association'
 
 class PrefixLabelSet {
   public prefix: string
@@ -141,7 +142,10 @@ export default async function (
     }
   }
 
-  if (isCreatedOpened()) {
+  if (
+    isCreatedOpened() &&
+    isAuthorAssociationAllowed(label.author_association)
+  ) {
     computeLabels()
   }
 

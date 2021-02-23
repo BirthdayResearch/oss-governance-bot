@@ -16,9 +16,7 @@ async function processLabels(
   commands: Commands
 ): Promise<void> {
   for (const labelOp of labels) {
-    if (isAuthorAssociationAllowed(labelOp.author_association)) {
-      await label(labelOp, commands)
-    }
+    await label(labelOp, commands)
   }
 }
 

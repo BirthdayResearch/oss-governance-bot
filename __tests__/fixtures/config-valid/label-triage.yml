@@ -1,0 +1,22 @@
+version: v1
+
+issue:
+  labels:
+    - prefix: triage
+      list: [ "accepted" ]
+      multiple: false
+      author_association:
+        collaborator: true
+        member: true
+        owner: true
+      needs:
+        comment: |
+          @$AUTHOR: Thanks for opening an issue, it is currently awaiting triage.
+
+          The triage/accepted label can be added by foundation members by writing `/triage accepted` in a comment.
+
+          In the meantime, you can:
+
+          1. Checkout [DeFiChain’s Github issue page](https://github.com/DeFiCh/app/issues) to see if your issue has already been reported
+          2. Checkout [how to an submit issue for DeFi app](https://github.com/DeFiCh/app/wiki/How-to-submit-issues-for-DeFi-app)
+          3. Submit any logs if you have them, this will greatly expedite the process for us.

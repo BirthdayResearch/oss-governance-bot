@@ -98,7 +98,7 @@ describe('all', () => {
         }
       ]
     }, getCommands(['/close', '/prefix a', '/another a']))
-    await expect(intercepted).toHaveBeenCalledTimes(5)
+    await expect(intercepted).toHaveBeenCalledTimes(6)
   });
 })
 

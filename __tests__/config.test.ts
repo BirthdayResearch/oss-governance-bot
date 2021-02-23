@@ -219,6 +219,10 @@ describe('valid config', () => {
     return expectValid('version.yml')
   })
 
+  it('label-triage.yml is valid', () => {
+    return expectValid('label-triage.yml')
+  })
+
   describe('captures', () => {
     it('captures-all.yml is valid', () => {
       return expectValid('captures-all.yml')
