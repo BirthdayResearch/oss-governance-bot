@@ -20,20 +20,6 @@ issue:
       multiple: false
       needs: true
 
-    - prefix: area
-      list: [ "security", "documentation", "chat-ops", "labels", "captures", "permission" ]
-      multiple: true
-      needs:
-        comment: |
-          @$AUTHOR: There are no area labels on this issue. Adding an appropriate label will greatly expedite the process for us. You can add as many area as you see fit. **If you are unsure what to do you can ignore this!**
-
-          * `/area labels`
-          * `/area chat-ops`
-          * `/area documentation`
-          * `/area security`
-          * `/area captures`
-          * `/area permission`
-
   chat_ops:
     - cmd: /close
       type: close

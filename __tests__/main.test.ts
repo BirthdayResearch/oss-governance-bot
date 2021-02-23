@@ -103,14 +103,15 @@ describe('getGovernance', () => {
     jest.setTimeout(10000)
     github.context.payload = {
       issue: {
-        number: 1
+        number: 1,
+        state: 'open'
       }
     }
 
     const {getGovernance} = require('../src/main')
     const governance = await getGovernance()
 
-    expect(governance?.labels?.length).toBe(3)
+    expect(governance?.labels?.length).toBe(2)
   })
 
   it('should be pull request', async function () {
@@ -134,14 +135,15 @@ describe('getGovernance', () => {
           id: 1
         },
         issue: {
-          number: 1
+          number: 1,
+          state: 'open'
         }
       }
 
       const {getGovernance} = require('../src/main')
       const governance = await getGovernance()
 
-      expect(governance?.labels?.length).toBe(3)
+      expect(governance?.labels?.length).toBe(2)
     })
 
     it('should be pull request', async function () {

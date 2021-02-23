@@ -11,9 +11,6 @@
   name: needs/kind
   description: Needs kind label
 - color: cc40d8
-  name: needs/area
-  description: Needs area label(s)
-- color: cc40d8
   name: needs/priority
   description: Needs a priority label
 - color: cc40d8
@@ -45,20 +42,6 @@
 - color: e7e9eb
   name: kind/dependencies
   description: Pull requests that update a dependency file
-
-# Area
-- color: fbca04
-  name: area/security
-- color: fbca04
-  name: area/documentation
-- color: fbca04
-  name: area/chat-ops
-- color: fbca04
-  name: area/labels
-- color: fbca04
-  name: area/captures
-- color: fbca04
-  name: area/permission
 
 # Priority
 - color: d93f0b
