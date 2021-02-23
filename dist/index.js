@@ -1102,9 +1102,7 @@ const core = __importStar(__nccwpck_require__(2186));
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         for (const labelOp of labels) {
-            if (author_association_1.isAuthorAssociationAllowed(labelOp.author_association)) {
-                yield label_1.default(labelOp, commands);
-            }
+            yield label_1.default(labelOp, commands);
         }
     });
 }
@@ -1208,6 +1206,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const github_1 = __nccwpck_require__(5928);
 const github = __importStar(__nccwpck_require__(5438));
 const ignore_1 = __nccwpck_require__(5404);
+const author_association_1 = __nccwpck_require__(249);
 class PrefixLabelSet {
     constructor(prefix) {
         this.needs = false;
@@ -1315,7 +1314,8 @@ function default_1(label, commands) {
                 labelSet.add(value);
             }
         }
-        if (ignore_1.isCreatedOpened()) {
+        if (ignore_1.isCreatedOpened() &&
+            author_association_1.isAuthorAssociationAllowed(label.author_association)) {
             computeLabels();
         }
         labelSet.setMultiple(label.multiple === undefined || label.multiple);

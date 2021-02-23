@@ -1,7 +1,6 @@
 import ignore, {isCreatedOpened} from '../src/ignore'
 import * as github from '@actions/github'
 import nock from 'nock'
-import fs from 'fs'
 import * as core from '@actions/core'
 
 function set(

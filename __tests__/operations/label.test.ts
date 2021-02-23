@@ -539,7 +539,6 @@ describe('labels', () => {
     await expect(deleteLabels).not.toHaveBeenCalled()
   });
 
-
   it('should have removed labels with command', async function () {
     github.context.eventName = 'issues'
     github.context.payload = {
@@ -920,7 +919,7 @@ describe('status', () => {
   });
 })
 
-describe('flaky test', () => {
+describe('scenario', () => {
   it('should have needs/kind removed when /kind fix is commented', async () => {
     github.context.eventName = 'issue_comment'
     github.context.payload = {
@@ -949,7 +948,7 @@ describe('flaky test', () => {
     await expect(postComments).not.toHaveBeenCalled()
   });
 
-  it('needs/kind', async () => {
+  it('needs/kind should not be called', async () => {
     github.context.eventName = 'issue_comment'
     github.context.payload = {
       action: 'created',
@@ -976,7 +975,7 @@ describe('flaky test', () => {
     await expect(deleteLabels).not.toHaveBeenCalled()
   });
 
-  it('should have removed labels with command', async function () {
+  it('should have removed labels with command', async () => {
     github.context.eventName = 'issues'
     github.context.payload = {
       action: 'opened',
@@ -1006,5 +1005,32 @@ describe('flaky test', () => {
     await expect(postComments).toHaveBeenCalledTimes(1)
     await expect(postLabels).toHaveBeenCalledTimes(2)
     await expect(deleteLabels).not.toHaveBeenCalled()
+  });
+
+  it('should have needs/triage added when sender is not whitelisted', async () => {
+    github.context.eventName = 'issue'
+    github.context.payload = {
+      action: 'opened',
+      issue: {
+        number: 1,
+        author_association: 'NONE'
+      }
+    }
+
+    await label({
+      prefix: 'triage',
+      multiple: false,
+      list: ["accepted"],
+      needs: {
+        comment: 'TEST'
+      },
+      author_association: {
+        contributor: true
+      }
+    }, getCommands())
+
+    await expect(postLabels).toHaveBeenCalledWith({labels: ['needs/triage']})
+    await expect(deleteLabels).not.toHaveBeenCalled()
+    await expect(postComments).toHaveBeenCalled()
   });
 })
