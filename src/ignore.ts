@@ -48,10 +48,11 @@ async function ignoreBot(): Promise<boolean> {
 
   if (payload.sender?.type !== 'User') {
     return true
-  } else {
-    if (payload.sender?.id === (await getBotUserId())) {
-      return true
-    }
+  }
+
+  // allow fail because 'github-token' resource not accessible by integration
+  if (payload.sender?.id === (await getBotUserId().catch(() => ''))) {
+    return true
   }
 
   return false
