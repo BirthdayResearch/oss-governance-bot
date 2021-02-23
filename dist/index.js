@@ -660,8 +660,10 @@ function ignoreBot() {
         if (((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User') {
             return true;
         }
-        if (((_b = payload.sender) === null || _b === void 0 ? void 0 : _b.id) === (yield github_1.getBotUserId())) {
-            return true;
+        else {
+            if (((_b = payload.sender) === null || _b === void 0 ? void 0 : _b.id) === (yield github_1.getBotUserId())) {
+                return true;
+            }
         }
         return false;
     });

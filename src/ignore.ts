@@ -48,10 +48,10 @@ async function ignoreBot(): Promise<boolean> {
 
   if (payload.sender?.type !== 'User') {
     return true
-  }
-
-  if (payload.sender?.id === (await getBotUserId())) {
-    return true
+  } else {
+    if (payload.sender?.id === (await getBotUserId())) {
+      return true
+    }
   }
 
   return false
