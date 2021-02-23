@@ -96,6 +96,26 @@ describe('issue_comment', () => {
     set('issue_comment', 'deleted', 'User')
     await expectIgnore(true)
   })
+
+  it('should ignore created but closed', async () => {
+    set('issue_comment', 'created', 'User', {
+      pull_request: {
+        number: 1,
+        state: 'closed'
+      }
+    })
+    await expectIgnore(true)
+  })
+
+  it('should ignore created but closed', async () => {
+    set('issue_comment', 'created', 'User', {
+      issue: {
+        number: 1,
+        state: 'closed'
+      }
+    })
+    await expectIgnore(true)
+  })
 })
 
 describe('pull_request', () => {

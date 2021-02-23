@@ -668,11 +668,28 @@ function ignoreBot() {
     });
 }
 /**
+ * Closed issue and pull_request should not trigger governance
+ */
+function ignoreClosed() {
+    var _a, _b;
+    const payload = github.context.payload;
+    if (((_a = payload === null || payload === void 0 ? void 0 : payload.pull_request) === null || _a === void 0 ? void 0 : _a.state) === 'closed') {
+        return true;
+    }
+    if (((_b = payload === null || payload === void 0 ? void 0 : payload.issue) === null || _b === void 0 ? void 0 : _b.state) === 'closed') {
+        return true;
+    }
+    return false;
+}
+/**
  * To prevent mistakes, this will ignore invalid workflow trigger
  */
 function default_1() {
     return __awaiter(this, void 0, void 0, function* () {
         if (ignoreLabeledRaceCondition()) {
+            return true;
+        }
+        if (ignoreClosed()) {
             return true;
         }
         if (yield ignoreBot()) {

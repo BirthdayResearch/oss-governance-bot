@@ -59,10 +59,30 @@ async function ignoreBot(): Promise<boolean> {
 }
 
 /**
+ * Closed issue and pull_request should not trigger governance
+ */
+function ignoreClosed(): boolean {
+  const payload = github.context.payload
+  if (payload?.pull_request?.state === 'closed') {
+    return true
+  }
+
+  if (payload?.issue?.state === 'closed') {
+    return true
+  }
+
+  return false
+}
+
+/**
  * To prevent mistakes, this will ignore invalid workflow trigger
  */
 export default async function (): Promise<boolean> {
   if (ignoreLabeledRaceCondition()) {
+    return true
+  }
+
+  if (ignoreClosed()) {
     return true
   }
 
