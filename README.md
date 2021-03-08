@@ -1,4 +1,4 @@
-<img src="icon.png" width="120" height="120" align="left" style="margin-right:32px"/>
+<img src="icon.png" width="120" height="120" align="right" style="margin-left:32px"/>
 
 # OSS Governance Bot
 
@@ -9,9 +9,8 @@
 
 <!-- 3 Arc: Context - Problem - Solution -->
 
-[DeFiChain](https://defichain.com/) - Decentralized finance enabled on
-Bitcoin. [A blockchain dedicated to fast, intelligent and transparent financial services, accessible by everyone.](https://defichain.com/white-paper/)
-To achieve that, our projects have to be open source and accessible by anyone.
+To building a decentralized finance at [DeFiChain](https://defichain.com/),
+[we created a blockchain dedicated to fast, intelligent and transparent financial services, accessible by everyone.](https://defichain.com/white-paper/)
 
 Although putting our project on GitHub makes it transparent and visible for public contributions, it's far from making
 it maintainable. For new contributors, creating an issue or pull request and successfully sending it is a mountainous
@@ -35,6 +34,7 @@ contributors can trigger chat-ops via /slash style commands.
 * Scale to thousands of contributors without alienating community participation with complex quality control hierarchy.
 * A GitHub Action that lives natively and integrate well with the GitHub action/workflow product offering. You can view
   the source directly and modify it to your needs.
+* See it in action at [DeFiCh/app](https://github.com/DeFiCh/app/issues) or [DeFiCh/ain](https://github.com/DeFiCh/ain/pulls).
 
 ![preview](preview.png)
 
@@ -376,8 +376,11 @@ npm run all # to build/check/lint/package
 
 * For any question please feel free to create an issue.
 * Pull request for non-breaking features are welcomed too!
+* Although all features were created specifically for DeFiChain foundation needs; you should not limit yourself to our
+  offering. Feel free to fork the project. Appreciate if you mention us!
 
 ## Prior art
 
 * [Open Source Governance Models](https://gist.github.com/calebamiles/c578f88403b2fcb203deb5c9ef941d98)
 * [Kubernetes Prow](https://github.com/kubernetes/test-infra)
+* [jpmcb/prow-github-actions](https://github.com/jpmcb/prow-github-actions)

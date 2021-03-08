@@ -651,20 +651,21 @@ function ignoreLabeledRaceCondition() {
 }
 /**
  * Ignore non 'User' to prevent infinite loop.
- * Also ignores if sender is bot-token user
  */
 function ignoreBot() {
-    var _a, _b;
+    var _a;
+    const payload = github.context.payload;
+    return ((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User';
+}
+/**
+ * Ignores if sender is bot-token user
+ */
+function ignoreSelf() {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const payload = github.context.payload;
-        if (((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User') {
-            return true;
-        }
-        // allow fail because 'github-token' resource not accessible by integration
-        if (((_b = payload.sender) === null || _b === void 0 ? void 0 : _b.id) === (yield github_1.getBotUserId().catch(() => ''))) {
-            return true;
-        }
-        return false;
+        // allow fail because with 'github-token' > 'resource not accessible by integration'
+        return ((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.id) === (yield github_1.getBotUserId().catch(() => ''));
     });
 }
 /**
@@ -692,11 +693,11 @@ function default_1() {
         if (ignoreClosed()) {
             return true;
         }
-        if (yield ignoreBot()) {
+        if (yield ignoreSelf()) {
             return true;
         }
         if (is('issue_comment', ['created'])) {
-            return false;
+            return ignoreBot();
         }
         if (is('pull_request', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
             return false;

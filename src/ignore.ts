@@ -41,21 +41,19 @@ function ignoreLabeledRaceCondition(): boolean {
 
 /**
  * Ignore non 'User' to prevent infinite loop.
- * Also ignores if sender is bot-token user
  */
-async function ignoreBot(): Promise<boolean> {
+function ignoreBot(): boolean {
   const payload = github.context.payload
+  return payload.sender?.type !== 'User'
+}
 
-  if (payload.sender?.type !== 'User') {
-    return true
-  }
-
-  // allow fail because 'github-token' resource not accessible by integration
-  if (payload.sender?.id === (await getBotUserId().catch(() => ''))) {
-    return true
-  }
-
-  return false
+/**
+ * Ignores if sender is bot-token user
+ */
+async function ignoreSelf(): Promise<boolean> {
+  const payload = github.context.payload
+  // allow fail because with 'github-token' > 'resource not accessible by integration'
+  return payload.sender?.id === (await getBotUserId().catch(() => ''))
 }
 
 /**
@@ -86,12 +84,12 @@ export default async function (): Promise<boolean> {
     return true
   }
 
-  if (await ignoreBot()) {
+  if (await ignoreSelf()) {
     return true
   }
 
   if (is('issue_comment', ['created'])) {
-    return false
+    return ignoreBot()
   }
 
   if (is('pull_request', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
