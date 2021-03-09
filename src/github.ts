@@ -9,6 +9,7 @@ export function initClient(
 }
 
 export async function getBotUserId(): Promise<number> {
+  core.info('github-client: getBotUserId')
   const client = initClient(core.getInput('bot-token'))
   const user = await client.users.getAuthenticated()
   return user.data.id
@@ -30,6 +31,7 @@ export function getLabels(): string[] {
 export async function addLabels(labels: string[]): Promise<void> {
   if (!labels.length) return
 
+  core.info('github-client: addLabels')
   const client = initClient(core.getInput('bot-token'))
 
   await client.issues.addLabels({
@@ -43,6 +45,7 @@ export async function addLabels(labels: string[]): Promise<void> {
 export async function removeLabels(labels: string[]): Promise<void> {
   if (!labels.length) return
 
+  core.info('github-client: removeLabels')
   const client = initClient(core.getInput('bot-token'))
 
   await Promise.all(
@@ -104,6 +107,7 @@ function getIssueUserLogin(): string | undefined {
  * @param body comment
  */
 export async function postComment(body: string) {
+  core.info('github-client: postComment')
   const client = initClient(core.getInput('bot-token'))
 
   body = body.replace('$AUTHOR', github.context.payload.sender?.login)
@@ -119,6 +123,7 @@ export async function postComment(body: string) {
 }
 
 export async function patchIssue(changes: any) {
+  core.info('github-client: patchIssue')
   const client = initClient()
 
   await client.issues.update({
@@ -132,6 +137,7 @@ export async function patchIssue(changes: any) {
 export async function assign(assignees: string[]) {
   if (!assignees.length) return
 
+  core.info('github-client: assign')
   const client = initClient(core.getInput('bot-token'))
 
   await client.issues.addAssignees({
@@ -145,6 +151,7 @@ export async function assign(assignees: string[]) {
 export async function requestReviewers(reviewers: string[]) {
   if (!reviewers.length) return
 
+  core.info('github-client: requestReviewers')
   const client = initClient(core.getInput('bot-token'))
 
   await client.pulls.requestReviewers({
@@ -161,6 +168,7 @@ export async function commitStatus(
   description?: string,
   url?: string
 ): Promise<void> {
+  core.info('github-client: commitStatus')
   const client = initClient()
 
   async function sendStatus(sha: string) {
@@ -195,6 +203,7 @@ export async function commitStatus(
 }
 
 export async function hasReleaseByTag(tag: string): Promise<boolean> {
+  core.info('github-client: getReleaseByTag')
   const client = initClient()
 
   const release = client.repos.getReleaseByTag({

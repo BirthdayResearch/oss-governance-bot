@@ -402,6 +402,7 @@ function initClient(token = core.getInput('github-token')) {
 exports.initClient = initClient;
 function getBotUserId() {
     return __awaiter(this, void 0, void 0, function* () {
+        core.info('github-client: getBotUserId');
         const client = initClient(core.getInput('bot-token'));
         const user = yield client.users.getAuthenticated();
         return user.data.id;
@@ -422,6 +423,7 @@ function addLabels(labels) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!labels.length)
             return;
+        core.info('github-client: addLabels');
         const client = initClient(core.getInput('bot-token'));
         yield client.issues.addLabels({
             owner: github.context.repo.owner,
@@ -436,6 +438,7 @@ function removeLabels(labels) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!labels.length)
             return;
+        core.info('github-client: removeLabels');
         const client = initClient(core.getInput('bot-token'));
         yield Promise.all(labels.map(name => client.issues.removeLabel({
             owner: github.context.repo.owner,
@@ -491,6 +494,7 @@ function getIssueUserLogin() {
 function postComment(body) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        core.info('github-client: postComment');
         const client = initClient(core.getInput('bot-token'));
         body = body.replace('$AUTHOR', (_a = github.context.payload.sender) === null || _a === void 0 ? void 0 : _a.login);
         body = body.replace('$ISSUE_AUTHOR', getIssueUserLogin());
@@ -506,6 +510,7 @@ function postComment(body) {
 exports.postComment = postComment;
 function patchIssue(changes) {
     return __awaiter(this, void 0, void 0, function* () {
+        core.info('github-client: patchIssue');
         const client = initClient();
         yield client.issues.update(Object.assign({ owner: github.context.repo.owner, repo: github.context.repo.repo, issue_number: getNumber() }, changes));
     });
@@ -515,6 +520,7 @@ function assign(assignees) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!assignees.length)
             return;
+        core.info('github-client: assign');
         const client = initClient(core.getInput('bot-token'));
         yield client.issues.addAssignees({
             owner: github.context.repo.owner,
@@ -529,6 +535,7 @@ function requestReviewers(reviewers) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!reviewers.length)
             return;
+        core.info('github-client: requestReviewers');
         const client = initClient(core.getInput('bot-token'));
         yield client.pulls.requestReviewers({
             owner: github.context.repo.owner,
@@ -542,6 +549,7 @@ exports.requestReviewers = requestReviewers;
 function commitStatus(context, state, description, url) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
+        core.info('github-client: commitStatus');
         const client = initClient();
         function sendStatus(sha) {
             return __awaiter(this, void 0, void 0, function* () {
@@ -573,6 +581,7 @@ function commitStatus(context, state, description, url) {
 exports.commitStatus = commitStatus;
 function hasReleaseByTag(tag) {
     return __awaiter(this, void 0, void 0, function* () {
+        core.info('github-client: getReleaseByTag');
         const client = initClient();
         const release = client.repos.getReleaseByTag({
             owner: github.context.repo.owner,
