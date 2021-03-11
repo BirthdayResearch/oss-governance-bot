@@ -29,8 +29,6 @@ beforeEach(() => {
     switch (name) {
       case 'github-token':
         return 'token'
-      case 'bot-token':
-        return 'token'
       case 'config-path':
         return '.github/governance.yml'
       default:

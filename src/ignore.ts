@@ -48,7 +48,7 @@ function ignoreBot(): boolean {
 }
 
 /**
- * Ignores if sender is bot-token user
+ * Ignores if sender is self
  */
 async function ignoreSelf(): Promise<boolean> {
   const payload = github.context.payload

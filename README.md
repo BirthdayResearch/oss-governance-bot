@@ -58,12 +58,10 @@ jobs:
     name: Governance
     runs-on: ubuntu-latest
     steps:
-      # Semantic versioning, lock to different version: v1, v1.x or a commit hash.
-      - uses: DeFiCh/oss-governance-bot@v1
+      # Semantic versioning, lock to different version: v2, v2.0 or a commit hash.
+      - uses: DeFiCh/oss-governance-bot@v2
         with:
-          # You can use a PAT to post a comment/label so that it shows up as a user instead of github-actions
-          # Set the user to Triage, full repo scope.
-          bot-token: ${{secrets.BOT_PAT}} # optional, default to '${{ github.token }}'
+          # You can use a PAT to post a comment/label/status so that it shows up as a user instead of github-actions
           github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'
           config-path: .github/governance.yml # optional, default to '.github/governance.yml'
 ```

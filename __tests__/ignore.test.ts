@@ -62,7 +62,7 @@ describe('sender', () => {
     await expectIgnore(true)
   })
 
-  it('should ignore bot-token', async () => {
+  it('should ignore token from bot', async () => {
     github.context.eventName = 'issue_comment'
     github.context.payload = {
       action: 'created',
