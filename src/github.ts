@@ -10,7 +10,7 @@ export function initClient(
 
 export async function getBotUserId(): Promise<number> {
   core.info('github-client: getBotUserId')
-  const client = initClient(core.getInput('bot-token'))
+  const client = initClient()
   const user = await client.users.getAuthenticated()
   return user.data.id
 }
@@ -32,7 +32,7 @@ export async function addLabels(labels: string[]): Promise<void> {
   if (!labels.length) return
 
   core.info('github-client: addLabels')
-  const client = initClient(core.getInput('bot-token'))
+  const client = initClient()
 
   await client.issues.addLabels({
     owner: github.context.repo.owner,
@@ -46,7 +46,7 @@ export async function removeLabels(labels: string[]): Promise<void> {
   if (!labels.length) return
 
   core.info('github-client: removeLabels')
-  const client = initClient(core.getInput('bot-token'))
+  const client = initClient()
 
   await Promise.all(
     labels.map(name =>
@@ -108,7 +108,7 @@ function getIssueUserLogin(): string | undefined {
  */
 export async function postComment(body: string) {
   core.info('github-client: postComment')
-  const client = initClient(core.getInput('bot-token'))
+  const client = initClient()
 
   body = body.replace('$AUTHOR', github.context.payload.sender?.login)
   body = body.replace('$ISSUE_AUTHOR', getIssueUserLogin()!)
@@ -138,7 +138,7 @@ export async function assign(assignees: string[]) {
   if (!assignees.length) return
 
   core.info('github-client: assign')
-  const client = initClient(core.getInput('bot-token'))
+  const client = initClient()
 
   await client.issues.addAssignees({
     owner: github.context.repo.owner,
@@ -152,7 +152,7 @@ export async function requestReviewers(reviewers: string[]) {
   if (!reviewers.length) return
 
   core.info('github-client: requestReviewers')
-  const client = initClient(core.getInput('bot-token'))
+  const client = initClient()
 
   await client.pulls.requestReviewers({
     owner: github.context.repo.owner,

@@ -403,7 +403,7 @@ exports.initClient = initClient;
 function getBotUserId() {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('github-client: getBotUserId');
-        const client = initClient(core.getInput('bot-token'));
+        const client = initClient();
         const user = yield client.users.getAuthenticated();
         return user.data.id;
     });
@@ -424,7 +424,7 @@ function addLabels(labels) {
         if (!labels.length)
             return;
         core.info('github-client: addLabels');
-        const client = initClient(core.getInput('bot-token'));
+        const client = initClient();
         yield client.issues.addLabels({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -439,7 +439,7 @@ function removeLabels(labels) {
         if (!labels.length)
             return;
         core.info('github-client: removeLabels');
-        const client = initClient(core.getInput('bot-token'));
+        const client = initClient();
         yield Promise.all(labels.map(name => client.issues.removeLabel({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -495,7 +495,7 @@ function postComment(body) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         core.info('github-client: postComment');
-        const client = initClient(core.getInput('bot-token'));
+        const client = initClient();
         body = body.replace('$AUTHOR', (_a = github.context.payload.sender) === null || _a === void 0 ? void 0 : _a.login);
         body = body.replace('$ISSUE_AUTHOR', getIssueUserLogin());
         body += getDetails();
@@ -521,7 +521,7 @@ function assign(assignees) {
         if (!assignees.length)
             return;
         core.info('github-client: assign');
-        const client = initClient(core.getInput('bot-token'));
+        const client = initClient();
         yield client.issues.addAssignees({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -536,7 +536,7 @@ function requestReviewers(reviewers) {
         if (!reviewers.length)
             return;
         core.info('github-client: requestReviewers');
-        const client = initClient(core.getInput('bot-token'));
+        const client = initClient();
         yield client.pulls.requestReviewers({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -667,7 +667,7 @@ function ignoreBot() {
     return ((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User';
 }
 /**
- * Ignores if sender is bot-token user
+ * Ignores if sender is self
  */
 function ignoreSelf() {
     var _a;
