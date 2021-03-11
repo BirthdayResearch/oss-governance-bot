@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import nock from "nock";
-import capture from "../../src/operations/capture";
+import capture from "../../src/operators/capture";
 
 const postLabels = jest.fn()
 

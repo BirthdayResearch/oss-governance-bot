@@ -1,4 +1,4 @@
-import comment from '../../../src/operations/chat-ops/comment'
+import comment from '../../../src/operators/chat-ops/comment'
 import {Command, Commands} from "../../../src/command";
 import * as github from "@actions/github";
 import * as core from "@actions/core";

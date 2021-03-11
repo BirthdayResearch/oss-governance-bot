@@ -1,4 +1,4 @@
-import labelChatOps from '../../../src/operations/chat-ops/label'
+import labelChatOps from '../../../src/operators/chat-ops/label'
 import {Command, Commands} from "../../../src/command";
 import * as github from "@actions/github";
 import * as core from "@actions/core";

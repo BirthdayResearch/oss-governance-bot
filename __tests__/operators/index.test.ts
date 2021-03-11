@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import nock from "nock";
-import operations from "../../src/operations";
+import operations from "../../src/operators";
 import {Command, Commands} from "../../src/command";
 
 const intercepted = jest.fn()

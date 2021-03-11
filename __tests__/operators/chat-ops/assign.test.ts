@@ -1,4 +1,4 @@
-import assign from '../../../src/operations/chat-ops/assign'
+import assign from '../../../src/operators/chat-ops/assign'
 import {Command, Commands} from "../../../src/command";
 import * as github from "@actions/github";
 import * as core from "@actions/core";

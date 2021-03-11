@@ -1,4 +1,4 @@
-import close from '../../../src/operations/chat-ops/close'
+import close from '../../../src/operators/chat-ops/close'
 import {Command, Commands} from "../../../src/command";
 import * as github from "@actions/github";
 import * as core from "@actions/core";
