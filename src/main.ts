@@ -1,9 +1,9 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import {Config, getConfig, Governance} from './config'
-import ignore from './ignore'
+import ignore from './rules/ignore'
 import command from './command'
-import operations from './operations'
+import operations from './operators'
 import {initClient} from './github'
 
 /**

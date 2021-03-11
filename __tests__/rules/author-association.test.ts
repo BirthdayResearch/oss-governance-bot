@@ -1,6 +1,6 @@
 import * as github from '@actions/github'
-import {AuthorAssociation} from '../src/config'
-import {isAuthorAssociationAllowed} from '../src/author-association'
+import {AuthorAssociation} from '../../src/config'
+import {isAuthorAssociationAllowed} from '../../src/rules/author-association'
 
 function expectAssociation(
   association: AuthorAssociation | undefined,

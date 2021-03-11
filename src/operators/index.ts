@@ -1,6 +1,6 @@
 import {Capture, ChatOps, Governance, Label} from '../config'
 import {Commands} from '../command'
-import {isAuthorAssociationAllowed} from '../author-association'
+import {isAuthorAssociationAllowed} from '../rules/author-association'
 import label from './label'
 import capture from './capture'
 import chatOpsClose from './chat-ops/close'
@@ -8,7 +8,7 @@ import chatOpsComment from './chat-ops/comment'
 import chatOpsAssign from './chat-ops/assign'
 import chatOpsReview from './chat-ops/review'
 import chatOpsLabel from './chat-ops/label'
-import {isCreatedOpened} from '../ignore'
+import {isCreatedOpened} from '../rules/ignore'
 import * as core from '@actions/core'
 
 async function processLabels(

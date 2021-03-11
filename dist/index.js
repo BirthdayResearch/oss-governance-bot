@@ -2,76 +2,6 @@ require('./sourcemap-register.js');module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 249:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isAuthorAssociationAllowed = void 0;
-const github = __importStar(__nccwpck_require__(5438));
-function getAuthorAssociation() {
-    const payload = github.context.payload;
-    const current = payload.comment || payload.pull_request || payload.issue;
-    return current === null || current === void 0 ? void 0 : current.author_association;
-}
-function isCommentUserIssueAuthor() {
-    var _a, _b, _c, _d;
-    const payload = github.context.payload;
-    return ((_b = (_a = payload.comment) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.login) === ((_d = (_c = payload.issue) === null || _c === void 0 ? void 0 : _c.user) === null || _d === void 0 ? void 0 : _d.login);
-}
-function isAuthorAssociationAllowed(authorAssociation) {
-    if (!authorAssociation) {
-        return true;
-    }
-    if (authorAssociation.author && isCommentUserIssueAuthor()) {
-        return true;
-    }
-    switch (getAuthorAssociation()) {
-        case 'COLLABORATOR':
-            return !!authorAssociation.collaborator;
-        case 'CONTRIBUTOR':
-            return !!authorAssociation.contributor;
-        case 'FIRST_TIMER':
-            return !!authorAssociation.first_timer;
-        case 'FIRST_TIME_CONTRIBUTOR':
-            return !!authorAssociation.first_time_contributor;
-        case 'MANNEQUIN':
-            return !!authorAssociation.mannequin;
-        case 'MEMBER':
-            return !!authorAssociation.member;
-        case 'NONE':
-            return !!authorAssociation.none;
-        case 'OWNER':
-            return !!authorAssociation.owner;
-        default:
-            return false;
-    }
-}
-exports.isAuthorAssociationAllowed = isAuthorAssociationAllowed;
-
-
-/***/ }),
-
 /***/ 524:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -596,151 +526,6 @@ exports.hasReleaseByTag = hasReleaseByTag;
 
 /***/ }),
 
-/***/ 5404:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isCreatedOpened = void 0;
-const github = __importStar(__nccwpck_require__(5438));
-const github_1 = __nccwpck_require__(5928);
-function is(eventName, actions) {
-    return (github.context.eventName === eventName &&
-        actions.includes(github.context.payload.action));
-}
-/**
- * Ignore labeled race condition where it get created before needs labels.
- * Not sure what is a better way to do this.
- */
-function ignoreLabeledRaceCondition() {
-    var _a, _b, _c, _d, _e, _f;
-    const payload = github.context.payload;
-    if (is('issues', ['labeled'])) {
-        return (Date.parse((_a = payload.issue) === null || _a === void 0 ? void 0 : _a.created_at) + 5000 >=
-            Date.parse((_b = payload.issue) === null || _b === void 0 ? void 0 : _b.updated_at));
-    }
-    if (is('pull_request', ['labeled'])) {
-        return (Date.parse((_c = payload.pull_request) === null || _c === void 0 ? void 0 : _c.created_at) + 5000 >=
-            Date.parse((_d = payload.pull_request) === null || _d === void 0 ? void 0 : _d.updated_at));
-    }
-    if (is('pull_request_target', ['labeled'])) {
-        return (Date.parse((_e = payload.pull_request) === null || _e === void 0 ? void 0 : _e.created_at) + 5000 >=
-            Date.parse((_f = payload.pull_request) === null || _f === void 0 ? void 0 : _f.updated_at));
-    }
-    return false;
-}
-/**
- * Ignore non 'User' to prevent infinite loop.
- */
-function ignoreBot() {
-    var _a;
-    const payload = github.context.payload;
-    return ((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User';
-}
-/**
- * Ignores if sender is self
- */
-function ignoreSelf() {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        const payload = github.context.payload;
-        // allow fail because with 'github-token' > 'resource not accessible by integration'
-        return ((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.id) === (yield github_1.getBotUserId().catch(() => ''));
-    });
-}
-/**
- * Closed issue and pull_request should not trigger governance
- */
-function ignoreClosed() {
-    var _a, _b;
-    const payload = github.context.payload;
-    if (((_a = payload === null || payload === void 0 ? void 0 : payload.pull_request) === null || _a === void 0 ? void 0 : _a.state) === 'closed') {
-        return true;
-    }
-    if (((_b = payload === null || payload === void 0 ? void 0 : payload.issue) === null || _b === void 0 ? void 0 : _b.state) === 'closed') {
-        return true;
-    }
-    return false;
-}
-/**
- * To prevent mistakes, this will ignore invalid workflow trigger
- */
-function default_1() {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (ignoreLabeledRaceCondition()) {
-            return true;
-        }
-        if (ignoreClosed()) {
-            return true;
-        }
-        if (yield ignoreSelf()) {
-            return true;
-        }
-        if (is('issue_comment', ['created'])) {
-            return ignoreBot();
-        }
-        if (is('pull_request', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
-            return false;
-        }
-        if (is('pull_request_target', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
-            return false;
-        }
-        if (is('issues', ['opened', 'labeled', 'unlabeled'])) {
-            return false;
-        }
-        return true;
-    });
-}
-exports.default = default_1;
-function isCreatedOpened() {
-    if (is('issue_comment', ['created'])) {
-        return true;
-    }
-    if (is('pull_request', ['opened'])) {
-        return true;
-    }
-    if (is('pull_request_target', ['opened'])) {
-        return true;
-    }
-    if (is('issues', ['opened'])) {
-        return true;
-    }
-    return false;
-}
-exports.isCreatedOpened = isCreatedOpened;
-
-
-/***/ }),
-
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -782,9 +567,9 @@ exports.runGovernance = exports.getGovernance = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const config_1 = __nccwpck_require__(88);
-const ignore_1 = __importDefault(__nccwpck_require__(5404));
+const ignore_1 = __importDefault(__nccwpck_require__(1938));
 const command_1 = __importDefault(__nccwpck_require__(524));
-const operations_1 = __importDefault(__nccwpck_require__(7928));
+const operators_1 = __importDefault(__nccwpck_require__(9854));
 const github_1 = __nccwpck_require__(5928);
 /**
  * @return the current governance config based on the context, it could be 'pull_request' or 'issue'.
@@ -825,7 +610,7 @@ function runGovernance() {
         core.info('main: parsing commands');
         const commands = yield command_1.default();
         core.info('main: running operations');
-        yield operations_1.default(governance, commands);
+        yield operators_1.default(governance, commands);
         core.info('main: completed operations');
     });
 }
@@ -845,7 +630,7 @@ ignore_1.default()
 
 /***/ }),
 
-/***/ 3884:
+/***/ 7623:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -896,7 +681,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 9842:
+/***/ 7357:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -935,7 +720,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 6665:
+/***/ 8487:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -967,7 +752,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 4874:
+/***/ 3738:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -997,7 +782,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 6852:
+/***/ 2251:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1041,7 +826,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 1090:
+/***/ 2450:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1080,7 +865,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 7928:
+/***/ 9854:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1117,15 +902,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const author_association_1 = __nccwpck_require__(249);
-const label_1 = __importDefault(__nccwpck_require__(4550));
-const capture_1 = __importDefault(__nccwpck_require__(3884));
-const close_1 = __importDefault(__nccwpck_require__(6665));
-const comment_1 = __importDefault(__nccwpck_require__(4874));
-const assign_1 = __importDefault(__nccwpck_require__(9842));
-const review_1 = __importDefault(__nccwpck_require__(1090));
-const label_2 = __importDefault(__nccwpck_require__(6852));
-const ignore_1 = __nccwpck_require__(5404);
+const author_association_1 = __nccwpck_require__(9955);
+const label_1 = __importDefault(__nccwpck_require__(6625));
+const capture_1 = __importDefault(__nccwpck_require__(7623));
+const close_1 = __importDefault(__nccwpck_require__(8487));
+const comment_1 = __importDefault(__nccwpck_require__(3738));
+const assign_1 = __importDefault(__nccwpck_require__(7357));
+const review_1 = __importDefault(__nccwpck_require__(2450));
+const label_2 = __importDefault(__nccwpck_require__(2251));
+const ignore_1 = __nccwpck_require__(1938);
 const core = __importStar(__nccwpck_require__(2186));
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -1197,7 +982,7 @@ exports.default = default_1;
 
 /***/ }),
 
-/***/ 4550:
+/***/ 6625:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -1233,8 +1018,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const github_1 = __nccwpck_require__(5928);
 const github = __importStar(__nccwpck_require__(5438));
-const ignore_1 = __nccwpck_require__(5404);
-const author_association_1 = __nccwpck_require__(249);
+const ignore_1 = __nccwpck_require__(1938);
+const author_association_1 = __nccwpck_require__(9955);
 class PrefixLabelSet {
     constructor(prefix) {
         this.needs = false;
@@ -1413,6 +1198,226 @@ function sendStatus(label, success) {
         yield github_1.commitStatus(status.context, state(), description(), status.url);
     });
 }
+
+
+/***/ }),
+
+/***/ 9955:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isAuthorAssociationAllowed = void 0;
+const github = __importStar(__nccwpck_require__(5438));
+function getAuthorAssociation() {
+    const payload = github.context.payload;
+    const current = payload.comment || payload.pull_request || payload.issue;
+    return current === null || current === void 0 ? void 0 : current.author_association;
+}
+function isCommentUserIssueAuthor() {
+    var _a, _b, _c, _d;
+    const payload = github.context.payload;
+    return ((_b = (_a = payload.comment) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.login) === ((_d = (_c = payload.issue) === null || _c === void 0 ? void 0 : _c.user) === null || _d === void 0 ? void 0 : _d.login);
+}
+function isAuthorAssociationAllowed(authorAssociation) {
+    if (!authorAssociation) {
+        return true;
+    }
+    if (authorAssociation.author && isCommentUserIssueAuthor()) {
+        return true;
+    }
+    switch (getAuthorAssociation()) {
+        case 'COLLABORATOR':
+            return !!authorAssociation.collaborator;
+        case 'CONTRIBUTOR':
+            return !!authorAssociation.contributor;
+        case 'FIRST_TIMER':
+            return !!authorAssociation.first_timer;
+        case 'FIRST_TIME_CONTRIBUTOR':
+            return !!authorAssociation.first_time_contributor;
+        case 'MANNEQUIN':
+            return !!authorAssociation.mannequin;
+        case 'MEMBER':
+            return !!authorAssociation.member;
+        case 'NONE':
+            return !!authorAssociation.none;
+        case 'OWNER':
+            return !!authorAssociation.owner;
+        default:
+            return false;
+    }
+}
+exports.isAuthorAssociationAllowed = isAuthorAssociationAllowed;
+
+
+/***/ }),
+
+/***/ 1938:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isCreatedOpened = void 0;
+const github = __importStar(__nccwpck_require__(5438));
+const github_1 = __nccwpck_require__(5928);
+function is(eventName, actions) {
+    return (github.context.eventName === eventName &&
+        actions.includes(github.context.payload.action));
+}
+/**
+ * Ignore labeled race condition where it get created before needs labels.
+ * Not sure what is a better way to do this.
+ */
+function ignoreLabeledRaceCondition() {
+    var _a, _b, _c, _d, _e, _f;
+    const payload = github.context.payload;
+    if (is('issues', ['labeled'])) {
+        return (Date.parse((_a = payload.issue) === null || _a === void 0 ? void 0 : _a.created_at) + 5000 >=
+            Date.parse((_b = payload.issue) === null || _b === void 0 ? void 0 : _b.updated_at));
+    }
+    if (is('pull_request', ['labeled'])) {
+        return (Date.parse((_c = payload.pull_request) === null || _c === void 0 ? void 0 : _c.created_at) + 5000 >=
+            Date.parse((_d = payload.pull_request) === null || _d === void 0 ? void 0 : _d.updated_at));
+    }
+    if (is('pull_request_target', ['labeled'])) {
+        return (Date.parse((_e = payload.pull_request) === null || _e === void 0 ? void 0 : _e.created_at) + 5000 >=
+            Date.parse((_f = payload.pull_request) === null || _f === void 0 ? void 0 : _f.updated_at));
+    }
+    return false;
+}
+/**
+ * Ignore non 'User' to prevent infinite loop.
+ */
+function ignoreBot() {
+    var _a;
+    const payload = github.context.payload;
+    return ((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User';
+}
+/**
+ * Ignores if sender is self
+ */
+function ignoreSelf() {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        const payload = github.context.payload;
+        // allow fail because with 'github-token' > 'resource not accessible by integration'
+        try {
+            return ((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.id) === (yield github_1.getBotUserId());
+        }
+        catch (e) {
+            return false;
+        }
+    });
+}
+/**
+ * Closed issue and pull_request should not trigger governance
+ */
+function ignoreClosed() {
+    var _a, _b;
+    const payload = github.context.payload;
+    if (((_a = payload === null || payload === void 0 ? void 0 : payload.pull_request) === null || _a === void 0 ? void 0 : _a.state) === 'closed') {
+        return true;
+    }
+    if (((_b = payload === null || payload === void 0 ? void 0 : payload.issue) === null || _b === void 0 ? void 0 : _b.state) === 'closed') {
+        return true;
+    }
+    return false;
+}
+/**
+ * To prevent mistakes, this will ignore invalid workflow trigger
+ */
+function default_1() {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (ignoreLabeledRaceCondition()) {
+            return true;
+        }
+        if (ignoreClosed()) {
+            return true;
+        }
+        if (yield ignoreSelf()) {
+            return true;
+        }
+        if (is('issue_comment', ['created'])) {
+            return ignoreBot();
+        }
+        if (is('pull_request', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
+            return false;
+        }
+        if (is('pull_request_target', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
+            return false;
+        }
+        if (is('issues', ['opened', 'labeled', 'unlabeled'])) {
+            return false;
+        }
+        return true;
+    });
+}
+exports.default = default_1;
+function isCreatedOpened() {
+    if (is('issue_comment', ['created'])) {
+        return true;
+    }
+    if (is('pull_request', ['opened'])) {
+        return true;
+    }
+    if (is('pull_request_target', ['opened'])) {
+        return true;
+    }
+    if (is('issues', ['opened'])) {
+        return true;
+    }
+    return false;
+}
+exports.isCreatedOpened = isCreatedOpened;
 
 
 /***/ }),

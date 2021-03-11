@@ -1,5 +1,5 @@
 import * as github from '@actions/github'
-import {getBotUserId} from './github'
+import {getBotUserId} from '../github'
 
 function is(eventName: string, actions: string[]): boolean {
   return (
@@ -53,7 +53,11 @@ function ignoreBot(): boolean {
 async function ignoreSelf(): Promise<boolean> {
   const payload = github.context.payload
   // allow fail because with 'github-token' > 'resource not accessible by integration'
-  return payload.sender?.id === (await getBotUserId().catch(() => ''))
+  try {
+    return payload.sender?.id === (await getBotUserId())
+  } catch (e) {
+    return false
+  }
 }
 
 /**

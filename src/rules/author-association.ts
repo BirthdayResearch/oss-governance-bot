@@ -1,4 +1,4 @@
-import {AuthorAssociation} from './config'
+import {AuthorAssociation} from '../config'
 import * as github from '@actions/github'
 
 function getAuthorAssociation(): string | undefined {

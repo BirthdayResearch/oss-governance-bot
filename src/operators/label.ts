@@ -8,8 +8,8 @@ import {
   removeLabels
 } from '../github'
 import * as github from '@actions/github'
-import {isCreatedOpened} from '../ignore'
-import {isAuthorAssociationAllowed} from '../author-association'
+import {isCreatedOpened} from '../rules/ignore'
+import {isAuthorAssociationAllowed} from '../rules/author-association'
 
 class PrefixLabelSet {
   public prefix: string

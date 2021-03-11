@@ -1,4 +1,4 @@
-import ignore, {isCreatedOpened} from '../src/ignore'
+import ignore, {isCreatedOpened} from '../../src/rules/ignore'
 import * as github from '@actions/github'
 import nock from 'nock'
 import * as core from '@actions/core'
