@@ -1318,19 +1318,23 @@ function is(eventName, actions) {
  * Not sure what is a better way to do this.
  */
 function ignoreLabeledRaceCondition() {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g;
     const payload = github.context.payload;
+    if (((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User' &&
+        github.context.payload.action === 'labeled') {
+        return false;
+    }
     if (is('issues', ['labeled'])) {
-        return (Date.parse((_a = payload.issue) === null || _a === void 0 ? void 0 : _a.created_at) + 5000 >=
-            Date.parse((_b = payload.issue) === null || _b === void 0 ? void 0 : _b.updated_at));
+        return (Date.parse((_b = payload.issue) === null || _b === void 0 ? void 0 : _b.created_at) + 5000 >=
+            Date.parse((_c = payload.issue) === null || _c === void 0 ? void 0 : _c.updated_at));
     }
     if (is('pull_request', ['labeled'])) {
-        return (Date.parse((_c = payload.pull_request) === null || _c === void 0 ? void 0 : _c.created_at) + 5000 >=
-            Date.parse((_d = payload.pull_request) === null || _d === void 0 ? void 0 : _d.updated_at));
+        return (Date.parse((_d = payload.pull_request) === null || _d === void 0 ? void 0 : _d.created_at) + 5000 >=
+            Date.parse((_e = payload.pull_request) === null || _e === void 0 ? void 0 : _e.updated_at));
     }
     if (is('pull_request_target', ['labeled'])) {
-        return (Date.parse((_e = payload.pull_request) === null || _e === void 0 ? void 0 : _e.created_at) + 5000 >=
-            Date.parse((_f = payload.pull_request) === null || _f === void 0 ? void 0 : _f.updated_at));
+        return (Date.parse((_f = payload.pull_request) === null || _f === void 0 ? void 0 : _f.created_at) + 5000 >=
+            Date.parse((_g = payload.pull_request) === null || _g === void 0 ? void 0 : _g.updated_at));
     }
     return false;
 }
