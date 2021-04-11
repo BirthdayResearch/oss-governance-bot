@@ -15,6 +15,13 @@ function is(eventName: string, actions: string[]): boolean {
 function ignoreLabeledRaceCondition(): boolean {
   const payload = github.context.payload
 
+  if (
+    payload.sender?.type !== 'User' &&
+    github.context.payload.action === 'labeled'
+  ) {
+    return false
+  }
+
   if (is('issues', ['labeled'])) {
     return (
       Date.parse(payload.issue?.created_at) + 5000 >=

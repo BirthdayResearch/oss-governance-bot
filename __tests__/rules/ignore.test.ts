@@ -230,6 +230,17 @@ describe('pull_request', () => {
     })
     await expectIgnore(false)
   })
+
+  it('should not ignore if 3s but user is Bot', async () => {
+    set('pull_request', 'labeled', 'Bot', {
+      pull_request: {
+        number: 1,
+        created_at: '2021-02-01T07:03:58Z',
+        updated_at: '2021-02-01T07:04:01Z'
+      }
+    })
+    await expectIgnore(false)
+  })
 })
 
 describe('pull_request_target', () => {
