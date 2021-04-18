@@ -1381,10 +1381,10 @@ function ignoreClosed() {
  */
 function default_1() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (ignoreLabeledRaceCondition()) {
+        if (ignoreClosed()) {
             return true;
         }
-        if (ignoreClosed()) {
+        if (ignoreLabeledRaceCondition()) {
             return true;
         }
         if (yield ignoreSelf()) {
@@ -1393,13 +1393,22 @@ function default_1() {
         if (is('issue_comment', ['created'])) {
             return ignoreBot();
         }
-        if (is('pull_request', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
+        if (is('pull_request', ['synchronize', 'opened'])) {
+            return ignoreBot();
+        }
+        if (is('pull_request', ['labeled', 'unlabeled'])) {
             return false;
         }
-        if (is('pull_request_target', ['synchronize', 'opened', 'labeled', 'unlabeled'])) {
+        if (is('pull_request_target', ['synchronize', 'opened'])) {
+            return ignoreBot();
+        }
+        if (is('pull_request_target', ['labeled', 'unlabeled'])) {
             return false;
         }
-        if (is('issues', ['opened', 'labeled', 'unlabeled'])) {
+        if (is('issues', ['opened'])) {
+            return ignoreBot();
+        }
+        if (is('issues', ['labeled', 'unlabeled'])) {
             return false;
         }
         return true;
