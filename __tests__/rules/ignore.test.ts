@@ -139,9 +139,9 @@ describe('pull_request', () => {
     await expectIgnore(false)
   })
 
-  it('should not ignore opened if Bot', async () => {
+  it('should ignore opened if Bot', async () => {
     set('pull_request', 'opened', 'Bot')
-    await expectIgnore(false)
+    await expectIgnore(true)
   })
 
   it('should ignore locked', async () => {
@@ -264,9 +264,9 @@ describe('pull_request_target', () => {
     await expectIgnore(false)
   })
 
-  it('should not ignore opened if Bot', async () => {
+  it('should ignore opened if Bot', async () => {
     set('pull_request_target', 'opened', 'Bot')
-    await expectIgnore(false)
+    await expectIgnore(true)
   })
 
   it('should ignore locked', async () => {
@@ -378,9 +378,9 @@ describe('issues', () => {
     await expectIgnore(false)
   })
 
-  it('should not ignore opened if Bot', async () => {
+  it('should ignore opened if Bot', async () => {
     set('issues', 'opened', 'Bot')
-    await expectIgnore(false)
+    await expectIgnore(true)
   })
 
   it('should ignore assigned', async () => {
