@@ -95,6 +95,10 @@ export default async function (): Promise<boolean> {
     return true
   }
 
+  if (is('pull_request_target', ['opened'])) {
+    return false
+  }
+
   if (await ignoreSelf()) {
     return true
   }
