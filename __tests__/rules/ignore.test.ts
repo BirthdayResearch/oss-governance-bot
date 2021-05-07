@@ -266,7 +266,7 @@ describe('pull_request_target', () => {
 
   it('should ignore opened if Bot', async () => {
     set('pull_request_target', 'opened', 'Bot')
-    await expectIgnore(true)
+    await expectIgnore(false)
   })
 
   it('should ignore locked', async () => {

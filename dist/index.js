@@ -1387,6 +1387,9 @@ function default_1() {
         if (ignoreLabeledRaceCondition()) {
             return true;
         }
+        if (is('pull_request_target', ['opened'])) {
+            return false;
+        }
         if (yield ignoreSelf()) {
             return true;
         }
