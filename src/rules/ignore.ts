@@ -95,7 +95,7 @@ export default async function (): Promise<boolean> {
     return true
   }
 
-  if (is('pull_request_target', ['opened'])) {
+  if (is('pull_request_target', ['labeled'])) {
     return false
   }
 
