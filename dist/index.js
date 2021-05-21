@@ -1388,6 +1388,9 @@ function default_1() {
             return true;
         }
         if (yield ignoreSelf()) {
+            if (is('pull_request_target', ['synchronize', 'opened'])) {
+                return false;
+            }
             return true;
         }
         if (is('issue_comment', ['created'])) {
