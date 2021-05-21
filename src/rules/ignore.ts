@@ -96,6 +96,9 @@ export default async function (): Promise<boolean> {
   }
 
   if (await ignoreSelf()) {
+    if (is('pull_request_target', ['synchronize', 'opened'])) {
+      return false
+    }
     return true
   }
 
