@@ -1342,9 +1342,12 @@ function ignoreLabeledRaceCondition() {
  * Ignore non 'User' to prevent infinite loop.
  */
 function ignoreBot() {
-    var _a;
+    var _a, _b;
     const payload = github.context.payload;
-    return ((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type) !== 'User';
+    if (((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.login) === 'dependabot') {
+        return false;
+    }
+    return ((_b = payload.sender) === null || _b === void 0 ? void 0 : _b.type) !== 'User';
 }
 /**
  * Ignores if sender is self

@@ -57,6 +57,17 @@ describe('sender', () => {
     await expectIgnore(false)
   })
 
+  it('should not ignore Bot dependabot', async () => {
+    set('issue_comment', 'created', 'Bot', {
+      sender: {
+        type: 'Bot',
+        login: 'dependabot',
+        id: 100000
+      }
+    })
+    await expectIgnore(false)
+  })
+
   it('should ignore Bot', async () => {
     set('issue_comment', 'created', 'Bot')
     await expectIgnore(true)
