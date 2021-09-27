@@ -55,7 +55,7 @@ function ignoreBot(): boolean {
   core.info(
     `ignore: ignore bot - type:${payload.sender?.type} - login:${payload.sender?.login}`
   )
-  if (payload.sender?.login === 'dependabot') {
+  if (payload.sender?.login === 'dependabot[bot]') {
     return false
   }
   return payload.sender?.type !== 'User'

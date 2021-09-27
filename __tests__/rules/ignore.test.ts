@@ -61,7 +61,7 @@ describe('sender', () => {
     set('issue_comment', 'created', 'Bot', {
       sender: {
         type: 'Bot',
-        login: 'dependabot',
+        login: 'dependabot[bot]',
         id: 100000
       }
     })

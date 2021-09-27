@@ -1346,7 +1346,7 @@ function ignoreBot() {
     var _a, _b, _c, _d;
     const payload = github.context.payload;
     core.info(`ignore: ignore bot - type:${(_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type} - login:${(_b = payload.sender) === null || _b === void 0 ? void 0 : _b.login}`);
-    if (((_c = payload.sender) === null || _c === void 0 ? void 0 : _c.login) === 'dependabot') {
+    if (((_c = payload.sender) === null || _c === void 0 ? void 0 : _c.login) === 'dependabot[bot]') {
         return false;
     }
     return ((_d = payload.sender) === null || _d === void 0 ? void 0 : _d.type) !== 'User';
