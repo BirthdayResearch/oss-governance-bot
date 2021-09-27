@@ -1,4 +1,5 @@
 import * as github from '@actions/github'
+import * as core from '@actions/core'
 import {getBotUserId} from '../github'
 
 function is(eventName: string, actions: string[]): boolean {
@@ -51,6 +52,7 @@ function ignoreLabeledRaceCondition(): boolean {
  */
 function ignoreBot(): boolean {
   const payload = github.context.payload
+  core.info(`ignore: ignore bot - type:${payload.sender?.type} - login:${payload.sender?.login}`)
   if (payload.sender?.login === 'dependabot') {
     return false
   }
@@ -91,10 +93,12 @@ function ignoreClosed(): boolean {
  */
 export default async function (): Promise<boolean> {
   if (ignoreClosed()) {
+    core.info('ignore: closed')
     return true
   }
 
   if (ignoreLabeledRaceCondition()) {
+    core.info('ignore: labeled race condition')
     return true
   }
 
@@ -102,6 +106,7 @@ export default async function (): Promise<boolean> {
     if (is('pull_request_target', ['synchronize', 'opened'])) {
       return false
     }
+    core.info('ignore: ignore self')
     return true
   }
 
@@ -133,6 +138,7 @@ export default async function (): Promise<boolean> {
     return false
   }
 
+  core.info('ignore: catch all')
   return true
 }
 
