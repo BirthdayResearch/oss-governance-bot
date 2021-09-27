@@ -1308,6 +1308,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.isCreatedOpened = void 0;
 const github = __importStar(__nccwpck_require__(5438));
+const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5928);
 function is(eventName, actions) {
     return (github.context.eventName === eventName &&
@@ -1342,12 +1343,13 @@ function ignoreLabeledRaceCondition() {
  * Ignore non 'User' to prevent infinite loop.
  */
 function ignoreBot() {
-    var _a, _b;
+    var _a, _b, _c, _d;
     const payload = github.context.payload;
-    if (((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.login) === 'dependabot') {
+    core.info(`ignore: ignore bot - type:${(_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type} - login:${(_b = payload.sender) === null || _b === void 0 ? void 0 : _b.login}`);
+    if (((_c = payload.sender) === null || _c === void 0 ? void 0 : _c.login) === 'dependabot') {
         return false;
     }
-    return ((_b = payload.sender) === null || _b === void 0 ? void 0 : _b.type) !== 'User';
+    return ((_d = payload.sender) === null || _d === void 0 ? void 0 : _d.type) !== 'User';
 }
 /**
  * Ignores if sender is self
@@ -1385,15 +1387,18 @@ function ignoreClosed() {
 function default_1() {
     return __awaiter(this, void 0, void 0, function* () {
         if (ignoreClosed()) {
+            core.info('ignore: closed');
             return true;
         }
         if (ignoreLabeledRaceCondition()) {
+            core.info('ignore: labeled race condition');
             return true;
         }
         if (yield ignoreSelf()) {
             if (is('pull_request_target', ['synchronize', 'opened'])) {
                 return false;
             }
+            core.info('ignore: ignore self');
             return true;
         }
         if (is('issue_comment', ['created'])) {
@@ -1417,6 +1422,7 @@ function default_1() {
         if (is('issues', ['labeled', 'unlabeled'])) {
             return false;
         }
+        core.info('ignore: catch all');
         return true;
     });
 }
