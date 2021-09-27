@@ -52,9 +52,7 @@ function ignoreLabeledRaceCondition(): boolean {
  */
 function ignoreBot(): boolean {
   const payload = github.context.payload
-  core.info(
-    `ignore: ignore bot - type:${payload.sender?.type} - login:${payload.sender?.login}`
-  )
+  core.info(`ignore: ignore bot - type:${payload.sender?.type} - login:${payload.sender?.login}`)
   if (payload.sender?.login === 'dependabot') {
     return false
   }
