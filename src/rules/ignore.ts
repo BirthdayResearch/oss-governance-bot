@@ -47,6 +47,11 @@ function ignoreLabeledRaceCondition(): boolean {
   return false
 }
 
+function isDependabot(): boolean {
+  const payload = github.context.payload
+  return payload.sender?.login === 'dependabot[bot]'
+}
+
 /**
  * Ignore non 'User' to prevent infinite loop.
  */
@@ -55,7 +60,7 @@ function ignoreBot(): boolean {
   core.info(
     `ignore: ignore bot - type:${payload.sender?.type} - login:${payload.sender?.login}`
   )
-  if (payload.sender?.login === 'dependabot[bot]') {
+  if (isDependabot()) {
     return false
   }
   return payload.sender?.type !== 'User'
@@ -97,6 +102,15 @@ export default async function (): Promise<boolean> {
   if (ignoreClosed()) {
     core.info('ignore: closed')
     return true
+  }
+
+  if (isDependabot()) {
+    if (is('pull_request', ['opened'])) {
+      return true
+    }
+    if (is('pull_request_target', ['opened'])) {
+      return true
+    }
   }
 
   if (ignoreLabeledRaceCondition()) {

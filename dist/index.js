@@ -1338,17 +1338,22 @@ function ignoreLabeledRaceCondition() {
     }
     return false;
 }
+function isDependabot() {
+    var _a;
+    const payload = github.context.payload;
+    return ((_a = payload.sender) === null || _a === void 0 ? void 0 : _a.login) === 'dependabot[bot]';
+}
 /**
  * Ignore non 'User' to prevent infinite loop.
  */
 function ignoreBot() {
-    var _a, _b, _c, _d;
+    var _a, _b, _c;
     const payload = github.context.payload;
     core.info(`ignore: ignore bot - type:${(_a = payload.sender) === null || _a === void 0 ? void 0 : _a.type} - login:${(_b = payload.sender) === null || _b === void 0 ? void 0 : _b.login}`);
-    if (((_c = payload.sender) === null || _c === void 0 ? void 0 : _c.login) === 'dependabot[bot]') {
+    if (isDependabot()) {
         return false;
     }
-    return ((_d = payload.sender) === null || _d === void 0 ? void 0 : _d.type) !== 'User';
+    return ((_c = payload.sender) === null || _c === void 0 ? void 0 : _c.type) !== 'User';
 }
 /**
  * Ignores if sender is self
@@ -1388,6 +1393,14 @@ function default_1() {
         if (ignoreClosed()) {
             core.info('ignore: closed');
             return true;
+        }
+        if (isDependabot()) {
+            if (is('pull_request', ['opened'])) {
+                return true;
+            }
+            if (is('pull_request_target', ['opened'])) {
+                return true;
+            }
         }
         if (ignoreLabeledRaceCondition()) {
             core.info('ignore: labeled race condition');
