@@ -50,6 +50,15 @@ on:
   issue_comment:
     types: [ created ]
 
+# You can use permissions to modify the default permissions granted to the GITHUB_TOKEN, 
+# adding or removing access as required, so that you only allow the minimum required access. 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: write
+  checks: write
+
 jobs:
   governance:
     name: Governance
