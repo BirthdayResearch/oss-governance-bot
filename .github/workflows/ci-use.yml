@@ -8,6 +8,8 @@ on:
   issue_comment:
     types: [ created ]
 
+# You can use permissions to modify the default permissions granted to the GITHUB_TOKEN, 
+# adding or removing access as required, so that you only allow the minimum required access. 
 permissions:
   contents: read
   issues: write
@@ -23,7 +25,7 @@ jobs:
       - uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f
 
       - uses: ./
-        # with:
+        with:
           # You can use a PAT to post a comment/label so that it shows up as a user instead of github-actions
           # Set the user to Triage, full repo scope.
-          # github-token: ${{ secrets.DEFICHAIN_BOT_GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
