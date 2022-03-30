@@ -2,15 +2,12 @@
 
 # OSS Governance Bot
 
-[![codecov](https://codecov.io/gh/DeFiCh/oss-governance-bot/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/DeFiCh/oss-governance-bot)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a43f22b8c3c74fe9b6b58935a01fff4e)](https://www.codacy.com/gh/DeFiCh/oss-governance-bot/dashboard)
-[![Release](https://img.shields.io/github/v/release/DeFiCh/oss-governance-bot)](https://github.com/DeFiCh/oss-governance-bot/releases)
-[![License MIT](https://img.shields.io/github/license/DeFiCh/oss-governance-bot)](https://github.com/DeFiCh/oss-governance-bot/blob/main/LICENSE)
+[![codecov](https://codecov.io/gh/DeFiCh/oss-governance-bot/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/BirthdayResearch/oss-governance-bot)
+![Codacy Badge](https://app.codacy.com/project/badge/Grade/a43f22b8c3c74fe9b6b58935a01fff4e)
+[![Release](https://img.shields.io/github/v/release/BirthdayResearch/oss-governance-bot)](https://github.com/BirthdayResearch/oss-governance-bot/releases)
+[![License MIT](https://img.shields.io/github/license/BirthdayResearch/oss-governance-bot)](https://github.com/BirthdayResearch/oss-governance-bot/blob/main/LICENSE)
 
 <!-- 3 Arc: Context - Problem - Solution -->
-
-To building a decentralized finance at [DeFiChain](https://defichain.com/),
-[we created a blockchain dedicated to fast, intelligent and transparent financial services, accessible by everyone.](https://defichain.com/white-paper/)
 
 Although putting our project on GitHub makes it transparent and visible for public contributions, it's far from making
 it maintainable. For new contributors, creating an issue or pull request and successfully sending it is a mountainous
@@ -34,7 +31,7 @@ contributors can trigger chat-ops via /slash style commands.
 * Scale to thousands of contributors without alienating community participation with complex quality control hierarchy.
 * A GitHub Action that lives natively and integrate well with the GitHub action/workflow product offering. You can view
   the source directly and modify it to your needs.
-* See it in action at [DeFiCh/app](https://github.com/DeFiCh/app/issues) or [DeFiCh/ain](https://github.com/DeFiCh/ain/pulls).
+* See it in action at [DeFiCh/jellyfish](https://github.com/DeFiCh/jellyfish/issues).
 
 ![preview](preview.png)
 
@@ -53,13 +50,22 @@ on:
   issue_comment:
     types: [ created ]
 
+# You can use permissions to modify the default permissions granted to the GITHUB_TOKEN, 
+# adding or removing access as required, so that you only allow the minimum required access. 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: write
+  checks: write
+
 jobs:
   governance:
     name: Governance
     runs-on: ubuntu-latest
     steps:
       # Semantic versioning, lock to different version: v2, v2.0 or a commit hash.
-      - uses: DeFiCh/oss-governance-bot@v2
+      - uses: BirthdayResearch/oss-governance-bot@v2
         with:
           # You can use a PAT to post a comment/label/status so that it shows up as a user instead of github-actions
           github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'
@@ -374,7 +380,7 @@ npm run all # to build/check/lint/package
 
 * For any question please feel free to create an issue.
 * Pull request for non-breaking features are welcomed too!
-* Although all features were created specifically for DeFiChain foundation needs; you should not limit yourself to our
+* Although all features were created specifically for [Birthday Research](https://github.com/BirthdayResearch) needs; you should not limit yourself to our
   offering. Feel free to fork the project. Appreciate if you mention us!
 
 ## Prior art
