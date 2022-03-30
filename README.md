@@ -2,7 +2,7 @@
 
 # OSS Governance Bot
 
-[![codecov](https://codecov.io/gh/DeFiCh/oss-governance-bot/branch/main/graph/badge.svg?token=SOWIV1VVM1)](https://codecov.io/gh/BirthdayResearch/oss-governance-bot)
+[![codecov](https://codecov.io/gh/BirthdayResearch/oss-governance-bot/branch/main/graph/badge.svg?token=RJI65RZH2F)](https://codecov.io/gh/BirthdayResearch/oss-governance-bot)
 ![Codacy Badge](https://app.codacy.com/project/badge/Grade/a43f22b8c3c74fe9b6b58935a01fff4e)
 [![Release](https://img.shields.io/github/v/release/BirthdayResearch/oss-governance-bot)](https://github.com/BirthdayResearch/oss-governance-bot/releases)
 [![License MIT](https://img.shields.io/github/license/BirthdayResearch/oss-governance-bot)](https://github.com/BirthdayResearch/oss-governance-bot/blob/main/LICENSE)
@@ -31,9 +31,10 @@ contributors can trigger chat-ops via /slash style commands.
 * Scale to thousands of contributors without alienating community participation with complex quality control hierarchy.
 * A GitHub Action that lives natively and integrate well with the GitHub action/workflow product offering. You can view
   the source directly and modify it to your needs.
-* See it in action at [DeFiCh/jellyfish](https://github.com/DeFiCh/jellyfish/issues).
+* See it in action at [DeFiCh/jellyfish](https://github.com/DeFiCh/jellyfish/issues)
+  or [DeFiCh/scan](https://github.com/DeFiCh/scan/issues).
 
-![preview](preview.png)
+[![preview](preview.png)](https://github.com/DeFiCh/scan/issues/1034)
 
 ## Usage
 
@@ -380,8 +381,8 @@ npm run all # to build/check/lint/package
 
 * For any question please feel free to create an issue.
 * Pull request for non-breaking features are welcomed too!
-* Although all features were created specifically for [Birthday Research](https://github.com/BirthdayResearch) needs; you should not limit yourself to our
-  offering. Feel free to fork the project. Appreciate if you mention us!
+* Although all features were created specifically for [Birthday Research](https://github.com/BirthdayResearch) needs;
+  you should not limit yourself to our offering. Feel free to fork the project. Appreciate if you mention us!
 
 ## Prior art
 
