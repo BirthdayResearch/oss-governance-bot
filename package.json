@@ -34,7 +34,7 @@
     "@actions/github": "^4.0.0",
     "fp-ts": "^2.11.4",
     "io-ts": "^2.2.16",
-    "io-ts-reporters": "^1.2.2",
+    "io-ts-reporters": "^2.0.1",
     "js-yaml": "^4.0.0"
   },
   "devDependencies": {
