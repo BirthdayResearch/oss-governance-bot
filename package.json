@@ -35,7 +35,7 @@
     "fp-ts": "^2.11.4",
     "io-ts": "^2.2.16",
     "io-ts-reporters": "^1.2.2",
-    "js-yaml": "^4.0.0"
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
