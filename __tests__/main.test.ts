@@ -155,7 +155,8 @@ describe('getGovernance', () => {
           pull_request: {
             diff_url:
               'https://github.com/BirthdayResearch/oss-governance-bot/pull/9.diff',
-            html_url: 'https://github.com/BirthdayResearch/oss-governance-bot/pull/9',
+            html_url:
+              'https://github.com/BirthdayResearch/oss-governance-bot/pull/9',
             patch_url:
               'https://github.com/BirthdayResearch/oss-governance-bot/pull/9.patch',
             url:
