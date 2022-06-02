@@ -14,7 +14,7 @@ function set(
     action: action,
     sender: {
       type: userType,
-      login: 'defichain-bot',
+      login: 'birthday-bot',
       id: 100000
     },
     ...options
