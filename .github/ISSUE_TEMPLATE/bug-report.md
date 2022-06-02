@@ -7,7 +7,7 @@ labels: kind/bug
 <!-- 
 Please use this template while reporting a bug and provide as much info as possible.
 
-If the matter is security related, please disclose it privately via oss@defichain.com
+If the matter is security related, please disclose it privately via oss@birthday.dev
 -->
 
 #### What happened:

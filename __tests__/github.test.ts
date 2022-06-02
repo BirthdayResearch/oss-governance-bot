@@ -101,7 +101,7 @@ it('Organization: should format details as expected', async () => {
       '\n' +
       '<details><summary>Details</summary>' +
       '\n\n' +
-      'I am a bot created to help the [Codertocat](https://github.com/Codertocat/) developers manage community feedback and contributions. You can check out my [manifest file](https://github.com/Codertocat/Hello-World/blob/main/config-path/location.yml) to understand my behavior and what I can do. If you want to use this for your project, you can check out the [DeFiCh/oss-governance-bot](https://github.com/DeFiCh/oss-governance-bot) repository.' +
+      'I am a bot created to help the [Codertocat](https://github.com/Codertocat/) developers manage community feedback and contributions. You can check out my [manifest file](https://github.com/Codertocat/Hello-World/blob/main/config-path/location.yml) to understand my behavior and what I can do. If you want to use this for your project, you can check out the [BirthdayResearch/oss-governance-bot](https://github.com/BirthdayResearch/oss-governance-bot) repository.' +
       '\n\n' +
       '</details>'
   })
@@ -132,7 +132,7 @@ it('User: should format details as expected', async () => {
       '\n' +
       '<details><summary>Details</summary>' +
       '\n\n' +
-      'I am a bot created to help [Codertocat](https://github.com/Codertocat/) manage community feedback and contributions. You can check out my [manifest file](https://github.com/Codertocat/Hello-World/blob/main/config-path/location.yml) to understand my behavior and what I can do. If you want to use this for your project, you can check out the [DeFiCh/oss-governance-bot](https://github.com/DeFiCh/oss-governance-bot) repository.' +
+      'I am a bot created to help [Codertocat](https://github.com/Codertocat/) manage community feedback and contributions. You can check out my [manifest file](https://github.com/Codertocat/Hello-World/blob/main/config-path/location.yml) to understand my behavior and what I can do. If you want to use this for your project, you can check out the [BirthdayResearch/oss-governance-bot](https://github.com/BirthdayResearch/oss-governance-bot) repository.' +
       '\n\n' +
       '</details>'
   })
@@ -147,11 +147,14 @@ describe('commit status', () => {
       issue: {
         number: 1,
         pull_request: {
-          diff_url: 'https://github.com/DeFiCh/oss-governance-bot/pull/9.diff',
-          html_url: 'https://github.com/DeFiCh/oss-governance-bot/pull/9',
+          diff_url:
+            'https://github.com/BirthdayResearch/oss-governance-bot/pull/9.diff',
+          html_url:
+            'https://github.com/BirthdayResearch/oss-governance-bot/pull/9',
           patch_url:
-            'https://github.com/DeFiCh/oss-governance-bot/pull/9.patch',
-          url: 'https://api.github.com/repos/DeFiCh/oss-governance-bot/pulls/9'
+            'https://github.com/BirthdayResearch/oss-governance-bot/pull/9.patch',
+          url:
+            'https://api.github.com/repos/BirthdayResearch/oss-governance-bot/pulls/9'
         }
       }
     }

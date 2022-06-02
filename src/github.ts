@@ -86,7 +86,7 @@ function getDetails(): string {
   details += `You can check out my [manifest file](${repoUrl}/blob/${branch}/${configPath}) to understand my behavior and what I can do.`
   details += ' '
   details +=
-    'If you want to use this for your project, you can check out the [DeFiCh/oss-governance-bot](https://github.com/DeFiCh/oss-governance-bot) repository.'
+    'If you want to use this for your project, you can check out the [BirthdayResearch/oss-governance-bot](https://github.com/BirthdayResearch/oss-governance-bot) repository.'
   details += '\n\n'
   details += '</details>'
   return details

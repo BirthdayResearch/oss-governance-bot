@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DeFiCh/oss-governance-bot.git"
+    "url": "git+https://github.com/BirthdayResearch/oss-governance-bot.git"
   },
   "keywords": [
     "actions",
@@ -24,9 +24,8 @@
     "goverenance"
   ],
   "author": {
-    "name": "DeFiChain Foundation",
-    "email": "engineering@defichain.com",
-    "url": "https://defichain.com/"
+    "name": "Birthday Research",
+    "email": "oss@birthday.dev"
   },
   "license": "MIT",
   "dependencies": {
@@ -35,22 +34,22 @@
     "fp-ts": "^2.11.4",
     "io-ts": "^2.2.16",
     "io-ts-reporters": "^1.2.2",
-    "js-yaml": "^4.0.0"
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/js-yaml": "^4.0.5",
-    "@types/lodash": "^4.14.181",
+    "@types/lodash": "^4.14.182",
     "@types/node": "^14.14.26",
     "@typescript-eslint/parser": "^4.15.0",
     "@vercel/ncc": "^0.31.1",
-    "codecov": "^3.8.1",
+    "codecov": "^3.8.2",
     "eslint": "^7.32.0",
     "eslint-plugin-github": "^4.1.1",
     "eslint-plugin-jest": "^26.1.5",
     "jest": "^26.4.4",
     "jest-circus": "^26.4.4",
-    "nock": "^13.1.3",
+    "nock": "^13.2.4",
     "prettier": "2.2.1",
     "ts-jest": "^26.5.6",
     "typescript": "^4.1.5",
