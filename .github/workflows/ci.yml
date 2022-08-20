@@ -1,25 +1,66 @@
 name: CI
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build:
-    name: Build
+  Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
 
+      - uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+        with:
+          node-version: '16'
+          cache: 'npm'
+
       - run: npm ci
       - run: npm run build
-      - run: npm run format
-      - run: npm run lint
       - run: npm run pack
-      - run: npm run test:coverage
 
       - uses: EndBug/add-and-commit@998652d28d7702d095d40f52ae42982a80ae8c7d
         with:
           message: 'Diff from format, lint and pack'
+
+  lint_prettier:
+    name: "Lint (prettier)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+
+      - uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - run: npm ci
+      - run: npx --no-install prettier --check **/*.ts
+
+  lint_eslint:
+    name: "Lint (eslint)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+
+      - uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npx --no-install eslint src/**/*.ts
+
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+
+      - uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+        with:
+          node-version: '16'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run test:coverage
