@@ -2,6 +2,6 @@ version: v1
 
 issue:
   captures:
-    - regex: "- Operating System: *(macos|mac) *"
+    - regex: '- Operating System: *(macos|mac) *'
       ignore_case: true
-      label: [ 'maybe' ]
+      label: ['maybe']

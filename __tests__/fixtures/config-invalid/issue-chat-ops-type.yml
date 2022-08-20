@@ -2,5 +2,5 @@ version: v1
 
 issue:
   chat_ops:
-    - cmd: "/something"
+    - cmd: '/something'
       type: invalid

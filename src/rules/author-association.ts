@@ -1,46 +1,44 @@
-import {AuthorAssociation} from '../config'
-import * as github from '@actions/github'
+import { AuthorAssociation } from '../config';
+import * as github from '@actions/github';
 
 function getAuthorAssociation(): string | undefined {
-  const payload = github.context.payload
-  const current = payload.comment || payload.pull_request || payload.issue
-  return current?.author_association
+  const payload = github.context.payload;
+  const current = payload.comment || payload.pull_request || payload.issue;
+  return current?.author_association;
 }
 
 function isCommentUserIssueAuthor(): boolean {
-  const payload = github.context.payload
-  return payload.comment?.user?.login === payload.issue?.user?.login
+  const payload = github.context.payload;
+  return payload.comment?.user?.login === payload.issue?.user?.login;
 }
 
-export function isAuthorAssociationAllowed(
-  authorAssociation: AuthorAssociation | undefined
-): boolean {
+export function isAuthorAssociationAllowed(authorAssociation: AuthorAssociation | undefined): boolean {
   if (!authorAssociation) {
-    return true
+    return true;
   }
 
   if (authorAssociation.author && isCommentUserIssueAuthor()) {
-    return true
+    return true;
   }
 
   switch (getAuthorAssociation()) {
     case 'COLLABORATOR':
-      return !!authorAssociation.collaborator
+      return !!authorAssociation.collaborator;
     case 'CONTRIBUTOR':
-      return !!authorAssociation.contributor
+      return !!authorAssociation.contributor;
     case 'FIRST_TIMER':
-      return !!authorAssociation.first_timer
+      return !!authorAssociation.first_timer;
     case 'FIRST_TIME_CONTRIBUTOR':
-      return !!authorAssociation.first_time_contributor
+      return !!authorAssociation.first_time_contributor;
     case 'MANNEQUIN':
-      return !!authorAssociation.mannequin
+      return !!authorAssociation.mannequin;
     case 'MEMBER':
-      return !!authorAssociation.member
+      return !!authorAssociation.member;
     case 'NONE':
-      return !!authorAssociation.none
+      return !!authorAssociation.none;
     case 'OWNER':
-      return !!authorAssociation.owner
+      return !!authorAssociation.owner;
     default:
-      return false
+      return false;
   }
 }

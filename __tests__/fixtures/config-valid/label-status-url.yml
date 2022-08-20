@@ -3,8 +3,8 @@ version: v1
 issue:
   labels:
     - prefix: triage
-      list: [ "accepted" ]
+      list: ['accepted']
       needs:
         status:
           context: Status Context
-          url: "https://github.com/google"
+          url: 'https://github.com/google'

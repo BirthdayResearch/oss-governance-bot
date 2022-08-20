@@ -2,14 +2,14 @@ name: CI
 
 on:
   pull_request_target:
-    types: [ synchronize, opened, labeled, unlabeled ]
+    types: [synchronize, opened, labeled, unlabeled]
   issues:
-    types: [ opened, labeled, unlabeled ]
+    types: [opened, labeled, unlabeled]
   issue_comment:
-    types: [ created ]
+    types: [created]
 
-# You can use permissions to modify the default permissions granted to the GITHUB_TOKEN, 
-# adding or removing access as required, so that you only allow the minimum required access. 
+# You can use permissions to modify the default permissions granted to the GITHUB_TOKEN,
+# adding or removing access as required, so that you only allow the minimum required access.
 permissions:
   contents: read
   issues: write

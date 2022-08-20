@@ -2,4 +2,4 @@ version: v1
 
 issue:
   labels:
-    - list: [ "accepted" ]
+    - list: ['accepted']

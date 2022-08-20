@@ -6,7 +6,7 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write **/*.ts",
+    "format": "prettier --write .",
     "lint": "eslint --fix src/**/*.ts",
     "pack": "ncc build --source-map --license licenses.txt",
     "test": "jest",

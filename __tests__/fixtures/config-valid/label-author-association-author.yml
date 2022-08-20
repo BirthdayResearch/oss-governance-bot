@@ -3,7 +3,7 @@ version: v1
 issue:
   labels:
     - prefix: triage
-      list: [ "accepted" ]
+      list: ['accepted']
       multiple: false
       author_association:
         author: true

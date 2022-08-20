@@ -3,7 +3,7 @@ version: v1
 issue:
   labels:
     - prefix: triage
-      list: [ "accepted" ]
+      list: ['accepted']
       needs:
         comment: |
           @$AUTHOR: This issue is currently awaiting triage.

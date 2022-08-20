@@ -2,6 +2,6 @@ version: v1
 
 issue:
   captures:
-    - regex: "- Version: *(.+)"
+    - regex: '- Version: *(.+)'
       github_release: true
       label: 'version/$CAPTURED'

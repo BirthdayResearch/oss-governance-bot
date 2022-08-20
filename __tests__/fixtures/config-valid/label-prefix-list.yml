@@ -3,9 +3,9 @@ version: v1
 issue:
   labels:
     - prefix: triage
-      list: [ "accepted" ]
+      list: ['accepted']
 
 pull_request:
   labels:
     - prefix: kind
-      list: [ "feature", "fix", "chore", "docs", "refactor" ]
+      list: ['feature', 'fix', 'chore', 'docs', 'refactor']

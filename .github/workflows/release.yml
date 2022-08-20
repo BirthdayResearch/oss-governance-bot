@@ -2,7 +2,7 @@ name: Release Tags
 
 on:
   release:
-    types: [ released ]
+    types: [released]
 
 jobs:
   release-tags:

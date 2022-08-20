@@ -2,5 +2,5 @@ version: v1
 
 pull_request:
   chat_ops:
-    - cmd: "/close"
+    - cmd: '/close'
       type: close

@@ -2,6 +2,6 @@ version: v1
 
 pull_request:
   chat_ops:
-    - cmd: "/comment"
+    - cmd: '/comment'
       type: comment
-      comment: "comment"
+      comment: 'comment'

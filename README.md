@@ -26,12 +26,12 @@ contributors can trigger chat-ops via /slash style commands.
 
 ## What can OSS Governance Bot do for you?
 
-* Speed up issue triaging with automated chat-bot and chat-ops operations.
-* Increased code review agility by moving quality control hierarchy from requirements to educational steps.
-* Scale to thousands of contributors without alienating community participation with complex quality control hierarchy.
-* A GitHub Action that lives natively and integrate well with the GitHub action/workflow product offering. You can view
+- Speed up issue triaging with automated chat-bot and chat-ops operations.
+- Increased code review agility by moving quality control hierarchy from requirements to educational steps.
+- Scale to thousands of contributors without alienating community participation with complex quality control hierarchy.
+- A GitHub Action that lives natively and integrate well with the GitHub action/workflow product offering. You can view
   the source directly and modify it to your needs.
-* See it in action at [DeFiCh/jellyfish](https://github.com/DeFiCh/jellyfish/issues)
+- See it in action at [DeFiCh/jellyfish](https://github.com/DeFiCh/jellyfish/issues)
   or [DeFiCh/scan](https://github.com/DeFiCh/scan/issues).
 
 [![preview](preview.png)](https://github.com/DeFiCh/scan/issues/1034)
@@ -45,14 +45,14 @@ contributors can trigger chat-ops via /slash style commands.
 
 on:
   pull_request_target:
-    types: [ synchronize, opened, labeled, unlabeled ]
+    types: [synchronize, opened, labeled, unlabeled]
   issues:
-    types: [ opened, labeled, unlabeled ]
+    types: [opened, labeled, unlabeled]
   issue_comment:
-    types: [ created ]
+    types: [created]
 
-# You can use permissions to modify the default permissions granted to the GITHUB_TOKEN, 
-# adding or removing access as required, so that you only allow the minimum required access. 
+# You can use permissions to modify the default permissions granted to the GITHUB_TOKEN,
+# adding or removing access as required, so that you only allow the minimum required access.
 permissions:
   contents: read
   issues: write
@@ -83,7 +83,7 @@ version: v1
 issue:
   labels:
     - prefix: triage
-      list: [ "accepted" ]
+      list: ['accepted']
       multiple: false
       author_association:
         collaborator: true
@@ -96,7 +96,7 @@ issue:
           The triage/accepted label can be added by org members by writing /triage accepted in a comment.
 
     - prefix: kind
-      list: [ "feature", "bug", "question" ]
+      list: ['feature', 'bug', 'question']
       multiple: false
       needs:
         comment: |
@@ -107,7 +107,7 @@ issue:
           * `/kind question`
 
     - prefix: area
-      list: [ "ui-ux", "semantics", "translation", "security" ]
+      list: ['ui-ux', 'semantics', 'translation', 'security']
       multiple: true
       needs:
         comment: |
@@ -119,12 +119,12 @@ issue:
           * `/area security`
 
     - prefix: os
-      list: [ "mac", "win", "linux" ]
+      list: ['mac', 'win', 'linux']
       multiple: true
 
     - prefix: priority
       multiple: false
-      list: [ "urgent-now", "important-soon" ]
+      list: ['urgent-now', 'important-soon']
       author_association:
         collaborator: true
         member: true
@@ -159,7 +159,7 @@ pull_request:
   labels:
     - prefix: kind
       multiple: false
-      list: [ "feature", "fix", "chore", "docs", "refactor", "dependencies" ]
+      list: ['feature', 'fix', 'chore', 'docs', 'refactor', 'dependencies']
       needs:
         comment: |
           @$AUTHOR: There are no 'kind' label on this PR. You need a 'kind' label to generate the release automatically.
@@ -171,14 +171,14 @@ pull_request:
           * `/kind refactor`
           * `/kind dependencies`
         status:
-          context: "Kind Label"
+          context: 'Kind Label'
           description:
             success: Ready for review & merge.
             failure: Missing kind label to generate release automatically.
 
     - prefix: priority
       multiple: false
-      list: [ "urgent-now", "important-soon" ]
+      list: ['urgent-now', 'important-soon']
       author_association:
         collaborator: true
         member: true
@@ -236,7 +236,7 @@ version: v1
 issue:
   labels:
     - prefix: triage
-      list: [ "accepted" ]
+      list: ['accepted']
       author_association:
         author: false
         collaborator: true
@@ -258,7 +258,7 @@ pull_request:
   labels:
     - prefix: kind
       multiple: false
-      list: [ "feature", "fix", "chore", "docs", "refactor", "dependencies" ]
+      list: ['feature', 'fix', 'chore', 'docs', 'refactor', 'dependencies']
       needs:
         comment: |
           @$AUTHOR: There are no 'kind' label on this PR. You need a 'kind' label to generate the release automatically.
@@ -266,7 +266,7 @@ pull_request:
           * `/kind feature`
           * `/kind ...`
         status:
-          context: "Governance/Kind"
+          context: 'Governance/Kind'
           description:
             success: Ready for review & merge.
             failure: Missing kind label to generate release automatically.
@@ -324,8 +324,8 @@ issue:
 
 ### ChatOps: comment
 
-* `$AUTHOR` is the user that send the /chat-ops, comment/issue/pull_request.
-* `$ISSUE_AUTHOR` is the user that owns the current issue/pull_request.
+- `$AUTHOR` is the user that send the /chat-ops, comment/issue/pull_request.
+- `$ISSUE_AUTHOR` is the user that owns the current issue/pull_request.
 
 ```yml
 version: v1
@@ -352,7 +352,7 @@ issue:
       type: label
       label:
         add: kind/me
-        remove: [ 'label/remove', 'label/that' ]
+        remove: ['label/remove', 'label/that']
 ```
 
 ### Captures: Regex
@@ -364,7 +364,7 @@ version: v1
 
 issue:
   captures:
-    - regex: "- Version: *(.+)"
+    - regex: '- Version: *(.+)'
       github_release: true # validate against github_release
       label: 'version/$CAPTURED'
 ```
@@ -379,13 +379,13 @@ npm i # npm 7 is used
 npm run all # to build/check/lint/package
 ```
 
-* For any question please feel free to create an issue.
-* Pull request for non-breaking features are welcomed too!
-* Although all features were created specifically for [Birthday Research](https://github.com/BirthdayResearch) needs;
+- For any question please feel free to create an issue.
+- Pull request for non-breaking features are welcomed too!
+- Although all features were created specifically for [Birthday Research](https://github.com/BirthdayResearch) needs;
   you should not limit yourself to our offering. Feel free to fork the project. Appreciate if you mention us!
 
 ## Prior art
 
-* [Open Source Governance Models](https://gist.github.com/calebamiles/c578f88403b2fcb203deb5c9ef941d98)
-* [Kubernetes Prow](https://github.com/kubernetes/test-infra)
-* [jpmcb/prow-github-actions](https://github.com/jpmcb/prow-github-actions)
+- [Open Source Governance Models](https://gist.github.com/calebamiles/c578f88403b2fcb203deb5c9ef941d98)
+- [Kubernetes Prow](https://github.com/kubernetes/test-infra)
+- [jpmcb/prow-github-actions](https://github.com/jpmcb/prow-github-actions)

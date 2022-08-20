@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": [
-      "es2019"
-    ],
+    "lib": ["es2019"],
     "module": "commonjs",
     "outDir": "./lib",
     "rootDir": "./src",
@@ -11,8 +9,5 @@
     "noImplicitAny": true,
     "esModuleInterop": true
   },
-  "exclude": [
-    "node_modules",
-    "__tests__/**/*.ts"
-  ]
+  "exclude": ["node_modules", "__tests__/**/*.ts"]
 }

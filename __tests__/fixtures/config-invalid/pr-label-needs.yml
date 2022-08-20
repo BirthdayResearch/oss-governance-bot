@@ -3,5 +3,5 @@ version: v1
 pull_request:
   labels:
     - prefix: triage
-      list: [ "accepted" ]
-      needs: "invalid"
+      list: ['accepted']
+      needs: 'invalid'

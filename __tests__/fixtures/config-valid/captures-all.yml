@@ -2,19 +2,19 @@ version: v1
 
 issue:
   captures:
-    - regex: "- Version: *(.+)"
+    - regex: '- Version: *(.+)'
       github_release: true
       ignore_case: true
       label: 'version/$CAPTURED'
 
-    - regex: "- Operating System: *(macos|mac) *"
+    - regex: '- Operating System: *(macos|mac) *'
       ignore_case: true
       label: 'os/mac'
 
-    - regex: "- Operating System: *(windows|window|win|win) *"
+    - regex: '- Operating System: *(windows|window|win|win) *'
       ignore_case: true
       label: 'os/win'
 
-    - regex: "- Operating System: *(linux) *"
+    - regex: '- Operating System: *(linux) *'
       ignore_case: true
       label: 'os/linux'

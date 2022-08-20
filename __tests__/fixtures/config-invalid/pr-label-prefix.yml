@@ -2,4 +2,4 @@ version: v1
 
 pull_request:
   labels:
-    - list: [ "feature", "fix", "chore", "docs", "refactor" ]
+    - list: ['feature', 'fix', 'chore', 'docs', 'refactor']

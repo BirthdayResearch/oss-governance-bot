@@ -3,5 +3,5 @@ version: v1
 issue:
   labels:
     - prefix: triage
-      list: [ "accepted" ]
-      needs: "invalid"
+      list: ['accepted']
+      needs: 'invalid'
