@@ -1,8 +1,11 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
+  - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'monthly'
+      interval: 'daily'
     labels:
-      - "kind/dependencies"
+      - 'kind/dependencies'
+    commit-message:
+      include: scope
+      prefix: bump
