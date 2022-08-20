@@ -20,6 +20,6 @@ jobs:
       - run: npm run pack
       - run: npm run test:coverage
 
-      - uses: EndBug/add-and-commit@b3c7c1e078a023d75fb0bd326e02962575ce0519
+      - uses: EndBug/add-and-commit@998652d28d7702d095d40f52ae42982a80ae8c7d
         with:
           message: 'Diff from format, lint and pack'
