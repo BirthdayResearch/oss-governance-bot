@@ -21,7 +21,7 @@ jobs:
       - run: npm run build
       - run: npm run pack
 
-      - uses: EndBug/add-and-commit@998652d28d7702d095d40f52ae42982a80ae8c7d
+      - uses: EndBug/add-and-commit@d4d066316a2a85974a05efb42be78f897793c6d9
         with:
           message: 'Diff from format, lint and pack'
 
