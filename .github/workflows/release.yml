@@ -10,4 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
 
-      - uses: vweevers/additional-tags-action@f54689cf358d5368ed738306a414a3b020957296
+      - uses: vweevers/additional-tags-action@3bab55b44e81186dcfef7db9f2cbca01a78eb710
