@@ -76,6 +76,9 @@ export default async function (
   governance: Governance,
   commands: Commands
 ): Promise<any> {
+  core.info('operations: processAutomations')
+  await processAutomations()
+
   if (governance.captures?.length) {
     core.info('operations: processing captures')
     await processCaptures(governance.captures)
@@ -91,6 +94,5 @@ export default async function (
     await processLabels(governance.labels, commands)
   }
 
-  core.info('operations: processAutomations')
-  await processAutomations()
+  
 }
