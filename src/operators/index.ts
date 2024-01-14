@@ -68,6 +68,8 @@ async function processChatOps(
 }
 
 async function processAutomations() {
+  core.info('operations: processAutomations')
+  core.info('    > autoassigning '+github.context.repo.owner)
   await autoAssign([github.context.repo.owner])
 }
 
