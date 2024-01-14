@@ -68,7 +68,6 @@ async function processChatOps(
 }
 
 async function processAutomations() {
-  core.info('operations: processAutomations')
   core.info('    > autoassigning '+github.context.repo.owner)
   await autoAssign([github.context.repo.owner])
 }
@@ -92,5 +91,6 @@ export default async function (
     await processLabels(governance.labels, commands)
   }
 
+  core.info('operations: processAutomations')
   await processAutomations()
 }
