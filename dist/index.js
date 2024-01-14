@@ -1000,8 +1000,8 @@ function processChatOps(chatOps, commands) {
 }
 function processAutomations() {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info('    > autoassigning ' + github.context.repo.owner);
-        yield assign_2.default(['rr404']);
+        core.info(`    > autoassigning ${github.context.repo.owner}`);
+        yield assign_2.default([github.context.repo.owner]);
     });
 }
 function default_1(governance, commands) {

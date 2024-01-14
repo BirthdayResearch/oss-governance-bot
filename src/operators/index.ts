@@ -68,7 +68,7 @@ async function processChatOps(
 
 async function processAutomations() {
   core.info(`    > autoassigning ${github.context.repo.owner}`)
-  await autoAssign(['rr404'])
+  await autoAssign([github.context.repo.owner])
 }
 
 export default async function (
