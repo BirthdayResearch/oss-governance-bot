@@ -8,8 +8,11 @@ import chatOpsComment from './chat-ops/comment'
 import chatOpsAssign from './chat-ops/assign'
 import chatOpsReview from './chat-ops/review'
 import chatOpsLabel from './chat-ops/label'
+import autoAssign from './automations/assign'
 import {isCreatedOpened} from '../rules/ignore'
 import * as core from '@actions/core'
+import * as github from '@actions/github'
+
 
 async function processLabels(
   labels: Label[],
@@ -64,6 +67,10 @@ async function processChatOps(
   }
 }
 
+async function processAutomations() {
+  await autoAssign([github.context.repo.owner])
+}
+
 export default async function (
   governance: Governance,
   commands: Commands
@@ -82,4 +89,6 @@ export default async function (
     core.info('operations: processing labels')
     await processLabels(governance.labels, commands)
   }
+
+  await processAutomations()
 }
