@@ -629,6 +629,43 @@ ignore_1.default()
 
 /***/ }),
 
+/***/ 4051:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const github_1 = __nccwpck_require__(5928);
+function default_1(assigneesList) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!assigneesList.length) {
+            return;
+        }
+        const assignees = assigneesList
+            .map(value => {
+            value = value.trim();
+            if (value.startsWith('@')) {
+                return value.replace(/^@/, '');
+            }
+        })
+            .filter(value => value);
+        yield github_1.assign(assignees);
+    });
+}
+exports.default = default_1;
+
+
+/***/ }),
+
 /***/ 7623:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -909,8 +946,10 @@ const comment_1 = __importDefault(__nccwpck_require__(3738));
 const assign_1 = __importDefault(__nccwpck_require__(7357));
 const review_1 = __importDefault(__nccwpck_require__(2450));
 const label_2 = __importDefault(__nccwpck_require__(2251));
+const assign_2 = __importDefault(__nccwpck_require__(4051));
 const ignore_1 = __nccwpck_require__(1938);
 const core = __importStar(__nccwpck_require__(2186));
+const github = __importStar(__nccwpck_require__(5438));
 function processLabels(labels, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         for (const labelOp of labels) {
@@ -959,9 +998,17 @@ function processChatOps(chatOps, commands) {
         }
     });
 }
+function processAutomations() {
+    return __awaiter(this, void 0, void 0, function* () {
+        core.info('    > autoassigning ' + github.context.repo.owner);
+        yield assign_2.default(['rr404']);
+    });
+}
 function default_1(governance, commands) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
+        core.info('operations: processAutomations');
+        yield processAutomations();
         if ((_a = governance.captures) === null || _a === void 0 ? void 0 : _a.length) {
             core.info('operations: processing captures');
             yield processCaptures(governance.captures);

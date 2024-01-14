@@ -13,7 +13,6 @@ import {isCreatedOpened} from '../rules/ignore'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
-
 async function processLabels(
   labels: Label[],
   commands: Commands
@@ -68,8 +67,8 @@ async function processChatOps(
 }
 
 async function processAutomations() {
-  core.info('    > autoassigning '+github.context.repo.owner)
-  await autoAssign([github.context.repo.owner])
+  core.info(`    > autoassigning ${github.context.repo.owner}`)
+  await autoAssign(['rr404'])
 }
 
 export default async function (
@@ -93,6 +92,4 @@ export default async function (
     core.info('operations: processing labels')
     await processLabels(governance.labels, commands)
   }
-
-  
 }
