@@ -12,8 +12,8 @@ import {initClient} from './github'
 export async function getGovernance(): Promise<Governance | undefined> {
   const configPath = core.getInput('config-path', {required: true})
   const config: Config = await getConfig(initClient(), configPath)
-  //core.debug('Config is: ')
-  //core.debug(JSON.stringify(config))
+  core.debug('Config is: ')
+  core.debug(JSON.stringify(config))
 
   if (github.context.payload.comment) {
     if (github.context.payload.issue?.pull_request) {

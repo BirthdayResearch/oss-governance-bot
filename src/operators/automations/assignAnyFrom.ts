@@ -2,6 +2,9 @@ import * as core from '@actions/core'
 import {assign, getNumber} from '../../github'
 
 export default async function (assigneesList: string[]): Promise<void> {
+  // TODO check that there are no assignees
+  //
+
   if (!assigneesList.length) {
     return
   }
@@ -17,6 +20,6 @@ export default async function (assigneesList: string[]): Promise<void> {
 
   const assigneeIndex = (getNumber() ?? 0) % assignees.length
 
-  core.debug(''.concat('Index ', assigneeIndex.toString(), ' // About to assign', assignees[assigneeIndex]))
+  core.debug(''.concat('Index ', assigneeIndex.toString(), ' // About to assign to @', assignees[assigneeIndex]))
   await assign([assignees[assigneeIndex]])
 }
