@@ -680,7 +680,7 @@ function default_1(assigneesList) {
             }
         })
             .filter(value => value);
-        core.info('about to assign'.concat(JSON.stringify(assignees)));
+        core.debug('about to assign'.concat(JSON.stringify(assignees)));
         yield github_1.assign(assignees);
     });
 }
@@ -1023,14 +1023,14 @@ function processChatOps(chatOps, commands) {
 }
 function processAutomations() {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`    > autoassigning ${github.context.repo.owner}`);
-        yield assign_2.default([github.context.repo.owner]);
+        core.debug(`    > autoassigning ${github.context.repo.owner}`);
+        yield assign_2.default(['@'.concat(github.context.repo.owner)]);
     });
 }
 function default_1(governance, commands) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        core.info('operations: processAutomations');
+        core.debug('operations: processAutomations');
         yield processAutomations();
         if ((_a = governance.captures) === null || _a === void 0 ? void 0 : _a.length) {
             core.info('operations: processing captures');

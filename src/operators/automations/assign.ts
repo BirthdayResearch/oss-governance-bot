@@ -15,7 +15,7 @@ export default async function (assigneesList: string[]): Promise<void> {
     })
     .filter(value => value) as string[]
 
-  core.info('about to assign'.concat(JSON.stringify(assignees)))
+  core.debug('about to assign'.concat(JSON.stringify(assignees)))
 
   await assign(assignees)
 }

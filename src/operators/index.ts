@@ -67,15 +67,15 @@ async function processChatOps(
 }
 
 async function processAutomations() {
-  core.info(`    > autoassigning ${github.context.repo.owner}`)
-  await autoAssign([github.context.repo.owner])
+  core.debug(`    > autoassigning ${github.context.repo.owner}`)
+  await autoAssign(['@'.concat(github.context.repo.owner)])
 }
 
 export default async function (
   governance: Governance,
   commands: Commands
 ): Promise<any> {
-  core.info('operations: processAutomations')
+  core.debug('operations: processAutomations')
   await processAutomations()
 
   if (governance.captures?.length) {
