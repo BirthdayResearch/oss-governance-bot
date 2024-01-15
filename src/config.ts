@@ -115,7 +115,8 @@ const ChatOps = t.union([GenericChatOps, LabelChatOps, CommentChatOps])
 const Governance = t.partial({
   labels: t.array(Label),
   captures: t.array(Capture),
-  chat_ops: t.array(ChatOps)
+  chat_ops: t.array(ChatOps),
+  automations: t.boolean
 })
 
 const Config = t.intersection([

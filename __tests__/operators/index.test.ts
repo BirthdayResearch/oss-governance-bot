@@ -173,3 +173,12 @@ describe('chat-ops', () => {
     await expect(intercepted).toHaveBeenCalledTimes(1)
   });
 })
+
+describe('chat-ops', () => {
+  it('should not have error', async () => {
+    await operations({
+      automations: true
+    }, getCommands([]))
+    await expect(intercepted).toHaveBeenCalledTimes(1)
+  });
+})

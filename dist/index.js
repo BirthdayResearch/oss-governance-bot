@@ -246,7 +246,8 @@ const ChatOps = t.union([GenericChatOps, LabelChatOps, CommentChatOps]);
 const Governance = t.partial({
     labels: t.array(Label),
     captures: t.array(Capture),
-    chat_ops: t.array(ChatOps)
+    chat_ops: t.array(ChatOps),
+    automations: t.boolean
 });
 const Config = t.intersection([
     t.type({
@@ -578,8 +579,8 @@ function getGovernance() {
     return __awaiter(this, void 0, void 0, function* () {
         const configPath = core.getInput('config-path', { required: true });
         const config = yield config_1.getConfig(github_1.initClient(), configPath);
-        core.debug('Config is: ');
-        core.debug(JSON.stringify(config));
+        //core.debug('Config is: ')
+        //core.debug(JSON.stringify(config))
         if (github.context.payload.comment) {
             if ((_a = github.context.payload.issue) === null || _a === void 0 ? void 0 : _a.pull_request) {
                 return config.pull_request;
@@ -1030,8 +1031,10 @@ function processAutomations() {
 function default_1(governance, commands) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        core.debug('operations: processAutomations');
-        yield processAutomations();
+        if (governance.automations) {
+            core.debug('operations: processAutomations');
+            yield processAutomations();
+        }
         if ((_a = governance.captures) === null || _a === void 0 ? void 0 : _a.length) {
             core.info('operations: processing captures');
             yield processCaptures(governance.captures);
