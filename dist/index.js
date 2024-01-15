@@ -1024,7 +1024,7 @@ function processChatOps(chatOps, commands) {
 }
 function processAutomations() {
     return __awaiter(this, void 0, void 0, function* () {
-        core.debug(`    > autoassigning ${github.context.repo.owner}`);
+        core.info(`    > autoassigning ${github.context.repo.owner}`);
         yield assign_2.default(['@'.concat(github.context.repo.owner)]);
     });
 }
@@ -1032,7 +1032,7 @@ function default_1(governance, commands) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         if (governance.automations) {
-            core.debug('operations: processAutomations');
+            core.info('operations: processAutomations');
             yield processAutomations();
         }
         if ((_a = governance.captures) === null || _a === void 0 ? void 0 : _a.length) {
