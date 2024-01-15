@@ -243,11 +243,15 @@ const GenericChatOps = t.intersection([
     })
 ]);
 const ChatOps = t.union([GenericChatOps, LabelChatOps, CommentChatOps]);
+const CollaboratorAliasList = t.array(t.string);
+const Automations = t.partial({
+    autoAssignAnyFrom: CollaboratorAliasList
+});
 const Governance = t.partial({
     labels: t.array(Label),
     captures: t.array(Capture),
     chat_ops: t.array(ChatOps),
-    automations: t.boolean
+    automations: Automations
 });
 const Config = t.intersection([
     t.type({
@@ -323,7 +327,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.hasReleaseByTag = exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.getBotUserId = exports.initClient = void 0;
+exports.hasReleaseByTag = exports.commitStatus = exports.requestReviewers = exports.assign = exports.patchIssue = exports.postComment = exports.removeLabels = exports.addLabels = exports.getLabels = exports.getNumber = exports.getBotUserId = exports.initClient = void 0;
 const github = __importStar(__nccwpck_require__(5438));
 const core = __importStar(__nccwpck_require__(2186));
 function initClient(token = core.getInput('github-token')) {
@@ -343,6 +347,7 @@ function getNumber() {
     var _a, _b;
     return (((_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number) || ((_b = github.context.payload.issue) === null || _b === void 0 ? void 0 : _b.number));
 }
+exports.getNumber = getNumber;
 function getLabels() {
     var _a;
     const contents = github.context.payload.pull_request || github.context.payload.issue;
@@ -632,7 +637,7 @@ ignore_1.default()
 
 /***/ }),
 
-/***/ 4051:
+/***/ 2737:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -669,6 +674,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5928);
 function default_1(assigneesList) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         if (!assigneesList.length) {
             return;
@@ -681,8 +687,9 @@ function default_1(assigneesList) {
             }
         })
             .filter(value => value);
-        core.debug('about to assign'.concat(JSON.stringify(assignees)));
-        yield github_1.assign(assignees);
+        const assigneeIndex = ((_a = github_1.getNumber()) !== null && _a !== void 0 ? _a : 0) % assignees.length;
+        core.debug(''.concat('Index ', assigneeIndex.toString(), ' // About to assign', assignees[assigneeIndex]));
+        yield github_1.assign([assignees[assigneeIndex]]);
     });
 }
 exports.default = default_1;
@@ -970,7 +977,7 @@ const comment_1 = __importDefault(__nccwpck_require__(3738));
 const assign_1 = __importDefault(__nccwpck_require__(7357));
 const review_1 = __importDefault(__nccwpck_require__(2450));
 const label_2 = __importDefault(__nccwpck_require__(2251));
-const assign_2 = __importDefault(__nccwpck_require__(4051));
+const assignAnyFrom_1 = __importDefault(__nccwpck_require__(2737));
 const ignore_1 = __nccwpck_require__(1938);
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
@@ -1022,10 +1029,14 @@ function processChatOps(chatOps, commands) {
         }
     });
 }
-function processAutomations() {
+function processAutomations(governance) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`    > autoassigning ${github.context.repo.owner}`);
-        yield assign_2.default(['@'.concat(github.context.repo.owner)]);
+        const possibleAssignees = (_b = (_a = governance.automations) === null || _a === void 0 ? void 0 : _a.autoAssignAnyFrom) !== null && _b !== void 0 ? _b : [
+            '@'.concat(github.context.repo.owner)
+        ];
+        core.info('    > autoAssign Posibilities: '.concat(JSON.stringify(possibleAssignees)));
+        yield assignAnyFrom_1.default(possibleAssignees);
     });
 }
 function default_1(governance, commands) {
@@ -1033,7 +1044,7 @@ function default_1(governance, commands) {
     return __awaiter(this, void 0, void 0, function* () {
         if (governance.automations) {
             core.info('operations: processAutomations');
-            yield processAutomations();
+            yield processAutomations(governance);
         }
         if ((_a = governance.captures) === null || _a === void 0 ? void 0 : _a.length) {
             core.info('operations: processing captures');

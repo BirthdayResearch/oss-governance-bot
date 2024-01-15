@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {assign} from '../../github'
+import {assign, getNumber} from '../../github'
 
 export default async function (assigneesList: string[]): Promise<void> {
   if (!assigneesList.length) {
@@ -15,7 +15,8 @@ export default async function (assigneesList: string[]): Promise<void> {
     })
     .filter(value => value) as string[]
 
-  core.debug('about to assign'.concat(JSON.stringify(assignees)))
+  const assigneeIndex = (getNumber() ?? 0) % assignees.length
 
-  await assign(assignees)
+  core.debug(''.concat('Index ', assigneeIndex.toString(), ' // About to assign', assignees[assigneeIndex]))
+  await assign([assignees[assigneeIndex]])
 }

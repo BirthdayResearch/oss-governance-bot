@@ -177,7 +177,7 @@ describe('chat-ops', () => {
 describe('chat-ops', () => {
   it('should not have error', async () => {
     await operations({
-      automations: true
+      automations: { autoAssignAnyFrom: ['@rr404', '@rr404', '@rr404'] }
     }, getCommands([]))
     await expect(intercepted).toHaveBeenCalledTimes(1)
   });

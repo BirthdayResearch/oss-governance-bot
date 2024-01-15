@@ -112,11 +112,17 @@ const GenericChatOps = t.intersection([
 
 const ChatOps = t.union([GenericChatOps, LabelChatOps, CommentChatOps])
 
+const CollaboratorAliasList = t.array(t.string)
+
+const Automations = t.partial({
+  autoAssignAnyFrom: CollaboratorAliasList
+})
+
 const Governance = t.partial({
   labels: t.array(Label),
   captures: t.array(Capture),
   chat_ops: t.array(ChatOps),
-  automations: t.boolean
+  automations: Automations
 })
 
 const Config = t.intersection([

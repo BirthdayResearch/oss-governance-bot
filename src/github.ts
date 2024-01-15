@@ -15,7 +15,7 @@ export async function getBotUserId(): Promise<number> {
   return user.data.id
 }
 
-function getNumber(): number | undefined {
+export function getNumber(): number | undefined {
   return (
     github.context.payload.pull_request?.number ||
     github.context.payload.issue?.number

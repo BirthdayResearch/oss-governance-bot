@@ -8,7 +8,7 @@ import chatOpsComment from './chat-ops/comment'
 import chatOpsAssign from './chat-ops/assign'
 import chatOpsReview from './chat-ops/review'
 import chatOpsLabel from './chat-ops/label'
-import autoAssign from './automations/assign'
+import autoAssignAnyFrom from './automations/assignAnyFrom'
 import {isCreatedOpened} from '../rules/ignore'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
@@ -66,9 +66,14 @@ async function processChatOps(
   }
 }
 
-async function processAutomations() {
-  core.info(`    > autoassigning ${github.context.repo.owner}`)
-  await autoAssign(['@'.concat(github.context.repo.owner)])
+async function processAutomations(governance: Governance) {
+  const possibleAssignees = governance.automations?.autoAssignAnyFrom ?? [
+    '@'.concat(github.context.repo.owner)
+  ]
+  core.info(
+    '    > autoAssign Posibilities: '.concat(JSON.stringify(possibleAssignees))
+  )
+  await autoAssignAnyFrom(possibleAssignees)
 }
 
 export default async function (
@@ -77,7 +82,7 @@ export default async function (
 ): Promise<any> {
   if (governance.automations) {
     core.info('operations: processAutomations')
-    await processAutomations()
+    await processAutomations(governance)
   }
 
   if (governance.captures?.length) {
