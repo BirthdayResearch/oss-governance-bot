@@ -1,6 +1,128 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 4263:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(2186));
+const github_1 = __nccwpck_require__(5928);
+function default_1(assigneesList) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        // TODO check that there are no assignees
+        //
+        if (!assigneesList.length) {
+            return;
+        }
+        const assignees = assigneesList
+            .map(value => {
+            value = value.trim();
+            if (value.startsWith('@')) {
+                return value.replace(/^@/, '');
+            }
+        })
+            .filter(value => value);
+        const assigneeIndex = ((_a = github_1.getNumber()) !== null && _a !== void 0 ? _a : 0) % assignees.length;
+        core.debug(''.concat('Index ', assigneeIndex.toString(), ' // About to assign to @', assignees[assigneeIndex]));
+        yield github_1.assign([assignees[assigneeIndex]]);
+    });
+}
+exports["default"] = default_1;
+
+
+/***/ }),
+
+/***/ 443:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const assignAnyFrom_1 = __importDefault(__nccwpck_require__(4263));
+const core = __importStar(__nccwpck_require__(2186));
+const github = __importStar(__nccwpck_require__(5438));
+function processAutomations(config) {
+    var _a, _b, _c;
+    return __awaiter(this, void 0, void 0, function* () {
+        const possibleAssignees = (_c = (_b = (_a = config.issue) === null || _a === void 0 ? void 0 : _a.automations) === null || _b === void 0 ? void 0 : _b.autoAssignAnyFrom) !== null && _c !== void 0 ? _c : [
+            '@'.concat(github.context.repo.owner)
+        ];
+        core.info('    > autoAssign Posibilities: '.concat(JSON.stringify(possibleAssignees)));
+        yield assignAnyFrom_1.default(possibleAssignees);
+    });
+}
+function default_1(config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield processAutomations(config);
+    });
+}
+exports["default"] = default_1;
+
+
+/***/ }),
+
 /***/ 524:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -568,13 +690,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runGovernance = exports.getGovernance = void 0;
+exports.runAutomations = exports.runGovernance = exports.getGovernance = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const config_1 = __nccwpck_require__(88);
 const ignore_1 = __importDefault(__nccwpck_require__(1938));
 const command_1 = __importDefault(__nccwpck_require__(524));
 const operators_1 = __importDefault(__nccwpck_require__(9854));
+const automations_1 = __importDefault(__nccwpck_require__(443));
 const github_1 = __nccwpck_require__(5928);
 /**
  * @return the current governance config based on the context, it could be 'pull_request' or 'issue'.
@@ -624,79 +747,35 @@ function runGovernance() {
     });
 }
 exports.runGovernance = runGovernance;
+/**
+ * Get governance config, parse and run commands from context.
+ */
+function runAutomations() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const configPath = core.getInput('config-path', { required: true });
+        const config = yield config_1.getConfig(github_1.initClient(), configPath);
+        core.info('main: running automations');
+        yield automations_1.default(config);
+        core.info('main: completed automations');
+    });
+}
+exports.runAutomations = runAutomations;
 /* eslint github/no-then: off */
 ignore_1.default()
     .then((toIgnore) => __awaiter(void 0, void 0, void 0, function* () {
     if (toIgnore)
         return;
-    yield runGovernance();
+    if (github.context.eventName === 'schedule') {
+        yield runAutomations();
+    }
+    else {
+        yield runGovernance();
+    }
 }))
     .catch(error => {
     core.error(error);
     core.setFailed(error);
 });
-
-
-/***/ }),
-
-/***/ 2737:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(2186));
-const github_1 = __nccwpck_require__(5928);
-function default_1(assigneesList) {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        // TODO check that there are no assignees
-        //
-        if (!assigneesList.length) {
-            return;
-        }
-        const assignees = assigneesList
-            .map(value => {
-            value = value.trim();
-            if (value.startsWith('@')) {
-                return value.replace(/^@/, '');
-            }
-        })
-            .filter(value => value);
-        const assigneeIndex = ((_a = github_1.getNumber()) !== null && _a !== void 0 ? _a : 0) % assignees.length;
-        core.debug(''.concat('Index ', assigneeIndex.toString(), ' // About to assign to @', assignees[assigneeIndex]));
-        yield github_1.assign([assignees[assigneeIndex]]);
-    });
-}
-exports["default"] = default_1;
 
 
 /***/ }),
@@ -981,7 +1060,7 @@ const comment_1 = __importDefault(__nccwpck_require__(3738));
 const assign_1 = __importDefault(__nccwpck_require__(7357));
 const review_1 = __importDefault(__nccwpck_require__(2450));
 const label_2 = __importDefault(__nccwpck_require__(2251));
-const assignAnyFrom_1 = __importDefault(__nccwpck_require__(2737));
+const assignAnyFrom_1 = __importDefault(__nccwpck_require__(4263));
 const ignore_1 = __nccwpck_require__(1938);
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
@@ -1480,6 +1559,9 @@ function default_1() {
     return __awaiter(this, void 0, void 0, function* () {
         core.debug('ignore init context is: ');
         core.debug(JSON.stringify(github.context));
+        if (github.context.eventName === 'schedule') {
+            return false;
+        }
         if (ignoreClosed()) {
             core.info('ignore: closed');
             return true;

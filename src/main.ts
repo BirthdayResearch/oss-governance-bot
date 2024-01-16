@@ -4,6 +4,7 @@ import {Config, getConfig, Governance} from './config'
 import ignore from './rules/ignore'
 import command from './command'
 import operations from './operators'
+import automations from './automations'
 import {initClient} from './github'
 
 /**
@@ -57,12 +58,28 @@ export async function runGovernance(): Promise<void> {
   core.info('main: completed operations')
 }
 
+/**
+ * Get governance config, parse and run commands from context.
+ */
+export async function runAutomations(): Promise<void> {
+  const configPath = core.getInput('config-path', {required: true})
+  const config: Config = await getConfig(initClient(), configPath)
+
+  core.info('main: running automations')
+  await automations(config)
+  core.info('main: completed automations')
+}
+
 /* eslint github/no-then: off */
 ignore()
   .then(async toIgnore => {
     if (toIgnore) return
 
-    await runGovernance()
+    if (github.context.eventName === 'schedule') {
+      await runAutomations()
+    } else {
+      await runGovernance()
+    }
   })
   .catch(error => {
     core.error(error)

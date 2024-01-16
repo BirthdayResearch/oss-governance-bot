@@ -102,6 +102,10 @@ export default async function (): Promise<boolean> {
   core.debug('ignore init context is: ')
   core.debug(JSON.stringify(github.context))
 
+  if (github.context.eventName === 'schedule') {
+    return false
+  }
+
   if (ignoreClosed()) {
     core.info('ignore: closed')
     return true
