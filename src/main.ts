@@ -14,6 +14,8 @@ export async function getGovernance(): Promise<Governance | undefined> {
   const config: Config = await getConfig(initClient(), configPath)
   core.debug('Config is: ')
   core.debug(JSON.stringify(config))
+  core.debug('Context is: ')
+  core.debug(JSON.stringify(github.context))
 
   if (github.context.payload.comment) {
     if (github.context.payload.issue?.pull_request) {

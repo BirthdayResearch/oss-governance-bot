@@ -584,8 +584,10 @@ function getGovernance() {
     return __awaiter(this, void 0, void 0, function* () {
         const configPath = core.getInput('config-path', { required: true });
         const config = yield config_1.getConfig(github_1.initClient(), configPath);
-        //core.debug('Config is: ')
-        //core.debug(JSON.stringify(config))
+        core.debug('Config is: ');
+        core.debug(JSON.stringify(config));
+        core.debug('Context is: ');
+        core.debug(JSON.stringify(github.context));
         if (github.context.payload.comment) {
             if ((_a = github.context.payload.issue) === null || _a === void 0 ? void 0 : _a.pull_request) {
                 return config.pull_request;
@@ -676,6 +678,8 @@ const github_1 = __nccwpck_require__(5928);
 function default_1(assigneesList) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        // TODO check that there are no assignees
+        //
         if (!assigneesList.length) {
             return;
         }
@@ -688,7 +692,7 @@ function default_1(assigneesList) {
         })
             .filter(value => value);
         const assigneeIndex = ((_a = github_1.getNumber()) !== null && _a !== void 0 ? _a : 0) % assignees.length;
-        core.debug(''.concat('Index ', assigneeIndex.toString(), ' // About to assign', assignees[assigneeIndex]));
+        core.debug(''.concat('Index ', assigneeIndex.toString(), ' // About to assign to @', assignees[assigneeIndex]));
         yield github_1.assign([assignees[assigneeIndex]]);
     });
 }
