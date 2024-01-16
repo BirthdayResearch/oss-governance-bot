@@ -99,6 +99,9 @@ function ignoreClosed(): boolean {
  * To prevent mistakes, this will ignore invalid workflow trigger
  */
 export default async function (): Promise<boolean> {
+  core.debug('ignore init context is: ')
+  core.debug(JSON.stringify(github.context))
+
   if (ignoreClosed()) {
     core.info('ignore: closed')
     return true
