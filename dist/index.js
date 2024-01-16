@@ -1478,6 +1478,8 @@ function ignoreClosed() {
  */
 function default_1() {
     return __awaiter(this, void 0, void 0, function* () {
+        core.debug('ignore init context is: ');
+        core.debug(JSON.stringify(github.context));
         if (ignoreClosed()) {
             core.info('ignore: closed');
             return true;
