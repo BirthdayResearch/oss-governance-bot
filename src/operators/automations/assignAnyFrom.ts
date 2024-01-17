@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {assign, getNumber} from '../github'
+import {assign, getNumber} from '../../github'
 
 export default async function (assigneesList: string[]): Promise<void> {
   // TODO check that there are no assignees
