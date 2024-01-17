@@ -17,7 +17,7 @@ async function pocOctok(config: Config) {
       })
       // eslint-disable-next-line github/no-then
       .then(async issuesList => {
-        core.debug(issuesList)
+        core.debug(JSON.stringify(issuesList))
         return true
       })
       // eslint-disable-next-line github/no-then
